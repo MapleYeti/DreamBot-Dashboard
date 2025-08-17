@@ -8,3 +8,13 @@ export interface BotConfig {
   webhookUrl: string
   launchScript: string
 }
+
+export interface ConfigValidationResult {
+  success: boolean
+  errors: string[]
+}
+
+export interface ConfigWithValidation {
+  config: AppConfig
+  errors: string[]
+}

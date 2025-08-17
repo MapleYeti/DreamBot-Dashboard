@@ -1,16 +1,13 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import type { AppConfig } from '@shared/types/configTypes'
 
-interface ConfigApi {
-  read: () => Promise<AppConfig>
-  write: (data: AppConfig) => Promise<void>
-}
-
 const api = {
   config: {
-    read: (): Promise<AppConfig> => ipcRenderer.invoke('config:read'),
-    write: (data: AppConfig): Promise<void> => ipcRenderer.invoke('config:write', data)
-  } as ConfigApi
+    getConfig: (): Promise<{ config: AppConfig; errors: string[] }> =>
+      ipcRenderer.invoke('config:get'),
+    saveConfig: (data: AppConfig): Promise<{ success: boolean; errors: string[] }> =>
+      ipcRenderer.invoke('config:save', data)
+  }
 }
 
 declare global {
@@ -22,8 +19,9 @@ declare global {
 if (process.contextIsolated) {
   try {
     contextBridge.exposeInMainWorld('api', api)
+    console.log('Preload script loaded successfully, API exposed to renderer')
   } catch (error) {
-    console.error(error)
+    console.error('Failed to expose API to renderer:', error)
   }
 } else {
   window.api = api

@@ -1,8 +1,8 @@
 import type { AppConfig } from '@shared/types/configTypes'
 
 export interface ConfigApi {
-  read: () => Promise<AppConfig>
-  write: (data: AppConfig) => Promise<void>
+  getConfig: () => Promise<{ config: AppConfig; errors: string[] }>
+  saveConfig: (data: AppConfig) => Promise<{ success: boolean; errors: string[] }>
 }
 
 export interface Api {

@@ -3,6 +3,7 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import { join } from 'path'
 import { createMainWindow } from './windows'
 import { registerAllIpcHandlers } from './ipc'
+import { appConfigManager } from './appConfigManager/appConfigManager'
 
 let mainWindow: Electron.BrowserWindow | null = null
 
@@ -16,8 +17,17 @@ function createWindow(): void {
   }
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   electronApp.setAppUserModelId('com.electron')
+
+  // Initialize app configuration
+  const configManager = new appConfigManager()
+  try {
+    await configManager.loadConfig()
+    console.log('App configuration loaded successfully')
+  } catch (error) {
+    console.error('Failed to load app configuration:', error)
+  }
 
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)

@@ -2,27 +2,35 @@ import { useCallback } from 'react'
 import type { AppConfig } from '@shared/types/configTypes'
 
 export function useConfigApi() {
-  const readConfig = useCallback(async (): Promise<AppConfig | null> => {
+  const getConfig = useCallback(async (): Promise<{
+    config: AppConfig
+    errors: string[]
+  } | null> => {
     try {
-      return await window.api.config.read()
+      return await window.api.config.getConfig()
     } catch (error) {
-      console.error('Failed to read config:', error)
+      console.error('Failed to get config:', error)
       return null
     }
   }, [])
 
-  const writeConfig = useCallback(async (data: AppConfig): Promise<boolean> => {
-    try {
-      await window.api.config.write(data)
-      return true
-    } catch (error) {
-      console.error('Failed to write config:', error)
-      return false
-    }
-  }, [])
+  const saveConfig = useCallback(
+    async (data: AppConfig): Promise<{ success: boolean; errors: string[] }> => {
+      try {
+        return await window.api.config.saveConfig(data)
+      } catch (error) {
+        console.error('Failed to save config:', error)
+        return {
+          success: false,
+          errors: [error instanceof Error ? error.message : 'Failed to save config']
+        }
+      }
+    },
+    []
+  )
 
   return {
-    readConfig,
-    writeConfig
+    getConfig,
+    saveConfig
   }
 }

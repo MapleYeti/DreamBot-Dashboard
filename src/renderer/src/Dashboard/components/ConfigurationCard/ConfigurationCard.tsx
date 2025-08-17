@@ -12,9 +12,10 @@ import FooterNotes from './components/FooterNotes/FooterNotes'
 import { useConfigApi } from '../../../hooks/useConfigApi'
 
 const ConfigurationCard: React.FC = () => {
-  const { readConfig, writeConfig } = useConfigApi()
+  const { getConfig, saveConfig } = useConfigApi()
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [configStatus, setConfigStatus] = useState<ConfigStatus>('saved')
+  const [validationErrors, setValidationErrors] = useState<string[]>([])
   const [localConfig, setLocalConfig] = useState<AppConfig>({
     BASE_LOG_DIRECTORY: '',
     DREAMBOT_VIP_FEATURES: true,
@@ -28,13 +29,19 @@ const ConfigurationCard: React.FC = () => {
 
   useEffect(() => {
     const loadConfig = async () => {
-      const configData = await readConfig()
-      if (configData) {
-        setLocalConfig(configData)
+      const result = await getConfig()
+      if (result) {
+        setLocalConfig(result.config)
+        setValidationErrors(result.errors)
+        if (result.errors.length > 0) {
+          setConfigStatus('error')
+        } else {
+          setConfigStatus('saved')
+        }
       }
     }
     loadConfig()
-  }, [readConfig])
+  }, [getConfig])
 
   const handleToggleCollapse = () => {
     setIsCollapsed(!isCollapsed)
@@ -46,7 +53,16 @@ const ConfigurationCard: React.FC = () => {
   }
 
   const handleWebhookUrlChange = (value: string) => {
-    setLocalConfig((prev) => ({ ...prev, webhookUrl: value }))
+    setLocalConfig((prev) => ({
+      ...prev,
+      BOT_CONFIG: {
+        ...prev.BOT_CONFIG,
+        WoodcutterBot: {
+          ...prev.BOT_CONFIG.WoodcutterBot,
+          webhookUrl: value
+        }
+      }
+    }))
     setConfigStatus('unsaved')
   }
 
@@ -72,11 +88,18 @@ const ConfigurationCard: React.FC = () => {
 
   const handleSave = async () => {
     try {
-      await writeConfig(localConfig)
-      setConfigStatus('saved')
+      const result = await saveConfig(localConfig)
+      if (result.success) {
+        setConfigStatus('saved')
+        setValidationErrors([])
+      } else {
+        setConfigStatus('error')
+        setValidationErrors(result.errors)
+      }
     } catch (error) {
       console.error('Failed to save configuration:', error)
       setConfigStatus('error')
+      setValidationErrors(['Failed to save configuration'])
     }
   }
 
@@ -166,6 +189,18 @@ const ConfigurationCard: React.FC = () => {
         onExport={handleExport}
       />
 
+      {validationErrors.length > 0 && (
+        <div className={styles.validationErrors}>
+          <h4>Configuration Issues:</h4>
+          <ul>
+            {validationErrors.map((error, index) => (
+              <li key={index} className={styles.validationError}>
+                {error}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       <FooterNotes />
     </Card>
   )

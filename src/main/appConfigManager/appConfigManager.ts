@@ -8,7 +8,7 @@ export class appConfigManager {
   private config: AppConfig | null = null
 
   constructor() {
-    this.configFilePath = join(process.resourcesPath, 'config.json')
+    this.configFilePath = join(process.cwd(), 'config.json')
   }
 
   async loadConfig(): Promise<AppConfig> {
@@ -57,6 +57,26 @@ export class appConfigManager {
       return await this.loadConfig()
     }
     return this.config
+  }
+
+  async validateConfig(config: AppConfig): Promise<{ valid: boolean; errors: string[] }> {
+    return validateAppConfig(config)
+  }
+
+  async getConfigWithValidation(): Promise<{ config: AppConfig; errors: string[] }> {
+    try {
+      const config = await this.getConfig()
+      const validation = validateAppConfig(config)
+      return {
+        config,
+        errors: validation.errors
+      }
+    } catch (error) {
+      return {
+        config: this.getDefaultConfig(),
+        errors: [error instanceof Error ? error.message : 'Failed to load config']
+      }
+    }
   }
 
   async updateConfig(updates: Partial<AppConfig>): Promise<AppConfig> {

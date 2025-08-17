@@ -5,21 +5,38 @@ import type { AppConfig } from '@shared/types/configTypes'
 const configManager = new appConfigManager()
 
 export function registerConfigHandlers(): void {
-  ipcMain.handle('config:read', async (): Promise<AppConfig> => {
+  ipcMain.handle('config:get', async (): Promise<{ config: AppConfig; errors: string[] }> => {
     try {
-      return await configManager.getConfig()
+      const config = await configManager.getConfig()
+      const validation = await configManager.validateConfig(config)
+      return {
+        config,
+        errors: validation.errors
+      }
     } catch (error) {
-      console.error('Failed to read config:', error)
+      console.error('Failed to get config:', error)
       throw error
     }
   })
 
-  ipcMain.handle('config:write', async (_event, data: AppConfig): Promise<void> => {
-    try {
-      await configManager.saveConfig(data)
-    } catch (error) {
-      console.error('Failed to write config:', error)
-      throw error
+  ipcMain.handle(
+    'config:save',
+    async (_event, data: AppConfig): Promise<{ success: boolean; errors: string[] }> => {
+      try {
+        const validation = await configManager.validateConfig(data)
+        if (validation.valid) {
+          await configManager.saveConfig(data)
+          return { success: true, errors: [] }
+        } else {
+          return { success: false, errors: validation.errors }
+        }
+      } catch (error) {
+        console.error('Failed to save config:', error)
+        return {
+          success: false,
+          errors: [error instanceof Error ? error.message : 'Failed to save config']
+        }
+      }
     }
-  })
+  )
 }

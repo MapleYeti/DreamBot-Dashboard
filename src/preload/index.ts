@@ -14,6 +14,37 @@ const api = {
       // For now, we'll just remove all listeners since Electron doesn't expose the original callback
       ipcRenderer.removeAllListeners('config:changed')
     }
+  },
+  monitoring: {
+    startMonitoring: (): Promise<{ success: boolean; message: string }> =>
+      ipcRenderer.invoke('monitoring:start'),
+    stopMonitoring: (): Promise<{ success: boolean; message: string }> =>
+      ipcRenderer.invoke('monitoring:stop'),
+    getStatus: (): Promise<{
+      isMonitoring: boolean
+      botFolders: string[]
+      watchedFilesCount: number
+    }> => ipcRenderer.invoke('monitoring:get-status'),
+    onStatusChanged: (callback: (data: { isMonitoring: boolean }) => void) => {
+      ipcRenderer.on('monitoring:status-changed', (_event, data) => callback(data))
+    },
+    onLogUpdate: (
+      callback: (data: {
+        botName: string
+        fileName: string
+        filePath: string
+        newContent: string
+        timestamp: string
+      }) => void
+    ) => {
+      ipcRenderer.on('monitoring:log-update', (_event, data) => callback(data))
+    },
+    offStatusChanged: () => {
+      ipcRenderer.removeAllListeners('monitoring:status-changed')
+    },
+    offLogUpdate: () => {
+      ipcRenderer.removeAllListeners('monitoring:log-update')
+    }
   }
 }
 

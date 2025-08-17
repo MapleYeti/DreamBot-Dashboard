@@ -1,14 +1,20 @@
 import { ipcMain, webContents } from 'electron'
-import { appConfigManager } from '../appConfigManager/appConfigManager'
+import { ConfigManager } from '../application'
 import type { AppConfig } from '@shared/types/configTypes'
-
-const configManager = new appConfigManager()
 
 export function registerConfigHandlers(): void {
   ipcMain.handle('config:get', async (): Promise<{ config: AppConfig; errors: string[] }> => {
+    console.log('config:get IPC handler called')
     try {
+      const configManager = ConfigManager.getInstance()
+      console.log('Got config manager instance')
+
       const config = await configManager.getConfig()
+      console.log('Retrieved config:', config)
+
       const validation = await configManager.validateConfig(config)
+      console.log('Config validation result:', validation)
+
       return {
         config,
         errors: validation.errors
@@ -22,7 +28,9 @@ export function registerConfigHandlers(): void {
   ipcMain.handle(
     'config:save',
     async (_event, data: AppConfig): Promise<{ success: boolean; errors: string[] }> => {
+      console.log('config:save IPC handler called with data:', data)
       try {
+        const configManager = ConfigManager.getInstance()
         const validation = await configManager.validateConfig(data)
         if (validation.valid) {
           await configManager.saveConfig(data)

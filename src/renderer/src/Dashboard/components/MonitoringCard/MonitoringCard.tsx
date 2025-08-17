@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useAppConfig } from '../../../hooks/useAppConfig'
+import { useMonitoring } from '../../../hooks/useMonitoring'
 import styles from './MonitoringCard.module.css'
 
 interface BotStatus {
@@ -11,17 +12,10 @@ interface BotStatus {
   launchScript: string
 }
 
-interface MonitoringState {
-  enabled: boolean
-  bots: BotStatus[]
-}
-
 const MonitoringCard: React.FC = () => {
   const appConfigContext = useAppConfig()
-  const [monitoring, setMonitoring] = useState<MonitoringState>({
-    enabled: false,
-    bots: []
-  })
+  const monitoring = useMonitoring()
+  const [bots, setBots] = useState<BotStatus[]>([])
 
   // Update bots list when config changes
   useEffect(() => {
@@ -36,27 +30,22 @@ const MonitoringCard: React.FC = () => {
         launchScript: botConfig.launchScript
       }))
 
-      setMonitoring((prev) => ({
-        ...prev,
-        bots: botStatusList
-      }))
+      setBots(botStatusList)
     }
   }, [appConfigContext.config])
 
-  const handleStartMonitoring = (): void => {
-    setMonitoring((prev) => ({
-      ...prev,
-      enabled: !prev.enabled
-    }))
+  const handleStartMonitoring = async (): Promise<void> => {
+    await monitoring.startMonitoring()
+  }
+
+  const handleStopMonitoring = async (): Promise<void> => {
+    await monitoring.stopMonitoring()
   }
 
   const handleLaunchBot = (botId: string): void => {
-    setMonitoring((prev) => ({
-      ...prev,
-      bots: prev.bots.map((bot) =>
-        bot.id === botId ? { ...bot, status: 'Starting' as const } : bot
-      )
-    }))
+    setBots((prev) =>
+      prev.map((bot) => (bot.id === botId ? { ...bot, status: 'Starting' as const } : bot))
+    )
   }
 
   if (appConfigContext.isLoading) {
@@ -83,18 +72,37 @@ const MonitoringCard: React.FC = () => {
       </div>
 
       <div className={styles.monitoringControl}>
+        {monitoring.error && <div className={styles.errorMessage}>Error: {monitoring.error}</div>}
+
         <button
           className={styles.startButton}
-          onClick={handleStartMonitoring}
-          disabled={monitoring.enabled}
+          onClick={monitoring.status.isMonitoring ? handleStopMonitoring : handleStartMonitoring}
+          disabled={monitoring.isLoading}
         >
-          {monitoring.enabled ? 'Stop Monitoring' : 'Start Monitoring'}
+          {monitoring.isLoading
+            ? 'Processing...'
+            : monitoring.status.isMonitoring
+              ? 'Stop Monitoring'
+              : 'Start Monitoring'}
         </button>
+
+        {monitoring.status.isMonitoring && (
+          <div className={styles.monitoringStatus}>
+            <span className={styles.statusIndicator}>
+              <div className={`${styles.statusDot} ${styles.online}`}></div>
+              Active
+            </span>
+            <span className={styles.statusDetails}>
+              Watching {monitoring.status.watchedFilesCount} files in{' '}
+              {monitoring.status.botFolders.length} bot folders
+            </span>
+          </div>
+        )}
       </div>
 
       <div className={styles.botStatus}>
         <h3>Bot Status</h3>
-        {monitoring.bots.length === 0 ? (
+        {bots.length === 0 ? (
           <div className={styles.noBotsMessage}>
             No bots configured. Add bots in the Configuration section to see them here.
           </div>
@@ -118,7 +126,7 @@ const MonitoringCard: React.FC = () => {
                 <div className={styles.headerCell}>Actions</div>
               )}
             </div>
-            {monitoring.bots.map((bot) => (
+            {bots.map((bot) => (
               <div
                 key={bot.id}
                 className={styles.tableRow}
@@ -155,8 +163,8 @@ const MonitoringCard: React.FC = () => {
                     </div>
                   </div>
                 )}
-                <div className={styles.tableCell}>
-                  {appConfigContext.config?.DREAMBOT_VIP_FEATURES && (
+                {appConfigContext.config?.DREAMBOT_VIP_FEATURES && (
+                  <div className={styles.tableCell}>
                     <button
                       className={styles.launchButton}
                       onClick={() => handleLaunchBot(bot.id)}
@@ -165,13 +173,38 @@ const MonitoringCard: React.FC = () => {
                       <span className={styles.buttonIcon}>🚀</span>
                       Launch
                     </button>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             ))}
           </div>
         )}
       </div>
+
+      {monitoring.logUpdates.length > 0 && (
+        <div className={styles.logUpdates}>
+          <div className={styles.logUpdatesHeader}>
+            <h3>Recent Log Updates</h3>
+            <button className={styles.clearButton} onClick={monitoring.clearLogUpdates}>
+              Clear
+            </button>
+          </div>
+          <div className={styles.logUpdatesList}>
+            {monitoring.logUpdates.slice(0, 10).map((update, index) => (
+              <div key={index} className={styles.logUpdate}>
+                <div className={styles.logUpdateHeader}>
+                  <span className={styles.logBotName}>{update.botName}</span>
+                  <span className={styles.logFileName}>{update.fileName}</span>
+                  <span className={styles.logTimestamp}>
+                    {new Date(update.timestamp).toLocaleTimeString()}
+                  </span>
+                </div>
+                <div className={styles.logContent}>{update.newContent}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </section>
   )
 }

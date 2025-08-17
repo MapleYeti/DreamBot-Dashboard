@@ -1,1 +1,0 @@
-export { appConfigManager } from './appConfigManager'

@@ -7,8 +7,27 @@ export interface ConfigApi {
   offConfigChanged(): void
 }
 
+export interface MonitoringApi {
+  startMonitoring(): Promise<{ success: boolean; message: string }>
+  stopMonitoring(): Promise<{ success: boolean; message: string }>
+  getStatus(): Promise<{ isMonitoring: boolean; botFolders: string[]; watchedFilesCount: number }>
+  onStatusChanged(callback: (data: { isMonitoring: boolean }) => void): void
+  onLogUpdate(
+    callback: (data: {
+      botName: string
+      fileName: string
+      filePath: string
+      newContent: string
+      timestamp: string
+    }) => void
+  ): void
+  offStatusChanged(): void
+  offLogUpdate(): void
+}
+
 export interface Api {
   config: ConfigApi
+  monitoring: MonitoringApi
 }
 
 declare global {

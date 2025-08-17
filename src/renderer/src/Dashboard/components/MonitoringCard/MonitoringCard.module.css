@@ -201,6 +201,134 @@
   font-size: 14px;
 }
 
+.errorMessage {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.monitoringStatus {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 16px;
+  padding: 16px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+}
+
+.monitoringStatus .statusIndicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: #166534;
+}
+
+.monitoringStatus .statusDetails {
+  color: #374151;
+  font-size: 14px;
+}
+
+.logUpdates {
+  margin-top: 32px;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 24px;
+}
+
+.logUpdatesHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.logUpdatesHeader h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.clearButton {
+  background: #6b7280;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.clearButton:hover {
+  background: #4b5563;
+}
+
+.logUpdatesList {
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.logUpdate {
+  padding: 16px;
+  border-bottom: 1px solid #e5e7eb;
+  background: white;
+}
+
+.logUpdate:last-child {
+  border-bottom: none;
+}
+
+.logUpdateHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.logBotName {
+  background: #8b5cf6;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.logFileName {
+  color: #6b7280;
+  font-family: monospace;
+  font-size: 12px;
+}
+
+.logTimestamp {
+  color: #9ca3af;
+  font-size: 12px;
+  margin-left: auto;
+}
+
+.logContent {
+  background: #f9fafb;
+  padding: 12px;
+  border-radius: 6px;
+  font-family: monospace;
+  font-size: 13px;
+  color: #374151;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 100px;
+  overflow-y: auto;
+}
+
 @media (max-width: 768px) {
   .dashboardSection {
     padding: 20px;

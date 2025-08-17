@@ -33,7 +33,6 @@
 }
 
 .statusIcon {
-  color: #10b981;
   font-weight: bold;
   font-size: 12px;
 }
@@ -41,6 +40,14 @@
 .statusText {
   color: #6b7280;
   font-size: 12px;
+}
+
+.statusConfigured {
+  color: #059669;
+}
+
+.statusNotConfigured {
+  color: #dc2626;
 }
 
 .botActions {

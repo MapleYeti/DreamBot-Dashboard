@@ -4,8 +4,8 @@ import styles from './BotConfigItem.module.css'
 interface Bot {
   id: string
   name: string
-  webhookConfigured: boolean
-  launchCliConfigured: boolean
+  webhookUrl: string
+  launchScript: string
 }
 
 interface BotConfigItemProps {
@@ -15,25 +15,32 @@ interface BotConfigItemProps {
 }
 
 const BotConfigItem: React.FC<BotConfigItemProps> = ({ bot, onEdit, onRemove }) => {
+  const hasWebhook = !!bot.webhookUrl
+  const hasLaunchScript = !!bot.launchScript
+
   return (
     <div className={styles.botConfigItem}>
       <div className={styles.botInfo}>
         <div className={styles.botName}>{bot.name}</div>
         <div className={styles.botStatus}>
           <div className={styles.statusItem}>
-            <span className={styles.statusIcon}>
-              {bot.webhookConfigured ? '✓' : '✗'}
+            <span
+              className={`${styles.statusIcon} ${hasWebhook ? styles.statusConfigured : styles.statusNotConfigured}`}
+            >
+              {hasWebhook ? '✓' : '✗'}
             </span>
             <span className={styles.statusText}>
-              {bot.webhookConfigured ? 'Webhook configured' : 'Webhook not configured'}
+              {hasWebhook ? 'Webhook configured' : 'Webhook not configured'}
             </span>
           </div>
           <div className={styles.statusItem}>
-            <span className={styles.statusIcon}>
-              {bot.launchCliConfigured ? '✓' : '✗'}
+            <span
+              className={`${styles.statusIcon} ${hasLaunchScript ? styles.statusConfigured : styles.statusNotConfigured}`}
+            >
+              {hasLaunchScript ? '✓' : '✗'}
             </span>
             <span className={styles.statusText}>
-              {bot.launchCliConfigured ? 'Launch CLI configured' : 'Launch CLI not configured'}
+              {hasLaunchScript ? 'Launch CLI configured' : 'Launch CLI not configured'}
             </span>
           </div>
         </div>

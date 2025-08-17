@@ -8,6 +8,7 @@ interface BotConfigModalProps {
   mode: 'add' | 'edit'
   botName?: string
   botConfig?: BotConfig
+  vipFeaturesEnabled: boolean
   onSubmit: (botName: string, botConfig: BotConfig) => void
 }
 
@@ -17,6 +18,7 @@ const BotConfigModal: React.FC<BotConfigModalProps> = ({
   mode,
   botName: initialBotName = '',
   botConfig: initialBotConfig = { webhookUrl: '', launchScript: '' },
+  vipFeaturesEnabled,
   onSubmit
 }) => {
   const [botName, setBotName] = useState(initialBotName)
@@ -39,7 +41,7 @@ const BotConfigModal: React.FC<BotConfigModalProps> = ({
 
     const newBotConfig: BotConfig = {
       webhookUrl: webhookUrl.trim() || '',
-      launchScript: launchScript.trim() || ''
+      launchScript: vipFeaturesEnabled ? launchScript.trim() || '' : ''
     }
 
     onSubmit(botName.trim(), newBotConfig)
@@ -58,7 +60,7 @@ const BotConfigModal: React.FC<BotConfigModalProps> = ({
 
   const isEditMode = mode === 'edit'
   const title = isEditMode ? `Edit Bot: ${initialBotName}` : 'Add New Bot'
-  const submitButtonText = isEditMode ? 'Done' : 'Add Bot'
+  const submitButtonText = isEditMode ? 'Save Changes' : 'Add Bot'
 
   return (
     <div className={styles.modalOverlay} onClick={handleClose}>
@@ -80,7 +82,7 @@ const BotConfigModal: React.FC<BotConfigModalProps> = ({
               onChange={(e) => setBotName(e.target.value)}
               placeholder="e.g., MiningBot, FishingBot"
               className={styles.input}
-              disabled={isEditMode} // Disable name editing in edit mode
+              disabled={isEditMode}
             />
           </div>
 
@@ -96,17 +98,19 @@ const BotConfigModal: React.FC<BotConfigModalProps> = ({
             />
           </div>
 
-          <div className={styles.formGroup}>
-            <label htmlFor="launchScript">Launch Script (Optional):</label>
-            <input
-              id="launchScript"
-              type="text"
-              value={launchScript}
-              onChange={(e) => setLaunchScript(e.target.value)}
-              placeholder="script_name.txt"
-              className={styles.input}
-            />
-          </div>
+          {vipFeaturesEnabled && (
+            <div className={styles.formGroup}>
+              <label htmlFor="launchScript">Launch Script (Optional):</label>
+              <input
+                id="launchScript"
+                type="text"
+                value={launchScript}
+                onChange={(e) => setLaunchScript(e.target.value)}
+                placeholder="script_name.txt"
+                className={styles.input}
+              />
+            </div>
+          )}
 
           {errors.length > 0 && (
             <div className={styles.errors}>

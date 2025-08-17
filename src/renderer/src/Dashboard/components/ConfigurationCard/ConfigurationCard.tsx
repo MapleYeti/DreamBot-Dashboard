@@ -22,7 +22,7 @@ const ConfigurationCard: React.FC = () => {
   const [localConfig, setLocalConfig] = useState<AppConfig>(
     appConfigContext.config || {
       BASE_LOG_DIRECTORY: '',
-      DREAMBOT_VIP_FEATURES: true,
+      DREAMBOT_VIP_FEATURES: false,
       BASE_WEBHOOK_URL: '',
       BOT_CONFIG: {}
     }
@@ -192,6 +192,7 @@ const ConfigurationCard: React.FC = () => {
                 webhookUrl: bot.webhookUrl,
                 launchScript: bot.launchScript
               }}
+              vipFeaturesEnabled={localConfig.DREAMBOT_VIP_FEATURES}
               onEdit={handleBotSubmit}
               onRemove={handleRemoveBot}
             />
@@ -229,6 +230,7 @@ const ConfigurationCard: React.FC = () => {
           isOpen={isBotModalOpen}
           onClose={handleCloseBotModal}
           mode="add"
+          vipFeaturesEnabled={localConfig.DREAMBOT_VIP_FEATURES}
           onSubmit={handleBotSubmit}
         />
       ) : null}

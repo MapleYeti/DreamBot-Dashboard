@@ -1,11 +1,20 @@
 import React, { useState } from 'react'
-import { ConfigInput, CheckboxField, BotConfigItem, ActionButtons, FooterNotes } from './components'
+import {
+  ConfigInput,
+  CheckboxField,
+  BotConfigItem,
+  ActionButtons,
+  FooterNotes,
+  StatusBadge,
+  ConfigStatus
+} from './components'
 import { Card } from '../Card'
 import { AppConfig } from '@shared/types/configTypes'
 import styles from './ConfigurationCard.module.css'
 
 const ConfigurationCard: React.FC = () => {
   const [isCollapsed, setIsCollapsed] = useState(false)
+  const [configStatus, setConfigStatus] = useState<ConfigStatus>('saved')
   const [localConfig, setLocalConfig] = useState<AppConfig>({
     BASE_LOG_DIRECTORY: '',
     DREAMBOT_VIP_FEATURES: true,
@@ -23,14 +32,17 @@ const ConfigurationCard: React.FC = () => {
 
   const handleLogsDirectoryChange = (value: string) => {
     setLocalConfig((prev) => ({ ...prev, BASE_LOG_DIRECTORY: value }))
+    setConfigStatus('unsaved')
   }
 
   const handleWebhookUrlChange = (value: string) => {
     setLocalConfig((prev) => ({ ...prev, webhookUrl: value }))
+    setConfigStatus('unsaved')
   }
 
   const handleVipFeaturesChange = (checked: boolean) => {
     setLocalConfig((prev) => ({ ...prev, DREAMBOT_VIP_FEATURES: checked }))
+    setConfigStatus('unsaved')
   }
 
   const handleAddBot = () => {
@@ -51,6 +63,7 @@ const ConfigurationCard: React.FC = () => {
   const handleSave = () => {
     // TODO: Implement save functionality
     console.log('Saving configuration:', localConfig)
+    setConfigStatus('saved')
   }
 
   const handleUndo = () => {
@@ -82,10 +95,7 @@ const ConfigurationCard: React.FC = () => {
       icon="⚙️"
       headerActions={
         <>
-          <button className={styles.savedButton}>
-            <span className={styles.buttonIcon}>✓</span>
-            Saved
-          </button>
+          <StatusBadge status={configStatus} />
           <button className={styles.dropdownButton} onClick={handleToggleCollapse}>
             {isCollapsed ? '▼' : '▲'}
           </button>

@@ -1,18 +1,4 @@
 /* Configuration-specific styles */
-.savedButton {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
-}
 
 .dropdownButton {
   background: #6b7280;
@@ -56,8 +42,4 @@
 
 .addBotButton:hover {
   background: #7c3aed;
-}
-
-.buttonIcon {
-  font-size: 14px;
 }

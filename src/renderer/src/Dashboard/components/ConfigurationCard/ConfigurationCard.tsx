@@ -110,8 +110,15 @@ const ConfigurationCard: React.FC = () => {
   }
 
   const handleUndo = () => {
-    // TODO: Implement undo functionality
-    console.log('Undoing changes')
+    if (appConfigContext.config) {
+      setLocalConfig(appConfigContext.config)
+      setValidationErrors(appConfigContext.errors)
+      if (appConfigContext.errors.length > 0) {
+        setConfigStatus('error')
+      } else {
+        setConfigStatus('saved')
+      }
+    }
   }
 
   const handleImport = () => {
@@ -131,6 +138,18 @@ const ConfigurationCard: React.FC = () => {
 
   const handleCloseBotModal = () => {
     setIsBotModalOpen(false)
+  }
+
+  // Check if there are unsaved changes
+  const hasUnsavedChanges = () => {
+    if (!appConfigContext.config) return false
+
+    return (
+      localConfig.BASE_LOG_DIRECTORY !== appConfigContext.config.BASE_LOG_DIRECTORY ||
+      localConfig.DREAMBOT_VIP_FEATURES !== appConfigContext.config.DREAMBOT_VIP_FEATURES ||
+      localConfig.BASE_WEBHOOK_URL !== appConfigContext.config.BASE_WEBHOOK_URL ||
+      JSON.stringify(localConfig.BOT_CONFIG) !== JSON.stringify(appConfigContext.config.BOT_CONFIG)
+    )
   }
 
   return (
@@ -198,6 +217,7 @@ const ConfigurationCard: React.FC = () => {
           onUndo={handleUndo}
           onImport={handleImport}
           onExport={handleExport}
+          formHasChanges={hasUnsavedChanges()}
         />
 
         {validationErrors.length > 0 && (

@@ -17,6 +17,17 @@
   min-width: 140px;
 }
 
+.actionButtons button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  transform: none !important;
+}
+
+.actionButtons button:disabled:hover {
+  transform: none !important;
+  box-shadow: inherit !important;
+}
+
 .saveButton {
   background: #8b5cf6;
   color: white;
@@ -27,12 +38,32 @@
 }
 
 .undoButton {
-  background: #9ca3af;
+  background: #f59e0b;
   color: white;
+  border: 2px solid #d97706;
+  box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
+  position: relative;
+  overflow: hidden;
 }
 
 .undoButton:hover {
-  background: #6b7280;
+  background: #d97706;
+  border-color: #b45309;
+  box-shadow: 0 4px 8px rgba(245, 158, 11, 0.4);
+  transform: translateY(-1px);
+}
+
+.undoButton:active {
+  background: #b45309;
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
+}
+
+.undoButton::before {
+  content: '↶';
+  margin-right: 6px;
+  font-weight: bold;
+  font-size: 16px;
 }
 
 .importButton {

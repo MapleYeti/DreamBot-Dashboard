@@ -4,18 +4,27 @@ import { readdir, readFile, stat } from 'fs/promises'
 import { join, extname } from 'path'
 import type { AppConfig } from '@shared/types/configTypes'
 import { ConfigManager } from '../configManager'
+import { EventProcessor, WebhookService } from './utils'
 
 interface MonitoringState {
   isMonitoring: boolean
   watchedFiles: Map<string, ReturnType<typeof watch>>
   botFolders: string[]
+  lastProcessedContent: Map<string, string> // Track last processed content hash per file
 }
 
 export class MonitoringManager {
   private state: MonitoringState = {
     isMonitoring: false,
     watchedFiles: new Map(),
-    botFolders: []
+    botFolders: [],
+    lastProcessedContent: new Map()
+  }
+  private eventProcessor: EventProcessor
+  private webhookService: WebhookService | null = null
+
+  constructor() {
+    this.eventProcessor = new EventProcessor()
   }
 
   async startMonitoring(): Promise<{ success: boolean; message: string }> {
@@ -28,6 +37,9 @@ export class MonitoringManager {
     try {
       const configManager = ConfigManager.getInstance()
       currentConfig = await configManager.getConfig()
+
+      // Initialize webhook service with current config
+      this.webhookService = new WebhookService(currentConfig)
     } catch (error) {
       console.error('Failed to get current config for monitoring:', error)
       return { success: false, message: 'Failed to get current configuration' }
@@ -70,6 +82,7 @@ export class MonitoringManager {
 
       this.state.watchedFiles.clear()
       this.state.botFolders = []
+      this.state.lastProcessedContent.clear()
       this.state.isMonitoring = false
 
       // Notify all renderer processes that monitoring has stopped
@@ -212,6 +225,9 @@ export class MonitoringManager {
         if (newContent.trim()) {
           console.log(`[${botName}/${fileName}] New log content:`, newContent.trim())
 
+          // Process the new content for events
+          await this.processNewLogContent(newContent, botName, fileName)
+
           // Notify renderer processes of new log content
           webContents.getAllWebContents().forEach((webContent) => {
             webContent.send('monitoring:log-update', {
@@ -232,6 +248,60 @@ export class MonitoringManager {
       console.error(`Error reading log file ${filePath}:`, error)
       return null
     }
+  }
+
+  private async processNewLogContent(newContent: string, botName: string, fileName: string) {
+    if (!this.webhookService) {
+      console.log('Webhook service not initialized, skipping event processing')
+      return
+    }
+
+    // Create a content hash to prevent duplicate processing
+    const contentHash = this.createContentHash(newContent)
+    const fileKey = `${botName}/${fileName}`
+
+    // Check if we've already processed this exact content
+    if (this.state.lastProcessedContent.get(fileKey) === contentHash) {
+      console.log(`Skipping duplicate content for ${fileKey}`)
+      return
+    }
+
+    // Split content into lines and process each line
+    const lines = newContent.split('\n').filter((line) => line.trim())
+    const timestamp = new Date().toISOString()
+
+    // Process all lines for events
+    const events = this.eventProcessor.processLogLines(lines, botName, fileName, timestamp)
+
+    // Send webhooks for detected events
+    for (const event of events) {
+      console.log(`Detected ${event.type} event from ${botName}:`, event)
+
+      // Send webhook asynchronously (don't wait for it to complete)
+      this.webhookService.sendWebhook(event, botName).catch((error) => {
+        console.error(`Failed to send webhook for ${event.type} event:`, error)
+      })
+    }
+
+    if (events.length > 0) {
+      console.log(`Processed ${events.length} events from ${botName}/${fileName}`)
+      // Store the content hash to prevent duplicate processing
+      this.state.lastProcessedContent.set(fileKey, contentHash)
+    }
+  }
+
+  private createContentHash(content: string): string {
+    // Simple hash function to identify duplicate content
+    let hash = 0
+    if (content.length === 0) return hash.toString()
+
+    for (let i = 0; i < content.length; i++) {
+      const char = content.charCodeAt(i)
+      hash = (hash << 5) - hash + char
+      hash = hash & hash // Convert to 32-bit integer
+    }
+
+    return hash.toString()
   }
 
   private isLogFile(fileName: string): boolean {

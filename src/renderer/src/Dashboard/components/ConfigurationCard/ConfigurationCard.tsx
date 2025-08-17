@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
-import { Card } from '../Card'
-import { AppConfig } from '@shared/types/configTypes'
+import { Card } from '../../../components/Card'
+import type { AppConfig } from '@shared/types/configTypes'
 import styles from './ConfigurationCard.module.css'
 import StatusBadge, { ConfigStatus } from './components/StatusBadge/StatusBadge'
 import ConfigInput from './components/ConfigInput/ConfigInput'
@@ -9,8 +9,10 @@ import CheckboxField from './components/CheckboxField/CheckboxField'
 import BotConfigItem from './components/BotConfigItem/BotConfigItem'
 import ActionButtons from './components/ActionButtons/ActionButtons'
 import FooterNotes from './components/FooterNotes/FooterNotes'
+import { useConfigApi } from '../../../hooks/useConfigApi'
 
 const ConfigurationCard: React.FC = () => {
+  const { readConfig, writeConfig } = useConfigApi()
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [configStatus, setConfigStatus] = useState<ConfigStatus>('saved')
   const [localConfig, setLocalConfig] = useState<AppConfig>({
@@ -23,6 +25,16 @@ const ConfigurationCard: React.FC = () => {
       }
     }
   })
+
+  useEffect(() => {
+    const loadConfig = async () => {
+      const configData = await readConfig()
+      if (configData) {
+        setLocalConfig(configData)
+      }
+    }
+    loadConfig()
+  }, [readConfig])
 
   const handleToggleCollapse = () => {
     setIsCollapsed(!isCollapsed)
@@ -58,10 +70,14 @@ const ConfigurationCard: React.FC = () => {
     console.log('Remove bot:', botId)
   }
 
-  const handleSave = () => {
-    // TODO: Implement save functionality
-    console.log('Saving configuration:', localConfig)
-    setConfigStatus('saved')
+  const handleSave = async () => {
+    try {
+      await writeConfig(localConfig)
+      setConfigStatus('saved')
+    } catch (error) {
+      console.error('Failed to save configuration:', error)
+      setConfigStatus('error')
+    }
   }
 
   const handleUndo = () => {

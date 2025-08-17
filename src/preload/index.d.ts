@@ -1,16 +1,16 @@
-import { ElectronAPI } from '@electron-toolkit/preload'
+import type { AppConfig } from '@shared/types/configTypes'
 
-interface ConfigAPI {
-  config: {
-    read: () => Promise<unknown>
-    write: (data: unknown) => Promise<void>
-    update: (updates: unknown) => Promise<unknown>
-  }
+export interface ConfigApi {
+  read: () => Promise<AppConfig>
+  write: (data: AppConfig) => Promise<void>
+}
+
+export interface Api {
+  config: ConfigApi
 }
 
 declare global {
   interface Window {
-    electron: ElectronAPI
-    api: ConfigAPI
+    api: Api
   }
 }

@@ -82,6 +82,23 @@
   font-weight: 500;
 }
 
+.statusIndicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff6b6b;
+}
+
 @media (max-width: 768px) {
   .headerContent {
     padding: 0 20px;

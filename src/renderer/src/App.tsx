@@ -1,20 +1,11 @@
 import React from 'react'
-import './assets/dashboard-main.css'
-import Header from './components/Header'
-import MonitoringControl from './components/MonitoringCard'
-import Configuration from './components/ConfigurationCard'
-import LiveLogsCard from './components/LiveLogsCard'
+import Dashboard from './Dashboard/Dashboard'
+import './base.css'
 
-function App(): React.JSX.Element {
+function App(): React.ReactElement {
   return (
-    <div className="dashboard">
-      <Header />
-      {'test'}
-      <main className="dashboard-content">
-        <MonitoringControl />
-        <Configuration />
-        <LiveLogsCard />
-      </main>
+    <div className="App">
+      <Dashboard />
     </div>
   )
 }

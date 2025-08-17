@@ -1,0 +1,1 @@
+export { createMainWindow } from './mainWindow'

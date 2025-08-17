@@ -72,7 +72,7 @@ useEffect(() => { getUserData(id).then(setUserData); }, [id]);
 
 **USE Barrel Files (`index.ts`) for:**
 
-- ✅ **Specific component folders**: `/Card/`, `/Header/`, `/ConfigurationCard/`, `/MonitoringCard/`, `/LiveLogsCard/`
+- ✅ **Specific component folders**: `/Card/`, `/Header/`, `/ConfigurationCard/`, `/MonitoringCard/`
 - ✅ **Feature/domain folders**: `/main/ipc/`, `/main/windows/`, `/main/appConfigManager/`
 
 **DO NOT USE Barrel Files for:**

@@ -1,12 +1,13 @@
 .dashboard {
   min-height: 100vh;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 0;
 }
 
 .dashboardContent {
   max-width: 800px;
   margin: 0 auto;
-  margin-top: 30px;
+  padding: 25px;
   display: grid;
   grid-template-columns: 1fr;
   gap: 25px;
@@ -46,13 +47,9 @@
 }
 
 @media (max-width: 768px) {
-  .dashboard {
-    padding: 15px;
-  }
-
   .dashboardContent {
     max-width: 100%;
-    margin-top: 25px;
+    padding: 20px;
     gap: 20px;
   }
 
@@ -62,13 +59,9 @@
 }
 
 @media (max-width: 480px) {
-  .dashboard {
-    padding: 10px;
-  }
-
   .dashboardContent {
     max-width: 100%;
-    margin-top: 20px;
+    padding: 16px;
     gap: 16px;
   }
 

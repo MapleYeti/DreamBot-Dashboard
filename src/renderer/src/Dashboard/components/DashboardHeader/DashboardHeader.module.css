@@ -17,6 +17,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: nowrap;
+  min-height: 60px;
 }
 
 .logo {
@@ -27,6 +29,7 @@
   font-weight: 700;
   text-decoration: none;
   color: white;
+  flex-shrink: 0;
 }
 
 .logoIcon {
@@ -70,6 +73,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-shrink: 0;
 }
 
 .userAvatar {
@@ -107,16 +111,35 @@
 @media (max-width: 768px) {
   .headerContent {
     padding: 0 20px;
-    flex-direction: column;
     gap: 16px;
   }
 
-  .nav {
+  .statusIndicator {
+    padding: 6px 10px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .headerContent {
+    padding: 0 15px;
     gap: 12px;
   }
 
-  .navLink {
-    padding: 6px 12px;
-    font-size: 14px;
+  .statusIndicator {
+    padding: 5px 8px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  .headerContent {
+    padding: 0 10px;
+    gap: 8px;
+  }
+
+  .statusIndicator {
+    padding: 4px 6px;
+    font-size: 11px;
   }
 }

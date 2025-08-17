@@ -96,8 +96,16 @@ const ConfigurationCard: React.FC = () => {
   }
 
   const handleRemoveBot = (botId: string) => {
-    // TODO: Implement bot removal
-    console.log('Remove bot:', botId)
+    setLocalConfig((prev) => {
+      const newBotConfig = { ...prev.BOT_CONFIG }
+      delete newBotConfig[botId]
+
+      return {
+        ...prev,
+        BOT_CONFIG: newBotConfig
+      }
+    })
+    setConfigStatus('unsaved')
   }
 
   const handleSave = async () => {

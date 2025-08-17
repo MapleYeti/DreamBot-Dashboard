@@ -17,7 +17,6 @@ const ConfigurationCard: React.FC = () => {
   const appConfigContext = useAppConfig()
   const { saveConfig } = useConfigApi()
   const [isCollapsed, setIsCollapsed] = useState(false)
-  const [configStatus, setConfigStatus] = useState<ConfigStatus>('saved')
   const [validationErrors, setValidationErrors] = useState<string[]>([])
   const [isBotModalOpen, setIsBotModalOpen] = useState(false)
   const [localConfig, setLocalConfig] = useState<AppConfig>(
@@ -34,13 +33,27 @@ const ConfigurationCard: React.FC = () => {
     if (appConfigContext.config) {
       setLocalConfig(appConfigContext.config)
       setValidationErrors(appConfigContext.errors)
-      if (appConfigContext.errors.length > 0) {
-        setConfigStatus('error')
-      } else {
-        setConfigStatus('saved')
-      }
     }
   }, [appConfigContext.config, appConfigContext.errors])
+
+  // Check if there are unsaved changes
+  const hasUnsavedChanges = () => {
+    if (!appConfigContext.config) return false
+
+    return (
+      localConfig.BASE_LOG_DIRECTORY !== appConfigContext.config.BASE_LOG_DIRECTORY ||
+      localConfig.DREAMBOT_VIP_FEATURES !== appConfigContext.config.DREAMBOT_VIP_FEATURES ||
+      localConfig.BASE_WEBHOOK_URL !== appConfigContext.config.BASE_WEBHOOK_URL ||
+      JSON.stringify(localConfig.BOT_CONFIG) !== JSON.stringify(appConfigContext.config.BOT_CONFIG)
+    )
+  }
+
+  // Determine config status based on validation errors and unsaved changes
+  const getConfigStatus = (): ConfigStatus => {
+    if (validationErrors.length > 0) return 'error'
+    if (hasUnsavedChanges()) return 'unsaved'
+    return 'saved'
+  }
 
   const handleToggleCollapse = () => {
     setIsCollapsed(!isCollapsed)
@@ -48,17 +61,14 @@ const ConfigurationCard: React.FC = () => {
 
   const handleLogsDirectoryChange = (value: string) => {
     setLocalConfig((prev) => ({ ...prev, BASE_LOG_DIRECTORY: value }))
-    setConfigStatus('unsaved')
   }
 
   const handleBaseWebhookUrlChange = (value: string) => {
     setLocalConfig((prev) => ({ ...prev, BASE_WEBHOOK_URL: value }))
-    setConfigStatus('unsaved')
   }
 
   const handleVipFeaturesChange = (checked: boolean) => {
     setLocalConfig((prev) => ({ ...prev, DREAMBOT_VIP_FEATURES: checked }))
-    setConfigStatus('unsaved')
   }
 
   const handleAddBot = () => {
@@ -76,7 +86,6 @@ const ConfigurationCard: React.FC = () => {
         [botName]: botConfig
       }
     }))
-    setConfigStatus('unsaved')
   }
 
   const handleRemoveBot = (botId: string) => {
@@ -89,22 +98,18 @@ const ConfigurationCard: React.FC = () => {
         BOT_CONFIG: newBotConfig
       }
     })
-    setConfigStatus('unsaved')
   }
 
   const handleSave = async () => {
     try {
       const result = await saveConfig(localConfig)
       if (result.success) {
-        setConfigStatus('saved')
         setValidationErrors([])
       } else {
-        setConfigStatus('error')
         setValidationErrors(result.errors)
       }
     } catch (error) {
       console.error('Failed to save configuration:', error)
-      setConfigStatus('error')
       setValidationErrors(['Failed to save configuration'])
     }
   }
@@ -113,11 +118,6 @@ const ConfigurationCard: React.FC = () => {
     if (appConfigContext.config) {
       setLocalConfig(appConfigContext.config)
       setValidationErrors(appConfigContext.errors)
-      if (appConfigContext.errors.length > 0) {
-        setConfigStatus('error')
-      } else {
-        setConfigStatus('saved')
-      }
     }
   }
 
@@ -140,18 +140,6 @@ const ConfigurationCard: React.FC = () => {
     setIsBotModalOpen(false)
   }
 
-  // Check if there are unsaved changes
-  const hasUnsavedChanges = () => {
-    if (!appConfigContext.config) return false
-
-    return (
-      localConfig.BASE_LOG_DIRECTORY !== appConfigContext.config.BASE_LOG_DIRECTORY ||
-      localConfig.DREAMBOT_VIP_FEATURES !== appConfigContext.config.DREAMBOT_VIP_FEATURES ||
-      localConfig.BASE_WEBHOOK_URL !== appConfigContext.config.BASE_WEBHOOK_URL ||
-      JSON.stringify(localConfig.BOT_CONFIG) !== JSON.stringify(appConfigContext.config.BOT_CONFIG)
-    )
-  }
-
   return (
     <>
       <Card
@@ -162,7 +150,7 @@ const ConfigurationCard: React.FC = () => {
         icon="⚙️"
         headerActions={
           <>
-            <StatusBadge status={configStatus} />
+            <StatusBadge status={getConfigStatus()} />
             <button className={styles.dropdownButton} onClick={handleToggleCollapse}>
               {isCollapsed ? '▼' : '▲'}
             </button>

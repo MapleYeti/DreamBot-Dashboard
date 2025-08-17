@@ -4,7 +4,8 @@ import { readdir, readFile, stat } from 'fs/promises'
 import { join, extname } from 'path'
 import type { AppConfig } from '@shared/types/configTypes'
 import { ConfigManager } from '../configManager'
-import { EventProcessor, WebhookService } from './utils'
+import { EventProcessor } from './utils/eventProcessor'
+import { WebhookService } from './utils/webhookService'
 
 interface MonitoringState {
   isMonitoring: boolean

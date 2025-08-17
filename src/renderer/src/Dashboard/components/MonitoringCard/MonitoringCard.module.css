@@ -65,6 +65,23 @@
   color: #374151;
 }
 
+.loadingMessage {
+  text-align: center;
+  padding: 40px;
+  color: #6b7280;
+  font-size: 16px;
+}
+
+.noBotsMessage {
+  text-align: center;
+  padding: 40px;
+  color: #6b7280;
+  font-size: 16px;
+  background: #f9fafb;
+  border-radius: 8px;
+  border: 1px dashed #d1d5db;
+}
+
 .botTable {
   border: 1px solid #e5e7eb;
   border-radius: 8px;
@@ -73,7 +90,7 @@
 
 .tableHeader {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   background: #f9fafb;
   border-bottom: 1px solid #e5e7eb;
 }
@@ -87,7 +104,7 @@
 
 .tableRow {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   border-bottom: 1px solid #e5e7eb;
   transition: background-color 0.2s ease;
 }
@@ -104,6 +121,29 @@
   padding: 16px;
   display: flex;
   align-items: center;
+  color: #1f2937;
+  font-weight: 500;
+}
+
+.tableCell:first-child {
+  font-weight: 600;
+  color: #111827;
+}
+
+.configStatus {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.configured {
+  color: #10b981;
+}
+
+.notConfigured {
+  color: #ef4444;
 }
 
 .statusIndicator {
@@ -168,11 +208,13 @@
 
   .tableHeader,
   .tableRow {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
   }
 
-  .headerCell:last-child,
-  .tableCell:last-child {
+  .headerCell:nth-child(3),
+  .headerCell:nth-child(4),
+  .tableCell:nth-child(3),
+  .tableCell:nth-child(4) {
     display: none;
   }
 }

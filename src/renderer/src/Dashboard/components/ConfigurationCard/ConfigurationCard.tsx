@@ -12,9 +12,11 @@ import FooterNotes from './components/FooterNotes/FooterNotes'
 import BotConfigModal from './components/BotConfigModal'
 import { useAppConfig } from '../../../hooks/useAppConfig'
 import { useConfigApi } from '../../../hooks/useConfigApi'
+import { useUnsavedChanges } from '../../../hooks/useUnsavedChanges'
 
 const ConfigurationCard: React.FC = () => {
   const appConfigContext = useAppConfig()
+  const { setHasUnsavedChanges } = useUnsavedChanges()
   const { saveConfig } = useConfigApi()
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [validationErrors, setValidationErrors] = useState<string[]>([])
@@ -35,6 +37,13 @@ const ConfigurationCard: React.FC = () => {
       setValidationErrors(appConfigContext.errors)
     }
   }, [appConfigContext.config, appConfigContext.errors])
+
+  // Update unsaved changes state when local config changes
+  // Probably refactor this later
+  useEffect(() => {
+    const hasChanges = hasUnsavedChanges()
+    setHasUnsavedChanges(hasChanges)
+  }, [localConfig, appConfigContext.config, setHasUnsavedChanges])
 
   // Check if there are unsaved changes
   const hasUnsavedChanges = () => {

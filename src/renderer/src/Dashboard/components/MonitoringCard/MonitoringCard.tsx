@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useAppConfig } from '../../../hooks/useAppConfig'
 import { useMonitoring } from '../../../hooks/useMonitoring'
+import { useUnsavedChanges } from '../../../hooks/useUnsavedChanges'
 import styles from './MonitoringCard.module.css'
 
 interface BotStatus {
@@ -15,6 +16,7 @@ interface BotStatus {
 const MonitoringCard: React.FC = () => {
   const appConfigContext = useAppConfig()
   const monitoring = useMonitoring()
+  const { hasUnsavedChanges } = useUnsavedChanges()
   const [bots, setBots] = useState<BotStatus[]>([])
 
   // Update bots list when config changes
@@ -78,7 +80,9 @@ const MonitoringCard: React.FC = () => {
           <button
             className={monitoring.status.isMonitoring ? styles.stopButton : styles.startButton}
             onClick={monitoring.status.isMonitoring ? handleStopMonitoring : handleStartMonitoring}
-            disabled={monitoring.isLoading}
+            disabled={
+              monitoring.isLoading || (!monitoring.status.isMonitoring && hasUnsavedChanges)
+            }
           >
             {monitoring.isLoading
               ? 'Processing...'
@@ -88,11 +92,17 @@ const MonitoringCard: React.FC = () => {
           </button>
 
           <div
-            className={`${styles.monitoringStatus} ${monitoring.status.isMonitoring ? styles.active : ''}`}
+            className={`${styles.monitoringStatus} ${
+              monitoring.status.isMonitoring
+                ? styles.active
+                : hasUnsavedChanges
+                  ? styles.pending
+                  : ''
+            }`}
           >
             {monitoring.status.isMonitoring ? (
               <>
-                <span className={styles.statusIndicator}>
+                <span className={`${styles.statusIndicator} ${styles.online}`}>
                   <div className={`${styles.statusDot} ${styles.online}`}></div>
                   Active
                 </span>
@@ -103,11 +113,19 @@ const MonitoringCard: React.FC = () => {
               </>
             ) : (
               <>
-                <span className={styles.statusIndicator}>
-                  <div className={`${styles.statusDot} ${styles.offline}`}></div>
-                  Inactive
+                <span
+                  className={`${styles.statusIndicator} ${hasUnsavedChanges ? styles.pending : styles.offline}`}
+                >
+                  <div
+                    className={`${styles.statusDot} ${hasUnsavedChanges ? styles.pending : styles.offline}`}
+                  ></div>
+                  {hasUnsavedChanges ? 'Pending' : 'Inactive'}
                 </span>
-                <span className={styles.statusDetails}>No monitoring active</span>
+                <span className={styles.statusDetails}>
+                  {hasUnsavedChanges
+                    ? '⚠️ Save config to start monitoring'
+                    : 'No monitoring active'}
+                </span>
               </>
             )}
           </div>

@@ -196,6 +196,10 @@
   background-color: #6b7280;
 }
 
+.statusIndicator.pending .statusDot {
+  background-color: #f59e0b;
+}
+
 .statusIndicator.starting .statusDot {
   background-color: #f59e0b;
 }
@@ -277,6 +281,20 @@
 
 .monitoringStatus.active .statusDetails {
   color: #374151;
+}
+
+/* Pending configuration state */
+.monitoringStatus.pending {
+  background: #fefce8;
+  border-color: #fde047;
+}
+
+.monitoringStatus.pending .statusIndicator {
+  color: #a16207;
+}
+
+.monitoringStatus.pending .statusDetails {
+  color: #92400e;
 }
 
 .logUpdates {

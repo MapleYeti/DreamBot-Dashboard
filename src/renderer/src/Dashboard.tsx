@@ -1,9 +1,9 @@
 import React from 'react'
-import './assets/dashboard-main.css'
-import Header from './components/Header'
-import MonitoringControl from './components/MonitoringCard'
-import Configuration from './components/ConfigurationCard'
-import LiveLogsCard from './components/LiveLogsCard'
+import './Dashboard.css'
+import Header from './components/Header/Header'
+import MonitoringControl from './components/MonitoringCard/MonitoringCard'
+import Configuration from './components/ConfigurationCard/ConfigurationCard'
+import LiveLogsCard from './components/LiveLogsCard/LiveLogsCard'
 
 function App(): React.JSX.Element {
   return (

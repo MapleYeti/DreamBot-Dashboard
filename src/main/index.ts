@@ -1,7 +1,10 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
-import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
+import { join } from 'path'
 import icon from '../../resources/icon.png?asset'
+import { appConfigManager } from './appConfigManager/appConfigManager'
+
+const configManager = new appConfigManager()
 
 function createWindow(): void {
   // Create the browser window.
@@ -49,8 +52,24 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  // IPC test
-  ipcMain.on('ping', () => console.log('pong'))
+  // Config IPC handlers
+  ipcMain.handle('config:read', async () => {
+    try {
+      return await configManager.getConfig()
+    } catch (error) {
+      console.error('Failed to read config:', error)
+      return {}
+    }
+  })
+
+  ipcMain.handle('config:write', async (_, data) => {
+    try {
+      await configManager.saveConfig(data)
+    } catch (error) {
+      console.error('Failed to write config:', error)
+      throw error
+    }
+  })
 
   createWindow()
 

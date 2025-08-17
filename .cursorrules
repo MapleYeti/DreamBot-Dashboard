@@ -1,0 +1,145 @@
+# Electron Project Structure & Rules (Condensed)
+
+## Directory Structure
+
+- **/main/**: Main process code; entry at main.ts.
+  - IPC handlers in /main/ipc/, organized by feature.
+  - Window management in /main/windows/.
+  - Utilities/constants in /main/utils/.
+- **/renderer/**: Renderer process (React + TypeScript + Vite).
+  - UI components, pages, state.
+  - **Barrel files are allowed in specific component folders** (e.g., `/Card/`, `/Header/`, `/ConfigurationCard/`).
+  - **Barrel files are NOT allowed in generic collection folders** (e.g., `/components/`, `/hooks/`, `/utils/`).
+- **/preload/**: Preload scripts per window/context.
+  - Use `contextBridge` to expose minimal, secure APIs.
+  - Never expose Node.js APIs directly.
+- **/shared/**: Shared types, validation schemas, constants.
+  - No app logic here.
+- **/assets/**: Static files shared by main/renderer.
+
+## Frontend-Backend API Invocation Rules
+
+- Renderer NEVER calls Node/Electron APIs directly.
+- API calls go through preload-exposed, strongly typed, validated methods using `ipcRenderer.invoke` / `ipcMain.handle`.
+- Expose minimal, well-named API surface in preload.
+- Wrap backend logic in IPC handlers under /main/ipc/.
+- Consume all API calls in the renderer via a dedicated reusable React hook (e.g., `useApi` in /renderer/hooks/useApi.ts).
+- The hook centralizes typed API calls, error/loading handling, and caching.
+- Document all API methods with TypeScript comments.
+- Handle errors gracefully in preload and renderer layers, providing user-friendly messages.
+
+### Example Pattern
+
+// preload/index.ts
+contextBridge.exposeInMainWorld('api', {
+getUserData: async (userId: string): Promise<UserData> =>
+ipcRenderer.invoke('user:get-data', userId),
+});
+
+// main/ipc/userHandlers.ts
+ipcMain.handle('user:get-data', async (\_event, userId: string) => {
+// Validate, fetch, return data
+});
+
+// renderer/hooks/useUserDataApi.ts
+import { useCallback } from 'react';
+export function useApi() {
+const getUserData = useCallback(async (userId: string) => {
+try {
+return await window.api.getUserData(userId);
+} catch {
+return null;
+}
+}, []);
+return { getUserData };
+}
+
+// renderer/components/SomeComponent.tsx
+const { getUserData } = useUserDataApi();
+useEffect(() => { getUserData(id).then(setUserData); }, [id]);
+
+## Coding Philosophy
+
+- Strictly separate main (Node/Electron) and renderer (browser/React).
+- Use typed IPC channels only; no direct exposure.
+- No business/UI logic in preload.
+- Enable context isolation; disable nodeIntegration in renderer.
+- Add to /shared/ only if needed by both processes.
+- New features get own folders with barrel exports.
+- Avoid unnecessary comments; add only when clarifying complex code.
+
+## Barrel File Usage Rules
+
+**USE Barrel Files (`index.ts`) for:**
+
+- ✅ **Specific component folders**: `/Card/`, `/Header/`, `/ConfigurationCard/`, `/MonitoringCard/`, `/LiveLogsCard/`
+- ✅ **Feature/domain folders**: `/main/ipc/`, `/main/windows/`, `/main/appConfigManager/`
+
+**DO NOT USE Barrel Files for:**
+
+- ❌ **Generic collection folders**: `/components/`, `/hooks/`, `/utils/`
+- ❌ **Root-level organization folders** that just group other folders
+
+**Import Examples:**
+
+```typescript
+// ✅ CORRECT - Using barrel files for specific components
+import { Card } from '../Card'
+import { Header } from '../Header'
+import { ConfigurationCard } from '../ConfigurationCard'
+
+// ✅ CORRECT - Direct imports for hooks and utilities
+import { useApi } from '../hooks/useApi'
+import { someUtil } from '../utils/someUtil'
+
+// ✅ CORRECT - Using @shared alias for shared imports
+import type { AppConfig } from '@shared/types/configTypes'
+
+// ❌ WRONG - Don't use barrel files for generic collections
+import { Card } from '../components' // This would be wrong
+import { useApi } from '../hooks' // This would be wrong
+```
+
+## Shared Imports Rule
+
+- **ALWAYS use the @shared alias for imports from `/shared/` instead of relative imports**
+- ✅ CORRECT: `import type { AppConfig } from '@shared/types/configTypes'`
+- ❌ WRONG: `import type { AppConfig } from '../../../../shared/types/configTypes'`
+
+## Component Organization Rule
+
+- **`/renderer/src/components/` should contain ONLY generic, reusable, presentational components**
+- **Feature-specific components should be in their own feature folders** (e.g., `/Dashboard/components/`)
+- ✅ CORRECT: `/components/Card/` (generic, reusable)
+- ✅ CORRECT: `/Dashboard/components/ConfigurationCard/` (feature-specific)
+- ❌ WRONG: `/components/ConfigurationCard/` (feature-specific in generic folder)
+
+## CSS Modules Rule
+
+- **ALWAYS use CSS Modules (`.module.css`) for component styling**
+- **NEVER use regular CSS files (`.css`) for components**
+- ✅ CORRECT: `import styles from './Component.module.css'`
+- ❌ WRONG: `import './Component.css'`
+
+## Code Style
+
+- Use TypeScript everywhere.
+- File/folder names: kebab-case; components/types: PascalCase.
+- Document all modules and APIs clearly.
+- Prefer functional, pure React components.
+- IPC handlers should be async.
+
+## File Naming & Imports
+
+- Avoid deep relative imports; use barrels for flat imports where appropriate.
+- Import all shared code/types/utilities from /shared/.
+- Avoid duplication of files or logic in both main and renderer.
+
+## Testing
+
+- Locate tests next to the implementation files (`.test.ts` / `.spec.ts`).
+- Mock Node/Electron APIs for renderer tests.
+
+---
+
+**Always generate code and refactors following these rules and the directory structure. When unsure, consult the project instructions or existing patterns.**

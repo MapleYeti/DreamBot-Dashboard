@@ -20,11 +20,6 @@ const ConfigurationCard: React.FC = () => {
   const [configStatus, setConfigStatus] = useState<ConfigStatus>('saved')
   const [validationErrors, setValidationErrors] = useState<string[]>([])
   const [isBotModalOpen, setIsBotModalOpen] = useState(false)
-  const [modalMode, setModalMode] = useState<'add' | 'edit'>('add')
-  const [editingBot, setEditingBot] = useState<{
-    name: string
-    config: import('@shared/types/configTypes').BotConfig
-  } | null>(null)
   const [localConfig, setLocalConfig] = useState<AppConfig>(
     appConfigContext.config || {
       BASE_LOG_DIRECTORY: '',
@@ -67,18 +62,7 @@ const ConfigurationCard: React.FC = () => {
   }
 
   const handleAddBot = () => {
-    setModalMode('add')
-    setEditingBot(null)
     setIsBotModalOpen(true)
-  }
-
-  const handleEditBot = (botId: string) => {
-    const botConfig = localConfig.BOT_CONFIG[botId]
-    if (botConfig) {
-      setModalMode('edit')
-      setEditingBot({ name: botId, config: botConfig })
-      setIsBotModalOpen(true)
-    }
   }
 
   const handleBotSubmit = (
@@ -147,7 +131,6 @@ const ConfigurationCard: React.FC = () => {
 
   const handleCloseBotModal = () => {
     setIsBotModalOpen(false)
-    setEditingBot(null)
   }
 
   return (
@@ -201,7 +184,7 @@ const ConfigurationCard: React.FC = () => {
                 webhookUrl: bot.webhookUrl,
                 launchScript: bot.launchScript
               }}
-              onEdit={handleEditBot}
+              onEdit={handleBotSubmit}
               onRemove={handleRemoveBot}
             />
           ))}
@@ -236,9 +219,7 @@ const ConfigurationCard: React.FC = () => {
         <BotConfigModal
           isOpen={isBotModalOpen}
           onClose={handleCloseBotModal}
-          mode={modalMode}
-          botName={editingBot?.name || ''}
-          botConfig={editingBot?.config || { webhookUrl: '', launchScript: '' }}
+          mode="add"
           onSubmit={handleBotSubmit}
         />
       ) : null}

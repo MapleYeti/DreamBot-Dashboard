@@ -58,7 +58,7 @@ const BotConfigModal: React.FC<BotConfigModalProps> = ({
 
   const isEditMode = mode === 'edit'
   const title = isEditMode ? `Edit Bot: ${initialBotName}` : 'Add New Bot'
-  const submitButtonText = isEditMode ? 'Save Changes' : 'Add Bot'
+  const submitButtonText = isEditMode ? 'Done' : 'Add Bot'
 
   return (
     <div className={styles.modalOverlay} onClick={handleClose}>

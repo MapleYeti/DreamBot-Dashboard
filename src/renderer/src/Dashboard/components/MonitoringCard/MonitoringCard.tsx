@@ -67,37 +67,51 @@ const MonitoringCard: React.FC = () => {
       <div className={styles.sectionHeader}>
         <div className={styles.sectionTitle}>
           <span className={styles.sectionIcon}>🎮</span>
-          <h2>Monitoring Control</h2>
+          <h2>Monitoring</h2>
         </div>
       </div>
 
       <div className={styles.monitoringControl}>
         {monitoring.error && <div className={styles.errorMessage}>Error: {monitoring.error}</div>}
 
-        <button
-          className={styles.startButton}
-          onClick={monitoring.status.isMonitoring ? handleStopMonitoring : handleStartMonitoring}
-          disabled={monitoring.isLoading}
-        >
-          {monitoring.isLoading
-            ? 'Processing...'
-            : monitoring.status.isMonitoring
-              ? 'Stop Monitoring'
-              : 'Start Monitoring'}
-        </button>
+        <div className={styles.monitoringRow}>
+          <button
+            className={monitoring.status.isMonitoring ? styles.stopButton : styles.startButton}
+            onClick={monitoring.status.isMonitoring ? handleStopMonitoring : handleStartMonitoring}
+            disabled={monitoring.isLoading}
+          >
+            {monitoring.isLoading
+              ? 'Processing...'
+              : monitoring.status.isMonitoring
+                ? 'Stop Monitoring'
+                : 'Start Monitoring'}
+          </button>
 
-        {monitoring.status.isMonitoring && (
-          <div className={styles.monitoringStatus}>
-            <span className={styles.statusIndicator}>
-              <div className={`${styles.statusDot} ${styles.online}`}></div>
-              Active
-            </span>
-            <span className={styles.statusDetails}>
-              Watching {monitoring.status.watchedFilesCount} files in{' '}
-              {monitoring.status.botFolders.length} bot folders
-            </span>
+          <div
+            className={`${styles.monitoringStatus} ${monitoring.status.isMonitoring ? styles.active : ''}`}
+          >
+            {monitoring.status.isMonitoring ? (
+              <>
+                <span className={styles.statusIndicator}>
+                  <div className={`${styles.statusDot} ${styles.online}`}></div>
+                  Active
+                </span>
+                <span className={styles.statusDetails}>
+                  Watching {monitoring.status.watchedFilesCount} files in{' '}
+                  {monitoring.status.botFolders.length} bot folders
+                </span>
+              </>
+            ) : (
+              <>
+                <span className={styles.statusIndicator}>
+                  <div className={`${styles.statusDot} ${styles.offline}`}></div>
+                  Inactive
+                </span>
+                <span className={styles.statusDetails}>No monitoring active</span>
+              </>
+            )}
           </div>
-        )}
+        </div>
       </div>
 
       <div className={styles.botStatus}>

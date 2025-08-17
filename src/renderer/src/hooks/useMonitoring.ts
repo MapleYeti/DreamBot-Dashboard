@@ -40,19 +40,19 @@ export function useMonitoring() {
     getInitialStatus()
   }, [])
 
-  // Listen for status changes
+  // Listen for status updates
   useEffect(() => {
-    if (!window.api?.monitoring?.onStatusChanged) return
+    if (!window.api?.monitoring?.onStatusUpdate) return
 
-    const handleStatusChange = (data: { isMonitoring: boolean }) => {
-      setStatus((prev) => ({ ...prev, isMonitoring: data.isMonitoring }))
+    const handleStatusUpdate = (data: MonitoringStatus) => {
+      setStatus(data)
     }
 
-    window.api.monitoring.onStatusChanged(handleStatusChange)
+    window.api.monitoring.onStatusUpdate(handleStatusUpdate)
 
     return () => {
-      if (window.api?.monitoring?.offStatusChanged) {
-        window.api.monitoring.offStatusChanged()
+      if (window.api?.monitoring?.offStatusUpdate) {
+        window.api.monitoring.offStatusUpdate()
       }
     }
   }, [])

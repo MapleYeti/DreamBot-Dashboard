@@ -11,7 +11,13 @@ export interface MonitoringApi {
   startMonitoring(): Promise<{ success: boolean; message: string }>
   stopMonitoring(): Promise<{ success: boolean; message: string }>
   getStatus(): Promise<{ isMonitoring: boolean; botFolders: string[]; watchedFilesCount: number }>
-  onStatusChanged(callback: (data: { isMonitoring: boolean }) => void): void
+  onStatusUpdate(
+    callback: (data: {
+      isMonitoring: boolean
+      botFolders: string[]
+      watchedFilesCount: number
+    }) => void
+  ): void
   onLogUpdate(
     callback: (data: {
       botName: string
@@ -21,7 +27,7 @@ export interface MonitoringApi {
       timestamp: string
     }) => void
   ): void
-  offStatusChanged(): void
+  offStatusUpdate(): void
   offLogUpdate(): void
 }
 

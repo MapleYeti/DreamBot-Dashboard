@@ -10,7 +10,7 @@ import { WebhookService } from './utils/webhookService'
 interface MonitoringState {
   isMonitoring: boolean
   watchedFiles: Map<string, ReturnType<typeof watch>>
-  botFolders: string[]
+  watchedFolders: Map<string, ReturnType<typeof watch>>
   lastProcessedContent: Map<string, string> // Track last processed content hash per file
 }
 
@@ -18,7 +18,7 @@ export class MonitoringManager {
   private state: MonitoringState = {
     isMonitoring: false,
     watchedFiles: new Map(),
-    botFolders: [],
+    watchedFolders: new Map(),
     lastProcessedContent: new Map()
   }
   private eventProcessor: EventProcessor
@@ -54,10 +54,8 @@ export class MonitoringManager {
       await this.setupFileWatching(currentConfig)
       this.state.isMonitoring = true
 
-      // Notify all renderer processes that monitoring has started
-      webContents.getAllWebContents().forEach((webContent) => {
-        webContent.send('monitoring:status-changed', { isMonitoring: true })
-      })
+      // Emit unified status update
+      this.emitStatusUpdate()
 
       return { success: true, message: 'Monitoring started successfully' }
     } catch (error) {
@@ -78,18 +76,22 @@ export class MonitoringManager {
       // Stop watching all files
       for (const [filePath, watcher] of this.state.watchedFiles) {
         watcher.close()
-        console.log(`Stopped watching: ${filePath}`)
+        console.log(`Stopped watching file: ${filePath}`)
+      }
+
+      // Stop watching all folders
+      for (const [folderPath, watcher] of this.state.watchedFolders) {
+        watcher.close()
+        console.log(`Stopped watching folder: ${folderPath}`)
       }
 
       this.state.watchedFiles.clear()
-      this.state.botFolders = []
+      this.state.watchedFolders.clear()
       this.state.lastProcessedContent.clear()
       this.state.isMonitoring = false
 
-      // Notify all renderer processes that monitoring has stopped
-      webContents.getAllWebContents().forEach((webContent) => {
-        webContent.send('monitoring:status-changed', { isMonitoring: false })
-      })
+      // Emit unified status update
+      this.emitStatusUpdate()
 
       return { success: true, message: 'Monitoring stopped successfully' }
     } catch (error) {
@@ -118,7 +120,6 @@ export class MonitoringManager {
         if (stats.isDirectory()) {
           console.log(`Found bot folder: ${botFolderPath}`)
           await this.watchBotFolder(botFolderPath, botName)
-          this.state.botFolders.push(botName)
         } else {
           console.log(`Bot folder ${botName} exists but is not a directory, skipping`)
         }
@@ -131,7 +132,10 @@ export class MonitoringManager {
       }
     }
 
-    console.log(`Monitoring setup complete. Watching ${this.state.botFolders.length} bot folders`)
+    console.log(`Monitoring setup complete. Watching ${this.state.watchedFolders.size} bot folders`)
+
+    // Emit detailed status update after setup
+    this.emitStatusUpdate()
   }
 
   private async watchBotFolder(folderPath: string, botName: string) {
@@ -158,27 +162,28 @@ export class MonitoringManager {
 
   private async watchLogFile(filePath: string, botName: string, fileName: string) {
     try {
-      // Get initial file size for change detection
       const stats = await stat(filePath)
-      let lastSize = stats.size
+      const initialSize = stats.size
 
-      console.log(`Watching log file: ${filePath} (${botName}/${fileName})`)
+      console.log(`Watching log file: ${filePath} (initial size: ${initialSize})`)
 
-      const watcher = watch(filePath, (eventType) => {
+      const watcher = watch(filePath, async (eventType) => {
         if (eventType === 'change') {
-          this.handleLogFileChange(filePath, botName, fileName, lastSize)
-            .then((newSize) => {
-              if (newSize !== null) {
-                lastSize = newSize
-              }
-            })
-            .catch((error) => {
-              console.error(`Error handling log file change for ${filePath}:`, error)
-            })
+          const newSize = await this.handleLogFileChange(filePath, botName, fileName, initialSize)
+          if (newSize !== null) {
+            // Update the initial size for next change
+            Object.assign(this.state.watchedFiles, { [filePath]: { initialSize: newSize } })
+          }
         }
       })
 
       this.state.watchedFiles.set(filePath, watcher)
+      console.log(
+        `Added ${fileName} to watched files. Total watched files: ${this.state.watchedFiles.size}`
+      )
+
+      // Emit status update when new file is added
+      this.emitStatusUpdate()
     } catch (error) {
       console.error(`Failed to watch log file ${filePath}:`, error)
     }
@@ -197,6 +202,7 @@ export class MonitoringManager {
             if (stats.isFile() && this.isLogFile(_filename)) {
               console.log(`New log file detected in ${botName}: ${_filename}`)
               this.watchLogFile(filePath, botName, _filename)
+              // Status update will be emitted by watchLogFile
             }
           })
           .catch(() => {
@@ -205,7 +211,10 @@ export class MonitoringManager {
       }
     })
 
-    this.state.watchedFiles.set(folderPath, watcher)
+    this.state.watchedFolders.set(folderPath, watcher)
+    console.log(
+      `Added ${botName} folder to watched folders. Total watched folders: ${this.state.watchedFolders.size}`
+    )
   }
 
   private async handleLogFileChange(
@@ -313,11 +322,24 @@ export class MonitoringManager {
     return logExtensions.includes(extension) || fileName.includes('log') || fileName.includes('Log')
   }
 
+  private emitStatusUpdate() {
+    const status = this.getStatus()
+    webContents.getAllWebContents().forEach((webContent) => {
+      webContent.send('monitoring:status-update', status)
+    })
+  }
+
   getStatus() {
+    // Extract bot names from folder paths (e.g., "/path/to/logs/botName" -> "botName")
+    const botFolders = Array.from(this.state.watchedFolders.keys()).map((folderPath) => {
+      const parts = folderPath.split(/[\\/]/) // Handle both Windows and Unix path separators
+      return parts[parts.length - 1] // Get the last part (folder name)
+    })
+
     return {
       isMonitoring: this.state.isMonitoring,
-      botFolders: this.state.botFolders,
-      watchedFilesCount: this.state.watchedFiles.size
+      botFolders,
+      watchedFilesCount: this.state.watchedFiles.size // Only count actual log files
     }
   }
 }

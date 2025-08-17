@@ -25,8 +25,14 @@ const api = {
       botFolders: string[]
       watchedFilesCount: number
     }> => ipcRenderer.invoke('monitoring:get-status'),
-    onStatusChanged: (callback: (data: { isMonitoring: boolean }) => void) => {
-      ipcRenderer.on('monitoring:status-changed', (_event, data) => callback(data))
+    onStatusUpdate: (
+      callback: (data: {
+        isMonitoring: boolean
+        botFolders: string[]
+        watchedFilesCount: number
+      }) => void
+    ) => {
+      ipcRenderer.on('monitoring:status-update', (_event, data) => callback(data))
     },
     onLogUpdate: (
       callback: (data: {
@@ -39,8 +45,8 @@ const api = {
     ) => {
       ipcRenderer.on('monitoring:log-update', (_event, data) => callback(data))
     },
-    offStatusChanged: () => {
-      ipcRenderer.removeAllListeners('monitoring:status-changed')
+    offStatusUpdate: () => {
+      ipcRenderer.removeAllListeners('monitoring:status-update')
     },
     offLogUpdate: () => {
       ipcRenderer.removeAllListeners('monitoring:log-update')

@@ -13,11 +13,13 @@ import BotConfigModal from './components/BotConfigModal'
 import { useAppConfig } from '../../../hooks/useAppConfig'
 import { useConfigApi } from '../../../hooks/useConfigApi'
 import { useUnsavedChanges } from '../../../hooks/useUnsavedChanges'
+import { useMonitoring } from '../../../hooks/useMonitoring'
 
 const ConfigurationCard: React.FC = () => {
   const appConfigContext = useAppConfig()
   const { setHasUnsavedChanges } = useUnsavedChanges()
   const { saveConfig } = useConfigApi()
+  const monitoring = useMonitoring()
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [validationErrors, setValidationErrors] = useState<string[]>([])
   const [isBotModalOpen, setIsBotModalOpen] = useState(false)
@@ -29,6 +31,8 @@ const ConfigurationCard: React.FC = () => {
       BOT_CONFIG: {}
     }
   )
+
+  const isDisabled = monitoring.status.isMonitoring
 
   // Update local config when context changes
   useEffect(() => {
@@ -59,6 +63,7 @@ const ConfigurationCard: React.FC = () => {
 
   // Determine config status based on validation errors and unsaved changes
   const getConfigStatus = (): ConfigStatus => {
+    if (monitoring.status.isMonitoring) return 'monitoring'
     if (validationErrors.length > 0) return 'error'
     if (hasUnsavedChanges()) return 'unsaved'
     return 'saved'
@@ -81,7 +86,9 @@ const ConfigurationCard: React.FC = () => {
   }
 
   const handleAddBot = () => {
-    setIsBotModalOpen(true)
+    if (!isDisabled) {
+      setIsBotModalOpen(true)
+    }
   }
 
   const handleBotSubmit = (
@@ -174,6 +181,7 @@ const ConfigurationCard: React.FC = () => {
           showBrowseButton={true}
           onBrowseClick={handleBrowseLogs}
           placeholder="C:\Users\username\DreamBot\Logs"
+          disabled={isDisabled}
         />
 
         <ConfigInput
@@ -181,6 +189,7 @@ const ConfigurationCard: React.FC = () => {
           value={localConfig.BASE_WEBHOOK_URL}
           onChange={handleBaseWebhookUrlChange}
           placeholder="https://discord.com/api/webhooks/..."
+          disabled={isDisabled}
         />
 
         <CheckboxField
@@ -188,6 +197,7 @@ const ConfigurationCard: React.FC = () => {
           checked={localConfig.DREAMBOT_VIP_FEATURES}
           onChange={handleVipFeaturesChange}
           description="Enable advanced features like CLI bot launching. Requires DreamBot VIP subscription."
+          disabled={isDisabled}
         />
 
         <div className={styles.botConfigurations}>
@@ -204,9 +214,10 @@ const ConfigurationCard: React.FC = () => {
               vipFeaturesEnabled={localConfig.DREAMBOT_VIP_FEATURES}
               onEdit={handleBotSubmit}
               onRemove={handleRemoveBot}
+              disabled={isDisabled}
             />
           ))}
-          <button className={styles.addBotButton} onClick={handleAddBot}>
+          <button className={styles.addBotButton} onClick={handleAddBot} disabled={isDisabled}>
             + Add Bot
           </button>
         </div>
@@ -217,6 +228,7 @@ const ConfigurationCard: React.FC = () => {
           onImport={handleImport}
           onExport={handleExport}
           formHasChanges={hasUnsavedChanges()}
+          disabled={isDisabled}
         />
 
         {validationErrors.length > 0 && (

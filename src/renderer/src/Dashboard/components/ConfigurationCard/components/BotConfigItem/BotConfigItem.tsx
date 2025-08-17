@@ -15,13 +15,15 @@ interface BotConfigItemProps {
   vipFeaturesEnabled: boolean
   onEdit: (botName: string, botConfig: BotConfig) => void
   onRemove: (botId: string) => void
+  disabled?: boolean
 }
 
 const BotConfigItem: React.FC<BotConfigItemProps> = ({
   bot,
   vipFeaturesEnabled,
   onEdit,
-  onRemove
+  onRemove,
+  disabled = false
 }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const hasWebhook = !!bot.webhookUrl
@@ -70,10 +72,14 @@ const BotConfigItem: React.FC<BotConfigItemProps> = ({
           </div>
         </div>
         <div className={styles.botActions}>
-          <button className={styles.editButton} onClick={handleEdit}>
+          <button className={styles.editButton} onClick={handleEdit} disabled={disabled}>
             Edit
           </button>
-          <button className={styles.removeButton} onClick={() => onRemove(bot.id)}>
+          <button
+            className={styles.removeButton}
+            onClick={() => onRemove(bot.id)}
+            disabled={disabled}
+          >
             Remove
           </button>
         </div>

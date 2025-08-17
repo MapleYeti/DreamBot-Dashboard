@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './StatusBadge.module.css'
 
-export type ConfigStatus = 'saved' | 'unsaved' | 'loading' | 'error'
+export type ConfigStatus = 'saved' | 'unsaved' | 'loading' | 'error' | 'monitoring'
 
 interface StatusBadgeProps {
   status: ConfigStatus
@@ -19,6 +19,8 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className = '' }) => 
         return '🔄'
       case 'error':
         return '❌'
+      case 'monitoring':
+        return '🔒'
       default:
         return ''
     }
@@ -34,6 +36,8 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className = '' }) => 
         return 'Loading...'
       case 'error':
         return 'Error'
+      case 'monitoring':
+        return 'Monitoring'
       default:
         return ''
     }

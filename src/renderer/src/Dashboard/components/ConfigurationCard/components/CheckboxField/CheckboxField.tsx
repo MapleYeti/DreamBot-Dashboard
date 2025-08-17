@@ -6,13 +6,15 @@ interface CheckboxFieldProps {
   checked: boolean
   onChange: (checked: boolean) => void
   description?: string
+  disabled?: boolean
 }
 
 const CheckboxField: React.FC<CheckboxFieldProps> = ({
   label,
   checked,
   onChange,
-  description
+  description,
+  disabled = false
 }) => {
   return (
     <div className={styles.checkboxField}>
@@ -23,10 +25,9 @@ const CheckboxField: React.FC<CheckboxFieldProps> = ({
           className={styles.configCheckbox}
           checked={checked}
           onChange={(e) => onChange(e.target.checked)}
+          disabled={disabled}
         />
-        {description && (
-          <label className={styles.checkboxLabel}>{description}</label>
-        )}
+        {description && <label className={styles.checkboxLabel}>{description}</label>}
       </div>
     </div>
   )

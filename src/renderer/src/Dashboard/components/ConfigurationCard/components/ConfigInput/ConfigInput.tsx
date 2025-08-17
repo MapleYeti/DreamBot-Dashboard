@@ -8,6 +8,7 @@ interface ConfigInputProps {
   placeholder?: string
   showBrowseButton?: boolean
   onBrowseClick?: () => void
+  disabled?: boolean
 }
 
 const ConfigInput: React.FC<ConfigInputProps> = ({
@@ -16,7 +17,8 @@ const ConfigInput: React.FC<ConfigInputProps> = ({
   onChange,
   placeholder = '',
   showBrowseButton = false,
-  onBrowseClick
+  onBrowseClick,
+  disabled = false
 }) => {
   return (
     <div className={styles.configInputGroup}>
@@ -28,9 +30,10 @@ const ConfigInput: React.FC<ConfigInputProps> = ({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
+          disabled={disabled}
         />
         {showBrowseButton && onBrowseClick && (
-          <button className={styles.browseButton} onClick={onBrowseClick}>
+          <button className={styles.browseButton} onClick={onBrowseClick} disabled={disabled}>
             Browse
           </button>
         )}

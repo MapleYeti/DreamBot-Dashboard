@@ -148,9 +148,15 @@ const ConfigurationCard: React.FC = () => {
     console.log('Exporting configuration')
   }
 
-  const handleBrowseLogs = () => {
-    // TODO: Implement file browser
-    console.log('Opening logs directory browser')
+  const handleBrowseLogs = async () => {
+    try {
+      const selectedPath = await window.api.dialog.selectDirectory()
+      if (selectedPath) {
+        handleLogsDirectoryChange(selectedPath)
+      }
+    } catch (error) {
+      console.error('Failed to select directory:', error)
+    }
   }
 
   const handleCloseBotModal = () => {

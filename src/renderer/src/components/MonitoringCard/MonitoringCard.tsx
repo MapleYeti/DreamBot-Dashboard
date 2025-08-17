@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import './MonitoringCard.css'
+import styles from './MonitoringCard.module.css'
 
 interface Bot {
   id: string
@@ -61,17 +61,17 @@ const MonitoringCard: React.FC = () => {
   }
 
   return (
-    <section className="dashboard-section">
-      <div className="section-header">
-        <div className="section-title">
-          <span className="section-icon">🎮</span>
+    <section className={styles.dashboardSection}>
+      <div className={styles.sectionHeader}>
+        <div className={styles.sectionTitle}>
+          <span className={styles.sectionIcon}>🎮</span>
           <h2>Monitoring Control</h2>
         </div>
       </div>
 
-      <div className="monitoring-control">
+      <div className={styles.monitoringControl}>
         <button
-          className="start-button"
+          className={styles.startButton}
           onClick={handleStartMonitoring}
           disabled={monitoring.enabled}
         >
@@ -79,30 +79,30 @@ const MonitoringCard: React.FC = () => {
         </button>
       </div>
 
-      <div className="bot-status">
+      <div className={styles.botStatus}>
         <h3>Bot Status</h3>
-        <div className="bot-table">
-          <div className="table-header">
-            <div className="header-cell">Bot Name</div>
-            <div className="header-cell">Status</div>
-            <div className="header-cell">Actions</div>
+        <div className={styles.botTable}>
+          <div className={styles.tableHeader}>
+            <div className={styles.headerCell}>Bot Name</div>
+            <div className={styles.headerCell}>Status</div>
+            <div className={styles.headerCell}>Actions</div>
           </div>
           {monitoring.bots.map((bot) => (
-            <div key={bot.id} className="table-row">
-              <div className="table-cell">{bot.name}</div>
-              <div className="table-cell">
-                <div className={`status-indicator ${bot.status.toLowerCase()}`}>
-                  <div className="status-dot"></div>
+            <div key={bot.id} className={styles.tableRow}>
+              <div className={styles.tableCell}>{bot.name}</div>
+              <div className={styles.tableCell}>
+                <div className={`${styles.statusIndicator} ${styles[bot.status.toLowerCase()]}`}>
+                  <div className={styles.statusDot}></div>
                   <span>{bot.status}</span>
                 </div>
               </div>
-              <div className="table-cell">
+              <div className={styles.tableCell}>
                 <button
-                  className="launch-button"
+                  className={styles.launchButton}
                   onClick={() => handleLaunchBot(bot.id)}
                   disabled={!bot.enabled}
                 >
-                  <span className="button-icon">🚀</span>
+                  <span className={styles.buttonIcon}>🚀</span>
                   Launch
                 </button>
               </div>

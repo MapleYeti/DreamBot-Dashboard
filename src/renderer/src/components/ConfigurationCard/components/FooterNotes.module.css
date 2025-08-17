@@ -1,0 +1,23 @@
+.footerNotes {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 20px;
+}
+
+.noteItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.noteIcon {
+  color: #6b7280;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.noteText {
+  color: #6b7280;
+  font-size: 12px;
+  line-height: 1.4;
+}

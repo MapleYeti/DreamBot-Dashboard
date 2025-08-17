@@ -1,4 +1,5 @@
 import React from 'react'
+import styles from './BotConfigItem.module.css'
 
 interface BotConfigItemProps {
   bot: {
@@ -13,25 +14,25 @@ interface BotConfigItemProps {
 
 const BotConfigItem: React.FC<BotConfigItemProps> = ({ bot, onEdit, onRemove }) => {
   return (
-    <div className="bot-config-item">
-      <div className="bot-info">
-        <div className="bot-name">{bot.name}</div>
-        <div className="bot-status">
-          <div className="status-item">
-            <span className="status-icon">✓</span>
-            <span className="status-text">Webhook Configured</span>
+    <div className={styles.botConfigItem}>
+      <div className={styles.botInfo}>
+        <div className={styles.botName}>{bot.name}</div>
+        <div className={styles.botStatus}>
+          <div className={styles.statusItem}>
+            <span className={styles.statusIcon}>✓</span>
+            <span className={styles.statusText}>Webhook Configured</span>
           </div>
-          <div className="status-item">
-            <span className="status-icon">✓</span>
-            <span className="status-text">Launch CLI Configured</span>
+          <div className={styles.statusItem}>
+            <span className={styles.statusIcon}>✓</span>
+            <span className={styles.statusText}>Launch CLI Configured</span>
           </div>
         </div>
       </div>
-      <div className="bot-actions">
-        <button className="edit-button" onClick={() => onEdit(bot.id)}>
+      <div className={styles.botActions}>
+        <button className={styles.editButton} onClick={() => onEdit(bot.id)}>
           Edit
         </button>
-        <button className="remove-button" onClick={() => onRemove(bot.id)}>
+        <button className={styles.removeButton} onClick={() => onRemove(bot.id)}>
           Remove
         </button>
       </div>

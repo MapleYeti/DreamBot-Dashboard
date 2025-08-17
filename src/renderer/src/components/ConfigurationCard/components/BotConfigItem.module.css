@@ -1,0 +1,95 @@
+.botConfigItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  background: #f9fafb;
+}
+
+.botInfo {
+  flex: 1;
+}
+
+.botName {
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.botStatus {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.statusItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.statusIcon {
+  color: #10b981;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.statusText {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.botActions {
+  display: flex;
+  gap: 8px;
+}
+
+.editButton {
+  background: #6b7280;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.editButton:hover {
+  background: #4b5563;
+}
+
+.removeButton {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.removeButton:hover {
+  background: #dc2626;
+}
+
+@media (max-width: 480px) {
+  .botConfigItem {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .botActions {
+    justify-content: stretch;
+  }
+
+  .botActions button {
+    flex: 1;
+  }
+}

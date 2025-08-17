@@ -1,0 +1,64 @@
+.actionButtons {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.actionButtons button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1;
+  min-width: 140px;
+}
+
+.saveButton {
+  background: #8b5cf6;
+  color: white;
+}
+
+.saveButton:hover {
+  background: #7c3aed;
+}
+
+.undoButton {
+  background: #9ca3af;
+  color: white;
+}
+
+.undoButton:hover {
+  background: #6b7280;
+}
+
+.importButton {
+  background: #6b7280;
+  color: white;
+}
+
+.importButton:hover {
+  background: #4b5563;
+}
+
+.exportButton {
+  background: #6b7280;
+  color: white;
+}
+
+.exportButton:hover {
+  background: #4b5563;
+}
+
+@media (max-width: 768px) {
+  .actionButtons {
+    flex-direction: column;
+  }
+
+  .actionButtons button {
+    min-width: auto;
+  }
+}

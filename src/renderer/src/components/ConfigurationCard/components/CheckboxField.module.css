@@ -1,0 +1,33 @@
+.checkboxField {
+  margin-bottom: 24px;
+}
+
+.checkboxTitle {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.checkboxRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.configCheckbox {
+  width: 20px;
+  height: 20px;
+  accent-color: #8b5cf6;
+  cursor: pointer;
+  margin-top: 2px;
+}
+
+.checkboxLabel {
+  color: #6b7280;
+  font-size: 13px;
+  font-style: italic;
+  line-height: 1.4;
+  cursor: pointer;
+  flex: 1;
+}

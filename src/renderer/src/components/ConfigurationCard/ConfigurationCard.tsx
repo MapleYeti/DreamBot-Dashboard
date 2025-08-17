@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import { ConfigInput, CheckboxField, BotConfigItem, ActionButtons, FooterNotes } from './components'
-import './ConfigurationCard.css'
+import { Card } from '../Card'
 import { AppConfig } from '@shared/types/configTypes'
+import styles from './ConfigurationCard.module.css'
 
 const ConfigurationCard: React.FC = () => {
   const [isCollapsed, setIsCollapsed] = useState(false)
-  const [config, setConfig] = useState<AppConfig>({
+  const [localConfig, setLocalConfig] = useState<AppConfig>({
     BASE_LOG_DIRECTORY: '',
     DREAMBOT_VIP_FEATURES: true,
     BOT_CONFIG: {
@@ -21,16 +22,15 @@ const ConfigurationCard: React.FC = () => {
   }
 
   const handleLogsDirectoryChange = (value: string) => {
-    setConfig((prev) => ({ ...prev, BASE_LOG_DIRECTORY: value }))
+    setLocalConfig((prev) => ({ ...prev, BASE_LOG_DIRECTORY: value }))
   }
 
   const handleWebhookUrlChange = (value: string) => {
-    setConfig((prev) => ({ ...prev, webhookUrl: value }))
+    setLocalConfig((prev) => ({ ...prev, webhookUrl: value }))
   }
 
   const handleVipFeaturesChange = (checked: boolean) => {
-    console.log('VIP features changed to:', checked)
-    setConfig((prev) => ({ ...prev, DREAMBOT_VIP_FEATURES: checked }))
+    setLocalConfig((prev) => ({ ...prev, DREAMBOT_VIP_FEATURES: checked }))
   }
 
   const handleAddBot = () => {
@@ -50,7 +50,7 @@ const ConfigurationCard: React.FC = () => {
 
   const handleSave = () => {
     // TODO: Implement save functionality
-    console.log('Saving configuration:', config)
+    console.log('Saving configuration:', localConfig)
   }
 
   const handleUndo = () => {
@@ -74,85 +74,76 @@ const ConfigurationCard: React.FC = () => {
   }
 
   return (
-    <section className="dashboard-section">
-      <div className="section-header" onClick={handleToggleCollapse}>
-        <div className="section-title">
-          <span className="section-icon">⚙️</span>
-          <h2>Configuration</h2>
-        </div>
-        <div className="section-actions">
-          <button className="saved-button">
-            <span className="button-icon">✓</span>
+    <Card
+      isCollapsible={true}
+      isCollapsed={isCollapsed}
+      onToggleCollapse={handleToggleCollapse}
+      title="Configuration"
+      icon="⚙️"
+      headerActions={
+        <>
+          <button className={styles.savedButton}>
+            <span className={styles.buttonIcon}>✓</span>
             Saved
           </button>
-          <button
-            className={`dropdown-button ${isCollapsed ? 'collapsed' : ''}`}
-            onClick={(e) => {
-              e.stopPropagation()
-              handleToggleCollapse()
-            }}
-          >
+          <button className={styles.dropdownButton} onClick={handleToggleCollapse}>
             {isCollapsed ? '▼' : '▲'}
           </button>
-        </div>
+        </>
+      }
+    >
+      <ConfigInput
+        label="DreamBot Logs Directory:"
+        value={localConfig.BASE_LOG_DIRECTORY}
+        onChange={handleLogsDirectoryChange}
+        showBrowseButton={true}
+        onBrowseClick={handleBrowseLogs}
+        placeholder="C:\Users\username\DreamBot\Logs"
+      />
+
+      <ConfigInput
+        label="General Chat Webhook URL:"
+        value={localConfig.BOT_CONFIG.WoodcutterBot.webhookUrl}
+        onChange={handleWebhookUrlChange}
+        placeholder="https://discord.com/api/webhooks/..."
+      />
+
+      <CheckboxField
+        label="DreamBot VIP Features"
+        checked={localConfig.DREAMBOT_VIP_FEATURES}
+        onChange={handleVipFeaturesChange}
+        description="Enable advanced features like CLI bot launching. Requires DreamBot VIP subscription."
+      />
+
+      <div className={styles.botConfigurations}>
+        <h3>Bot Configurations</h3>
+        {Object.entries(localConfig.BOT_CONFIG).map(([botName, bot]) => (
+          <BotConfigItem
+            key={botName}
+            bot={{
+              id: botName,
+              name: botName,
+              webhookConfigured: !!bot.webhookUrl,
+              launchCliConfigured: !!bot.launchScript
+            }}
+            onEdit={handleEditBot}
+            onRemove={handleRemoveBot}
+          />
+        ))}
+        <button className={styles.addBotButton} onClick={handleAddBot}>
+          + Add Bot
+        </button>
       </div>
 
-      {!isCollapsed && (
-        <div className="configuration-content">
-          <ConfigInput
-            label="DreamBot Logs Directory:"
-            value={config.BASE_LOG_DIRECTORY}
-            onChange={handleLogsDirectoryChange}
-            showBrowseButton={true}
-            onBrowseClick={handleBrowseLogs}
-            placeholder="C:\Users\username\DreamBot\Logs"
-          />
+      <ActionButtons
+        onSave={handleSave}
+        onUndo={handleUndo}
+        onImport={handleImport}
+        onExport={handleExport}
+      />
 
-          <ConfigInput
-            label="General Chat Webhook URL:"
-            value={config.BOT_CONFIG.WoodcutterBot.webhookUrl}
-            onChange={handleWebhookUrlChange}
-            placeholder="https://discord.com/api/webhooks/..."
-          />
-
-          <CheckboxField
-            label="DreamBot VIP Features"
-            checked={config.DREAMBOT_VIP_FEATURES}
-            onChange={handleVipFeaturesChange}
-            description="Enable advanced features like CLI bot launching. Requires DreamBot VIP subscription."
-          />
-
-          <div className="bot-configurations">
-            <h3>Bot Configurations</h3>
-            {Object.entries(config.BOT_CONFIG).map(([botName, bot]) => (
-              <BotConfigItem
-                key={botName}
-                bot={{
-                  id: botName,
-                  name: botName,
-                  webhookConfigured: !!bot.webhookUrl,
-                  launchCliConfigured: !!bot.launchScript
-                }}
-                onEdit={handleEditBot}
-                onRemove={handleRemoveBot}
-              />
-            ))}
-            <button className="add-bot-button" onClick={handleAddBot}>
-              + Add Bot
-            </button>
-          </div>
-
-          <ActionButtons
-            onSave={handleSave}
-            onUndo={handleUndo}
-            onImport={handleImport}
-            onExport={handleExport}
-          />
-
-          <FooterNotes />
-        </div>
-      )}
-    </section>
+      <FooterNotes />
+    </Card>
   )
 }
 

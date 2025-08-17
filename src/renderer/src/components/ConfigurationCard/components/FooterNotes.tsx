@@ -1,18 +1,19 @@
 import React from 'react'
+import styles from './FooterNotes.module.css'
 
 const FooterNotes: React.FC = () => {
   return (
-    <div className="footer-notes">
-      <div className="note-item">
-        <span className="note-icon">?</span>
-        <span className="note-text">
+    <div className={styles.footerNotes}>
+      <div className={styles.noteItem}>
+        <span className={styles.noteIcon}>💡</span>
+        <span className={styles.noteText}>
           Import Configuration: Select a JSON file to import and overwrite current settings
         </span>
       </div>
-      <div className="note-item">
-        <span className="note-icon">?</span>
-        <span className="note-text">
-          Export Configuration: Save current settings to a JSON file in the new standardized format
+      <div className={styles.noteItem}>
+        <span className={styles.noteIcon}>💡</span>
+        <span className={styles.noteText}>
+          Export Configuration: Save current settings to a JSON file
         </span>
       </div>
     </div>

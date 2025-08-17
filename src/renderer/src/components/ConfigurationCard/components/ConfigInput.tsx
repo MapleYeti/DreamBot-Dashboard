@@ -1,4 +1,5 @@
 import React from 'react'
+import styles from './ConfigInput.module.css'
 
 interface ConfigInputProps {
   label: string
@@ -18,18 +19,18 @@ const ConfigInput: React.FC<ConfigInputProps> = ({
   onBrowseClick
 }) => {
   return (
-    <div className="config-input-group">
-      <label className="config-label">{label}</label>
-      <div className="input-row">
+    <div className={styles.configInputGroup}>
+      <label className={styles.configLabel}>{label}</label>
+      <div className={styles.inputRow}>
         <input
           type="text"
-          className="config-input"
+          className={styles.configInput}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
         />
         {showBrowseButton && (
-          <button className="browse-button" onClick={onBrowseClick}>
+          <button className={styles.browseButton} onClick={onBrowseClick}>
             Browse
           </button>
         )}

@@ -1,6 +1,6 @@
 import { readFile, writeFile, access } from 'fs/promises'
 import { join } from 'path'
-import { AppConfig } from '../../shared/types/configTypes'
+import { AppConfig } from '@shared/types/configTypes'
 import { validateAppConfig } from './utils/configValidator'
 
 export class appConfigManager {

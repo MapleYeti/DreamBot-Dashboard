@@ -9,7 +9,7 @@ function App(): React.JSX.Element {
   return (
     <div className="dashboard">
       <Header />
-
+      {'test'}
       <main className="dashboard-content">
         <MonitoringControl />
         <Configuration />

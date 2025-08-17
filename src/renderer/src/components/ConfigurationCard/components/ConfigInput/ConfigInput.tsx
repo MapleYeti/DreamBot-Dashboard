@@ -14,7 +14,7 @@ const ConfigInput: React.FC<ConfigInputProps> = ({
   label,
   value,
   onChange,
-  placeholder,
+  placeholder = '',
   showBrowseButton = false,
   onBrowseClick
 }) => {
@@ -29,7 +29,7 @@ const ConfigInput: React.FC<ConfigInputProps> = ({
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
         />
-        {showBrowseButton && (
+        {showBrowseButton && onBrowseClick && (
           <button className={styles.browseButton} onClick={onBrowseClick}>
             Browse
           </button>

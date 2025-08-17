@@ -5,7 +5,7 @@
 
 .noteItem {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
   margin-bottom: 8px;
 }
@@ -13,7 +13,7 @@
 .noteIcon {
   color: #6b7280;
   font-size: 12px;
-  flex-shrink: 0;
+  margin-top: 2px;
 }
 
 .noteText {

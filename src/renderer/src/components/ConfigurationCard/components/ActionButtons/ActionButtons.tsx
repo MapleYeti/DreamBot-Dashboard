@@ -12,16 +12,16 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({ onSave, onUndo, onImport,
   return (
     <div className={styles.actionButtons}>
       <button className={styles.saveButton} onClick={onSave}>
-        Save Configuration
+        Save
       </button>
       <button className={styles.undoButton} onClick={onUndo}>
-        Undo Changes
+        Undo
       </button>
       <button className={styles.importButton} onClick={onImport}>
-        Import Configuration
+        Import
       </button>
       <button className={styles.exportButton} onClick={onExport}>
-        Export Configuration
+        Export
       </button>
     </div>
   )

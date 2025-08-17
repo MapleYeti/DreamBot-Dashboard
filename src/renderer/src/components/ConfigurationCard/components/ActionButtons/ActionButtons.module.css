@@ -52,13 +52,3 @@
 .exportButton:hover {
   background: #4b5563;
 }
-
-@media (max-width: 768px) {
-  .actionButtons {
-    flex-direction: column;
-  }
-
-  .actionButtons button {
-    min-width: auto;
-  }
-}

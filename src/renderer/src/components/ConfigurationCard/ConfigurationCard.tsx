@@ -1,16 +1,14 @@
 import React, { useState } from 'react'
-import {
-  ConfigInput,
-  CheckboxField,
-  BotConfigItem,
-  ActionButtons,
-  FooterNotes,
-  StatusBadge,
-  ConfigStatus
-} from './components'
+
 import { Card } from '../Card'
 import { AppConfig } from '@shared/types/configTypes'
 import styles from './ConfigurationCard.module.css'
+import StatusBadge, { ConfigStatus } from './components/StatusBadge/StatusBadge'
+import ConfigInput from './components/ConfigInput/ConfigInput'
+import CheckboxField from './components/CheckboxField/CheckboxField'
+import BotConfigItem from './components/BotConfigItem/BotConfigItem'
+import ActionButtons from './components/ActionButtons/ActionButtons'
+import FooterNotes from './components/FooterNotes/FooterNotes'
 
 const ConfigurationCard: React.FC = () => {
   const [isCollapsed, setIsCollapsed] = useState(false)

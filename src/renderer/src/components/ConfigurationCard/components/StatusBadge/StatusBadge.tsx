@@ -27,7 +27,7 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className = '' }) => 
   const getStatusText = () => {
     switch (status) {
       case 'saved':
-        return 'Config loaded'
+        return 'Loaded'
       case 'unsaved':
         return 'Unsaved changes'
       case 'loading':

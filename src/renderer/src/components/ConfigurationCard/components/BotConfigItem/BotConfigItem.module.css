@@ -77,19 +77,3 @@
 .removeButton:hover {
   background: #dc2626;
 }
-
-@media (max-width: 480px) {
-  .botConfigItem {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
-  }
-
-  .botActions {
-    justify-content: stretch;
-  }
-
-  .botActions button {
-    flex: 1;
-  }
-}

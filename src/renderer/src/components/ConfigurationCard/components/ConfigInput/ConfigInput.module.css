@@ -48,14 +48,3 @@
 .browseButton:hover {
   background: #4b5563;
 }
-
-@media (max-width: 768px) {
-  .inputRow {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .browseButton {
-    align-self: flex-start;
-  }
-}

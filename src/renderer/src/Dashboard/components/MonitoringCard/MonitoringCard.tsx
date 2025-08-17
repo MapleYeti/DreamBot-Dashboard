@@ -97,8 +97,8 @@ const MonitoringCard: React.FC = () => {
                   Active
                 </span>
                 <span className={styles.statusDetails}>
-                  Watching {monitoring.status.watchedFilesCount} files in{' '}
-                  {monitoring.status.botFolders.length} bot folders
+                  Watching {monitoring.status.watchedFiles.length} files in{' '}
+                  {monitoring.status.watchedFolders.length} bot folders
                 </span>
               </>
             ) : (

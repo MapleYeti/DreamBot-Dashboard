@@ -1,10 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-
-interface MonitoringStatus {
-  isMonitoring: boolean
-  botFolders: string[]
-  watchedFilesCount: number
-}
+import { MonitoringStatus } from '@shared/types/monitoringTypes'
 
 interface LogUpdate {
   botName: string
@@ -17,8 +12,8 @@ interface LogUpdate {
 export function useMonitoring() {
   const [status, setStatus] = useState<MonitoringStatus>({
     isMonitoring: false,
-    botFolders: [],
-    watchedFilesCount: 0
+    watchedFiles: [],
+    watchedFolders: []
   })
   const [logUpdates, setLogUpdates] = useState<LogUpdate[]>([])
   const [isLoading, setIsLoading] = useState(false)

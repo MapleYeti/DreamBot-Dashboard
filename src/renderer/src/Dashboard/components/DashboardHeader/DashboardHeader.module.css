@@ -106,6 +106,17 @@
   height: 8px;
   border-radius: 50%;
   background: #ff6b6b;
+  transition: all 0.3s ease;
+}
+
+.statusDotOnline {
+  background: #10b981;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+}
+
+.statusDotOffline {
+  background: #ff6b6b;
+  box-shadow: 0 0 8px rgba(255, 107, 107, 0.4);
 }
 
 @media (max-width: 768px) {

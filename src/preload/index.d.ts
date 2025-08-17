@@ -1,4 +1,5 @@
 import type { AppConfig } from '@shared/types/configTypes'
+import { MonitoringStatus } from '@shared/types/monitoringTypes'
 
 export interface ConfigApi {
   getConfig(): Promise<{ config: AppConfig; errors: string[] }>
@@ -10,14 +11,8 @@ export interface ConfigApi {
 export interface MonitoringApi {
   startMonitoring(): Promise<{ success: boolean; message: string }>
   stopMonitoring(): Promise<{ success: boolean; message: string }>
-  getStatus(): Promise<{ isMonitoring: boolean; botFolders: string[]; watchedFilesCount: number }>
-  onStatusUpdate(
-    callback: (data: {
-      isMonitoring: boolean
-      botFolders: string[]
-      watchedFilesCount: number
-    }) => void
-  ): void
+  getStatus(): Promise<MonitoringStatus>
+  onStatusUpdate(callback: (data: MonitoringStatus) => void): void
   onLogUpdate(
     callback: (data: {
       botName: string

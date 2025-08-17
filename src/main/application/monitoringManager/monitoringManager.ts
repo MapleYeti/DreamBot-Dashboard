@@ -6,6 +6,7 @@ import type { AppConfig } from '@shared/types/configTypes'
 import { ConfigManager } from '../configManager'
 import { EventProcessor } from './utils/eventProcessor'
 import { WebhookService } from './utils/webhookService'
+import { MonitoringStatus } from '@shared/types/monitoringTypes'
 
 interface MonitoringState {
   isMonitoring: boolean
@@ -329,17 +330,14 @@ export class MonitoringManager {
     })
   }
 
-  getStatus() {
-    // Extract bot names from folder paths (e.g., "/path/to/logs/botName" -> "botName")
-    const botFolders = Array.from(this.state.watchedFolders.keys()).map((folderPath) => {
-      const parts = folderPath.split(/[\\/]/) // Handle both Windows and Unix path separators
-      return parts[parts.length - 1] // Get the last part (folder name)
-    })
+  getStatus(): MonitoringStatus {
+    const watchedFiles = Array.from(this.state.watchedFiles.keys())
+    const watchedFolders = Array.from(this.state.watchedFolders.keys())
 
     return {
       isMonitoring: this.state.isMonitoring,
-      botFolders,
-      watchedFilesCount: this.state.watchedFiles.size // Only count actual log files
+      watchedFiles: watchedFiles,
+      watchedFolders: watchedFolders
     }
   }
 }

@@ -105,6 +105,7 @@ const ConfigurationCard: React.FC = () => {
       const result = await saveConfig(localConfig)
       if (result.success) {
         setValidationErrors([])
+        // Config context will automatically refresh via event from backend
       } else {
         setValidationErrors(result.errors)
       }

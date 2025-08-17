@@ -6,7 +6,14 @@ const api = {
     getConfig: (): Promise<{ config: AppConfig; errors: string[] }> =>
       ipcRenderer.invoke('config:get'),
     saveConfig: (data: AppConfig): Promise<{ success: boolean; errors: string[] }> =>
-      ipcRenderer.invoke('config:save', data)
+      ipcRenderer.invoke('config:save', data),
+    onConfigChanged: (callback: (data: { config: AppConfig }) => void) => {
+      ipcRenderer.on('config:changed', (_event, data) => callback(data))
+    },
+    offConfigChanged: () => {
+      // For now, we'll just remove all listeners since Electron doesn't expose the original callback
+      ipcRenderer.removeAllListeners('config:changed')
+    }
   }
 }
 

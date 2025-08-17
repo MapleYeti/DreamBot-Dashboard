@@ -67,12 +67,14 @@ export function validateBotConfig(botConfig: unknown): ValidationResult {
 
   const botConfigObj = botConfig as Record<string, unknown>
 
-  if (!botConfigObj.webhookUrl || typeof botConfigObj.webhookUrl !== 'string') {
-    errors.push('webhookUrl must be a non-empty string')
+  // webhookUrl is optional, but if provided must be a string (empty string is valid)
+  if (botConfigObj.webhookUrl !== undefined && typeof botConfigObj.webhookUrl !== 'string') {
+    errors.push('webhookUrl must be a string if provided')
   }
 
-  if (!botConfigObj.launchScript || typeof botConfigObj.launchScript !== 'string') {
-    errors.push('launchScript must be a non-empty string')
+  // launchScript is optional, but if provided must be a string (empty string is valid)
+  if (botConfigObj.launchScript !== undefined && typeof botConfigObj.launchScript !== 'string') {
+    errors.push('launchScript must be a string if provided')
   }
 
   return {

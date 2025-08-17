@@ -1,6 +1,7 @@
 import { useState, useEffect, ReactNode } from 'react'
 import type { AppConfig } from '@shared/types/configTypes'
 import { useConfigApi } from '../hooks/useConfigApi'
+import { useConfigEvents } from '../hooks/useConfigEvents'
 import { AppConfigContext, type AppConfigContextType } from './AppConfigContextDef'
 
 interface AppConfigProviderProps {
@@ -40,6 +41,13 @@ export function AppConfigProvider({ children }: AppConfigProviderProps) {
   useEffect(() => {
     refreshConfig()
   }, [])
+
+  // Listen for config change events from the backend
+  useConfigEvents((data) => {
+    setConfig(data.config)
+    setErrors([]) // Clear errors when config is successfully updated
+    setIsLoading(false)
+  })
 
   const value: AppConfigContextType = {
     config,

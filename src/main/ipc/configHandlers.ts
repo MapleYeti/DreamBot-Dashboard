@@ -1,4 +1,4 @@
-import { ipcMain } from 'electron'
+import { ipcMain, webContents } from 'electron'
 import { appConfigManager } from '../appConfigManager/appConfigManager'
 import type { AppConfig } from '@shared/types/configTypes'
 
@@ -26,6 +26,12 @@ export function registerConfigHandlers(): void {
         const validation = await configManager.validateConfig(data)
         if (validation.valid) {
           await configManager.saveConfig(data)
+
+          // Emit config change event to all renderer processes
+          webContents.getAllWebContents().forEach((webContent) => {
+            webContent.send('config:changed', { config: data })
+          })
+
           return { success: true, errors: [] }
         } else {
           return { success: false, errors: validation.errors }

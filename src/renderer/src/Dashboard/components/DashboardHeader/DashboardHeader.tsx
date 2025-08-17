@@ -1,7 +1,7 @@
 import React from 'react'
-import styles from './Header.module.css'
+import styles from './DashboardHeader.module.css'
 
-const Header: React.FC = () => {
+const DashboardHeader: React.FC = () => {
   return (
     <header className={styles.header}>
       <div className={styles.headerContent}>
@@ -20,4 +20,4 @@ const Header: React.FC = () => {
   )
 }
 
-export default Header
+export default DashboardHeader

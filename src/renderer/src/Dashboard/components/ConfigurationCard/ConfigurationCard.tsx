@@ -9,39 +9,33 @@ import CheckboxField from './components/CheckboxField/CheckboxField'
 import BotConfigItem from './components/BotConfigItem/BotConfigItem'
 import ActionButtons from './components/ActionButtons/ActionButtons'
 import FooterNotes from './components/FooterNotes/FooterNotes'
+import { useAppConfig } from '../../../hooks/useAppConfig'
 import { useConfigApi } from '../../../hooks/useConfigApi'
 
 const ConfigurationCard: React.FC = () => {
-  const { getConfig, saveConfig } = useConfigApi()
+  const appConfigContext = useAppConfig()
+  const { saveConfig } = useConfigApi()
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [configStatus, setConfigStatus] = useState<ConfigStatus>('saved')
   const [validationErrors, setValidationErrors] = useState<string[]>([])
   const [localConfig, setLocalConfig] = useState<AppConfig>({
     BASE_LOG_DIRECTORY: '',
     DREAMBOT_VIP_FEATURES: true,
-    BOT_CONFIG: {
-      WoodcutterBot: {
-        webhookUrl: '',
-        launchScript: ''
-      }
-    }
+    BASE_WEBHOOK_URL: '',
+    BOT_CONFIG: {}
   })
 
   useEffect(() => {
-    const loadConfig = async () => {
-      const result = await getConfig()
-      if (result) {
-        setLocalConfig(result.config)
-        setValidationErrors(result.errors)
-        if (result.errors.length > 0) {
-          setConfigStatus('error')
-        } else {
-          setConfigStatus('saved')
-        }
+    if (appConfigContext.config) {
+      setLocalConfig(appConfigContext.config)
+      setValidationErrors(appConfigContext.errors)
+      if (appConfigContext.errors.length > 0) {
+        setConfigStatus('error')
+      } else {
+        setConfigStatus('saved')
       }
     }
-    loadConfig()
-  }, [getConfig])
+  }, [appConfigContext.config, appConfigContext.errors])
 
   const handleToggleCollapse = () => {
     setIsCollapsed(!isCollapsed)
@@ -52,17 +46,8 @@ const ConfigurationCard: React.FC = () => {
     setConfigStatus('unsaved')
   }
 
-  const handleWebhookUrlChange = (value: string) => {
-    setLocalConfig((prev) => ({
-      ...prev,
-      BOT_CONFIG: {
-        ...prev.BOT_CONFIG,
-        WoodcutterBot: {
-          ...prev.BOT_CONFIG.WoodcutterBot,
-          webhookUrl: value
-        }
-      }
-    }))
+  const handleBaseWebhookUrlChange = (value: string) => {
+    setLocalConfig((prev) => ({ ...prev, BASE_WEBHOOK_URL: value }))
     setConfigStatus('unsaved')
   }
 
@@ -149,9 +134,9 @@ const ConfigurationCard: React.FC = () => {
       />
 
       <ConfigInput
-        label="General Chat Webhook URL:"
-        value={localConfig.BOT_CONFIG.WoodcutterBot.webhookUrl}
-        onChange={handleWebhookUrlChange}
+        label="Base Webhook URL (Optional):"
+        value={localConfig.BASE_WEBHOOK_URL}
+        onChange={handleBaseWebhookUrlChange}
         placeholder="https://discord.com/api/webhooks/..."
       />
 

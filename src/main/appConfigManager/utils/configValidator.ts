@@ -20,6 +20,11 @@ export function validateAppConfig(config: unknown): ValidationResult {
     errors.push('DREAMBOT_VIP_FEATURES must be a boolean')
   }
 
+  // BASE_WEBHOOK_URL is optional, but if provided must be a string
+  if (configObj.BASE_WEBHOOK_URL !== undefined && typeof configObj.BASE_WEBHOOK_URL !== 'string') {
+    errors.push('BASE_WEBHOOK_URL must be a string if provided')
+  }
+
   if (!configObj.BOT_CONFIG || typeof configObj.BOT_CONFIG !== 'object') {
     errors.push('BOT_CONFIG must be a valid object')
   } else {

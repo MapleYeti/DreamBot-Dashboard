@@ -90,6 +90,7 @@ export class appConfigManager {
     return {
       BASE_LOG_DIRECTORY: './logs',
       DREAMBOT_VIP_FEATURES: false,
+      BASE_WEBHOOK_URL: '',
       BOT_CONFIG: {}
     }
   }

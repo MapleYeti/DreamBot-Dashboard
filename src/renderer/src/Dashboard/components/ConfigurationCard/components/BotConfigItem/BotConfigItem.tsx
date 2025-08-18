@@ -12,7 +12,6 @@ interface Bot {
 
 interface BotConfigItemProps {
   bot: Bot
-  vipFeaturesEnabled: boolean
   onEdit: (botName: string, botConfig: BotConfig) => void
   onRemove: (botId: string) => void
   disabled?: boolean
@@ -20,7 +19,6 @@ interface BotConfigItemProps {
 
 const BotConfigItem: React.FC<BotConfigItemProps> = ({
   bot,
-  vipFeaturesEnabled,
   onEdit,
   onRemove,
   disabled = false
@@ -57,18 +55,16 @@ const BotConfigItem: React.FC<BotConfigItemProps> = ({
                 {hasWebhook ? 'Webhook configured' : 'Webhook not configured'}
               </span>
             </div>
-            {vipFeaturesEnabled && (
-              <div className={styles.statusItem}>
-                <span
-                  className={`${styles.statusIcon} ${hasLaunchScript ? styles.statusConfigured : styles.statusNotConfigured}`}
-                >
-                  {hasLaunchScript ? '✓' : '✗'}
-                </span>
-                <span className={styles.statusText}>
-                  {hasLaunchScript ? 'Launch CLI configured' : 'Launch CLI not configured'}
-                </span>
-              </div>
-            )}
+            <div className={styles.statusItem}>
+              <span
+                className={`${styles.statusIcon} ${hasLaunchScript ? styles.statusConfigured : styles.statusNotConfigured}`}
+              >
+                {hasLaunchScript ? '✓' : '✗'}
+              </span>
+              <span className={styles.statusText}>
+                {hasLaunchScript ? 'Launch CLI configured' : 'Launch CLI not configured'}
+              </span>
+            </div>
           </div>
         </div>
         <div className={styles.botActions}>
@@ -92,7 +88,6 @@ const BotConfigItem: React.FC<BotConfigItemProps> = ({
           mode="edit"
           botName={bot.name}
           botConfig={{ webhookUrl: bot.webhookUrl, launchScript: bot.launchScript }}
-          vipFeaturesEnabled={vipFeaturesEnabled}
           onSubmit={handleEditSubmit}
         />
       ) : null}

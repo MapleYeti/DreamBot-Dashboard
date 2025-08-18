@@ -132,59 +132,49 @@ const MonitoringCard: React.FC = () => {
         </div>
       </div>
 
-      <div className={styles.botStatus}>
-        <h3>Bot Status</h3>
-        {bots.length === 0 ? (
-          <div className={styles.noBotsMessage}>
-            No bots configured. Add bots in the Configuration section to see them here.
-          </div>
-        ) : (
-          <div className={styles.botTable}>
-            <div
-              className={styles.tableHeader}
-              style={{
-                gridTemplateColumns: appConfigContext.config?.DREAMBOT_VIP_FEATURES
-                  ? '1fr 1fr 1fr 1fr 1fr'
-                  : '1fr 1fr 1fr'
-              }}
-            >
-              <div className={styles.headerCell}>Bot Name</div>
-              <div className={styles.headerCell}>Status</div>
-              <div className={styles.headerCell}>Webhook</div>
-              {appConfigContext.config?.DREAMBOT_VIP_FEATURES && (
-                <div className={styles.headerCell}>Launch Script</div>
-              )}
-              {appConfigContext.config?.DREAMBOT_VIP_FEATURES && (
-                <div className={styles.headerCell}>Actions</div>
-              )}
+      {appConfigContext.config?.DREAMBOT_VIP_FEATURES && (
+        <div className={styles.botStatus}>
+          <h3>Bot Status</h3>
+          {bots.length === 0 ? (
+            <div className={styles.noBotsMessage}>
+              No bots configured. Add bots in the Configuration section to see them here.
             </div>
-            {bots.map((bot) => (
+          ) : (
+            <div className={styles.botTable}>
               <div
-                key={bot.id}
-                className={styles.tableRow}
-                style={{
-                  gridTemplateColumns: appConfigContext.config?.DREAMBOT_VIP_FEATURES
-                    ? '1fr 1fr 1fr 1fr 1fr'
-                    : '1fr 1fr 1fr'
-                }}
+                className={styles.tableHeader}
+                style={{ gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr' }}
               >
-                <div className={styles.tableCell}>{bot.name}</div>
-                <div className={styles.tableCell}>
-                  <div className={`${styles.statusIndicator} ${styles[bot.status.toLowerCase()]}`}>
-                    <div className={styles.statusDot}></div>
-                    <span>{bot.status}</span>
+                <div className={styles.headerCell}>Bot Name</div>
+                <div className={styles.headerCell}>Status</div>
+                <div className={styles.headerCell}>Webhook</div>
+                <div className={styles.headerCell}>Launch Script</div>
+                <div className={styles.headerCell}>Actions</div>
+              </div>
+              {bots.map((bot) => (
+                <div
+                  key={bot.id}
+                  className={styles.tableRow}
+                  style={{ gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr' }}
+                >
+                  <div className={styles.tableCell}>{bot.name}</div>
+                  <div className={styles.tableCell}>
+                    <div
+                      className={`${styles.statusIndicator} ${styles[bot.status.toLowerCase()]}`}
+                    >
+                      <div className={styles.statusDot}></div>
+                      <span>{bot.status}</span>
+                    </div>
                   </div>
-                </div>
-                <div className={styles.tableCell}>
-                  <div className={styles.configStatus}>
-                    {bot.webhookUrl ? (
-                      <span className={styles.configured}>✓ Configured</span>
-                    ) : (
-                      <span className={styles.notConfigured}>✗ Not configured</span>
-                    )}
+                  <div className={styles.tableCell}>
+                    <div className={styles.configStatus}>
+                      {bot.webhookUrl ? (
+                        <span className={styles.configured}>✓ Configured</span>
+                      ) : (
+                        <span className={styles.notConfigured}>✗ Not configured</span>
+                      )}
+                    </div>
                   </div>
-                </div>
-                {appConfigContext.config?.DREAMBOT_VIP_FEATURES && (
                   <div className={styles.tableCell}>
                     <div className={styles.configStatus}>
                       {bot.launchScript ? (
@@ -194,47 +184,20 @@ const MonitoringCard: React.FC = () => {
                       )}
                     </div>
                   </div>
-                )}
-                {appConfigContext.config?.DREAMBOT_VIP_FEATURES && (
                   <div className={styles.tableCell}>
                     <button
                       className={styles.launchButton}
                       onClick={() => handleLaunchBot(bot.id)}
-                      disabled={!bot.enabled}
+                      disabled={!bot.launchScript}
                     >
                       <span className={styles.buttonIcon}>🚀</span>
                       Launch
                     </button>
                   </div>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {monitoring.logUpdates.length > 0 && (
-        <div className={styles.logUpdates}>
-          <div className={styles.logUpdatesHeader}>
-            <h3>Recent Log Updates</h3>
-            <button className={styles.clearButton} onClick={monitoring.clearLogUpdates}>
-              Clear
-            </button>
-          </div>
-          <div className={styles.logUpdatesList}>
-            {monitoring.logUpdates.slice(0, 10).map((update, index) => (
-              <div key={index} className={styles.logUpdate}>
-                <div className={styles.logUpdateHeader}>
-                  <span className={styles.logBotName}>{update.botName}</span>
-                  <span className={styles.logFileName}>{update.fileName}</span>
-                  <span className={styles.logTimestamp}>
-                    {new Date(update.timestamp).toLocaleTimeString()}
-                  </span>
                 </div>
-                <div className={styles.logContent}>{update.newContent}</div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </section>

@@ -42,15 +42,8 @@ const ConfigurationCard: React.FC = () => {
     }
   }, [appConfigContext.config, appConfigContext.errors])
 
-  // Update unsaved changes state when local config changes
-  // Probably refactor this later
-  useEffect(() => {
-    const hasChanges = hasUnsavedChanges()
-    setHasUnsavedChanges(hasChanges)
-  }, [localConfig, appConfigContext.config, setHasUnsavedChanges])
-
   // Check if there are unsaved changes
-  const hasUnsavedChanges = () => {
+  const hasUnsavedChanges = React.useCallback(() => {
     if (!appConfigContext.config) return false
 
     return (
@@ -59,7 +52,14 @@ const ConfigurationCard: React.FC = () => {
       localConfig.BASE_WEBHOOK_URL !== appConfigContext.config.BASE_WEBHOOK_URL ||
       JSON.stringify(localConfig.BOT_CONFIG) !== JSON.stringify(appConfigContext.config.BOT_CONFIG)
     )
-  }
+  }, [localConfig, appConfigContext.config])
+
+  // Update unsaved changes state when local config changes
+  // Probably refactor this later
+  useEffect(() => {
+    const hasChanges = hasUnsavedChanges()
+    setHasUnsavedChanges(hasChanges)
+  }, [localConfig, appConfigContext.config, setHasUnsavedChanges, hasUnsavedChanges])
 
   // Determine config status based on validation errors and unsaved changes
   const getConfigStatus = (): ConfigStatus => {
@@ -191,7 +191,7 @@ const ConfigurationCard: React.FC = () => {
         />
 
         <ConfigInput
-          label="Base Webhook URL (Optional):"
+          label={`Webhook URL${localConfig.DREAMBOT_VIP_FEATURES ? ' (Optional when using Bot Configuration Webhooks)' : ''}`}
           value={localConfig.BASE_WEBHOOK_URL}
           onChange={handleBaseWebhookUrlChange}
           placeholder="https://discord.com/api/webhooks/..."
@@ -202,31 +202,35 @@ const ConfigurationCard: React.FC = () => {
           label="DreamBot VIP Features"
           checked={localConfig.DREAMBOT_VIP_FEATURES}
           onChange={handleVipFeaturesChange}
-          description="Enable advanced features like CLI bot launching. Requires DreamBot VIP subscription."
+          description="Enable advanced features Bot Configurations and Launch Scripts. Requires DreamBot VIP subscription."
           disabled={isDisabled}
         />
 
-        <div className={styles.botConfigurations}>
-          <h3>Bot Configurations</h3>
-          {Object.entries(localConfig.BOT_CONFIG).map(([botName, bot]) => (
-            <BotConfigItem
-              key={botName}
-              bot={{
-                id: botName,
-                name: botName,
-                webhookUrl: bot.webhookUrl,
-                launchScript: bot.launchScript
-              }}
-              vipFeaturesEnabled={localConfig.DREAMBOT_VIP_FEATURES}
-              onEdit={handleBotSubmit}
-              onRemove={handleRemoveBot}
-              disabled={isDisabled}
-            />
-          ))}
-          <button className={styles.addBotButton} onClick={handleAddBot} disabled={isDisabled}>
-            + Add Bot
-          </button>
-        </div>
+        {localConfig.DREAMBOT_VIP_FEATURES && (
+          <div className={styles.botConfigurations}>
+            <h3>Bot Configurations</h3>
+            <p className={styles.helpText}>
+              💡 Must launch bot with CLI script to use Bot-specific webhooks
+            </p>
+            {Object.entries(localConfig.BOT_CONFIG).map(([botName, bot]) => (
+              <BotConfigItem
+                key={botName}
+                bot={{
+                  id: botName,
+                  name: botName,
+                  webhookUrl: bot.webhookUrl,
+                  launchScript: bot.launchScript
+                }}
+                onEdit={handleBotSubmit}
+                onRemove={handleRemoveBot}
+                disabled={isDisabled}
+              />
+            ))}
+            <button className={styles.addBotButton} onClick={handleAddBot} disabled={isDisabled}>
+              + Add Bot
+            </button>
+          </div>
+        )}
 
         <ActionButtons
           onSave={handleSave}
@@ -257,7 +261,6 @@ const ConfigurationCard: React.FC = () => {
           isOpen={isBotModalOpen}
           onClose={handleCloseBotModal}
           mode="add"
-          vipFeaturesEnabled={localConfig.DREAMBOT_VIP_FEATURES}
           onSubmit={handleBotSubmit}
         />
       ) : null}

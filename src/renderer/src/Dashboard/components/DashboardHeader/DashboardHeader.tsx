@@ -2,6 +2,7 @@ import React from 'react'
 import { useMonitoring } from '../../../hooks/useMonitoring'
 import { useAppConfig } from '../../../hooks/useAppConfig'
 import { useBotLaunch } from '../../../hooks/useBotLaunch'
+import VersionBadge from './components/VersionBadge'
 import styles from './DashboardHeader.module.css'
 
 const DashboardHeader: React.FC = () => {
@@ -40,6 +41,7 @@ const DashboardHeader: React.FC = () => {
         <div className={styles.logo}>
           <div className={styles.logoIcon}>🤖</div>
           <h1 className={styles.logoText}>DreamBot Dashboard</h1>
+          <VersionBadge />
         </div>
         <div className={styles.userInfo}>
           {isVipEnabled && (

@@ -4,8 +4,6 @@ import styles from './ActionButtons.module.css'
 interface ActionButtonsProps {
   onSave: () => void
   onUndo: () => void
-  onImport: () => void
-  onExport: () => void
   formHasChanges: boolean
   disabled?: boolean
 }
@@ -13,8 +11,6 @@ interface ActionButtonsProps {
 const ActionButtons: React.FC<ActionButtonsProps> = ({
   onSave,
   onUndo,
-  onImport,
-  onExport,
   formHasChanges,
   disabled = false
 }) => {
@@ -33,12 +29,6 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
         disabled={!formHasChanges || disabled}
       >
         Undo
-      </button>
-      <button className={styles.importButton} onClick={onImport} disabled={disabled}>
-        Import
-      </button>
-      <button className={styles.exportButton} onClick={onExport} disabled={disabled}>
-        Export
       </button>
     </div>
   )

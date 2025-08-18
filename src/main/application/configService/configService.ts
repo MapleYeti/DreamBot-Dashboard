@@ -51,10 +51,8 @@ export class ConfigService {
 
   async saveConfig(config: AppConfig): Promise<void> {
     try {
-      console.log('Saving config to:', this.configPath)
       await writeFile(this.configPath, JSON.stringify(config, null, 2))
       this.config = config
-      console.log('Config saved successfully')
     } catch (error) {
       console.error('Failed to save config:', error)
       throw error

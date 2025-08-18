@@ -9,9 +9,7 @@ const api = {
     saveConfig: (config: AppConfig): Promise<{ success: boolean; errors: string[] }> =>
       ipcRenderer.invoke('config:save', config),
     onChanged: (callback: (data: { config: AppConfig }) => void) => {
-      console.log('Preload: Setting up config:changed listener')
       ipcRenderer.on('config:changed', (_event, data) => {
-        console.log('Preload: Received config:changed event:', data)
         callback(data)
       })
     },
@@ -78,13 +76,9 @@ declare global {
 if (process.contextIsolated) {
   try {
     contextBridge.exposeInMainWorld('api', api)
-    console.log('Preload script loaded successfully, API exposed to renderer')
-    console.log('API structure:', JSON.stringify(api, null, 2))
   } catch (error) {
     console.error('Failed to expose API to renderer:', error)
   }
 } else {
   window.api = api
-  console.log('Preload script loaded in non-isolated context, API assigned to window')
-  console.log('API structure:', JSON.stringify(api, null, 2))
 }

@@ -138,16 +138,6 @@ const ConfigurationCard: React.FC = () => {
     }
   }
 
-  const handleImport = () => {
-    // TODO: Implement import functionality
-    console.log('Importing configuration')
-  }
-
-  const handleExport = () => {
-    // TODO: Implement export functionality
-    console.log('Exporting configuration')
-  }
-
   const handleBrowseLogs = async () => {
     try {
       const selectedPath = await window.api.dialog.selectDirectory()
@@ -235,8 +225,6 @@ const ConfigurationCard: React.FC = () => {
         <ActionButtons
           onSave={handleSave}
           onUndo={handleUndo}
-          onImport={handleImport}
-          onExport={handleExport}
           formHasChanges={hasUnsavedChanges()}
           disabled={isDisabled}
         />

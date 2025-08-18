@@ -65,21 +65,3 @@
   font-weight: bold;
   font-size: 16px;
 }
-
-.importButton {
-  background: #6b7280;
-  color: white;
-}
-
-.importButton:hover {
-  background: #4b5563;
-}
-
-.exportButton {
-  background: #6b7280;
-  color: white;
-}
-
-.exportButton:hover {
-  background: #4b5563;
-}

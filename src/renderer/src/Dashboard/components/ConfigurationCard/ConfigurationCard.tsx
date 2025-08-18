@@ -206,23 +206,49 @@ const ConfigurationCard: React.FC = () => {
                 Must launch bot with CLI script to use Bot-specific webhooks
               </HelpText>
             </div>
-            {Object.entries(localConfig.BOT_CONFIG).map(([botName, bot]) => (
-              <BotConfigItem
-                key={botName}
-                bot={{
-                  id: botName,
-                  name: botName,
-                  webhookUrl: bot.webhookUrl,
-                  launchScript: bot.launchScript
-                }}
-                onEdit={handleBotSubmit}
-                onRemove={handleRemoveBot}
-                disabled={isDisabled}
-              />
-            ))}
-            <button className={styles.addBotButton} onClick={handleAddBot} disabled={isDisabled}>
-              + Add Bot
-            </button>
+
+            {Object.entries(localConfig.BOT_CONFIG).length === 0 ? (
+              <div className={styles.emptyState}>
+                <div className={styles.emptyStateIcon}>🤖</div>
+                <h4 className={styles.emptyStateTitle}>No Bot Configurations</h4>
+                <p className={styles.emptyStateDescription}>
+                  Get started by adding your first bot configuration. Each bot can have its own
+                  webhook URL and launch script for automated management.
+                </p>
+                <button
+                  className={styles.emptyStateButton}
+                  onClick={handleAddBot}
+                  disabled={isDisabled}
+                >
+                  <span>➕</span>
+                  Add Your First Bot
+                </button>
+              </div>
+            ) : (
+              <>
+                {Object.entries(localConfig.BOT_CONFIG).map(([botName, bot]) => (
+                  <BotConfigItem
+                    key={botName}
+                    bot={{
+                      id: botName,
+                      name: botName,
+                      webhookUrl: bot.webhookUrl,
+                      launchScript: bot.launchScript
+                    }}
+                    onEdit={handleBotSubmit}
+                    onRemove={handleRemoveBot}
+                    disabled={isDisabled}
+                  />
+                ))}
+                <button
+                  className={styles.addBotButton}
+                  onClick={handleAddBot}
+                  disabled={isDisabled}
+                >
+                  + Add Bot
+                </button>
+              </>
+            )}
           </div>
         )}
 

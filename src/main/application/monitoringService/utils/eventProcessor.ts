@@ -1,4 +1,4 @@
-import { LOG_PATTERNS, type LogEvent } from './logPatterns'
+import { LOG_PATTERNS, type LogEvent } from '@shared/types/monitoringTypes'
 
 export default class EventProcessor {
   processLogLine(

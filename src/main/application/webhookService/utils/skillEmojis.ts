@@ -38,7 +38,7 @@ export function getSkillEmoji(skill: string): string {
     case 'Herblore':
       return '🌿'
     case 'Thieving':
-      return '💰'
+      return '👜'
     case 'Fletching':
       return '🎯'
     case 'Slayer':
@@ -48,7 +48,7 @@ export function getSkillEmoji(skill: string): string {
     case 'Construction':
       return '🏠'
     case 'Hunter':
-      return '🐺'
+      return '🐾'
 
     // Special
     case 'Combat':

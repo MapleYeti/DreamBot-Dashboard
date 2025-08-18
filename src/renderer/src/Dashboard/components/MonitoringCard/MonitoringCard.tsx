@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useMemo } from 'react'
 import { useAppConfig } from '../../../hooks/useAppConfig'
 import { useMonitoring } from '../../../hooks/useMonitoring'
 import { useUnsavedChanges } from '../../../hooks/useUnsavedChanges'
+import { useBotLaunch } from '../../../hooks/useBotLaunch'
 import styles from './MonitoringCard.module.css'
 
 interface BotStatus {
@@ -11,43 +12,60 @@ interface BotStatus {
   enabled: boolean
   webhookUrl: string
   launchScript: string
+  isRunning?: boolean
+  pid?: number
 }
 
 const MonitoringCard: React.FC = () => {
   const appConfigContext = useAppConfig()
   const monitoring = useMonitoring()
   const { hasUnsavedChanges } = useUnsavedChanges()
-  const [bots, setBots] = useState<BotStatus[]>([])
+  const { botStatuses, launchBot, stopBot, isLoading: botLaunchLoading } = useBotLaunch()
 
-  // Update bots list when config changes
-  useEffect(() => {
-    if (appConfigContext.config?.BOT_CONFIG) {
-      const botEntries = Object.entries(appConfigContext.config.BOT_CONFIG)
-      const botStatusList: BotStatus[] = botEntries.map(([botName, botConfig]) => ({
+  // Derive bots list from config and bot statuses
+  const bots: BotStatus[] = useMemo(() => {
+    if (!appConfigContext.config?.BOT_CONFIG) return []
+
+    return Object.entries(appConfigContext.config.BOT_CONFIG).map(([botName, botConfig]) => {
+      const status = botStatuses[botName]
+      return {
         id: botName,
         name: botName,
-        status: 'Offline' as const, // Default status for new bots
-        enabled: true, // Default to enabled
+        status: status?.isRunning ? ('Online' as const) : ('Offline' as const),
+        enabled: true,
         webhookUrl: botConfig.webhookUrl,
-        launchScript: botConfig.launchScript
-      }))
+        launchScript: botConfig.launchScript,
+        isRunning: status?.isRunning ?? false,
+        pid: status?.pid
+      }
+    })
+  }, [appConfigContext.config?.BOT_CONFIG, botStatuses])
 
-      setBots(botStatusList)
+  const handleStartMonitoring = () => monitoring.startMonitoring()
+  const handleStopMonitoring = () => monitoring.stopMonitoring()
+
+  const handleLaunchBot = async (botId: string): Promise<void> => {
+    try {
+      const result = await launchBot(botId)
+      if (!result.success) {
+        console.error(`Failed to launch bot ${botId}:`, result.message)
+      }
+      // Success case is handled by real-time status updates
+    } catch (error) {
+      console.error(`Error launching bot ${botId}:`, error)
     }
-  }, [appConfigContext.config])
-
-  const handleStartMonitoring = async (): Promise<void> => {
-    await monitoring.startMonitoring()
   }
 
-  const handleStopMonitoring = async (): Promise<void> => {
-    await monitoring.stopMonitoring()
-  }
-
-  const handleLaunchBot = (botId: string): void => {
-    setBots((prev) =>
-      prev.map((bot) => (bot.id === botId ? { ...bot, status: 'Starting' as const } : bot))
-    )
+  const handleStopBot = async (botId: string): Promise<void> => {
+    try {
+      const result = await stopBot(botId)
+      if (!result.success) {
+        console.error(`Failed to stop bot ${botId}:`, result.message)
+      }
+      // Success case is handled by real-time status updates
+    } catch (error) {
+      console.error(`Error stopping bot ${botId}:`, error)
+    }
   }
 
   if (appConfigContext.isLoading) {
@@ -164,6 +182,9 @@ const MonitoringCard: React.FC = () => {
                     >
                       <div className={styles.statusDot}></div>
                       <span>{bot.status}</span>
+                      {bot.isRunning && bot.pid && (
+                        <span className={styles.pidInfo}> (PID: {bot.pid})</span>
+                      )}
                     </div>
                   </div>
                   <div className={styles.tableCell}>
@@ -185,19 +206,36 @@ const MonitoringCard: React.FC = () => {
                     </div>
                   </div>
                   <div className={styles.tableCell}>
-                    <button
-                      className={styles.launchButton}
-                      onClick={() => handleLaunchBot(bot.id)}
-                      disabled={!bot.launchScript}
-                    >
-                      <span className={styles.buttonIcon}>🚀</span>
-                      Launch
-                    </button>
+                    {bot.isRunning ? (
+                      <button
+                        className={styles.stopButton}
+                        onClick={() => handleStopBot(bot.id)}
+                        disabled={botLaunchLoading}
+                      >
+                        <span className={styles.buttonIcon}>⏹️</span>
+                        Stop
+                      </button>
+                    ) : (
+                      <button
+                        className={styles.launchButton}
+                        onClick={() => handleLaunchBot(bot.id)}
+                        disabled={!bot.launchScript || botLaunchLoading}
+                      >
+                        <span className={styles.buttonIcon}>🚀</span>
+                        Launch
+                      </button>
+                    )}
                   </div>
                 </div>
               ))}
             </div>
           )}
+        </div>
+      )}
+
+      {appConfigContext.config?.DREAMBOT_VIP_FEATURES && (
+        <div className={styles.footer}>
+          <p className={styles.helpText}>💡 Must launch bot through dashboard to track status</p>
         </div>
       )}
     </section>

@@ -38,6 +38,32 @@ const api = {
       ipcRenderer.removeAllListeners('monitoring:log-update')
     }
   },
+  botLaunch: {
+    launchBot: (botName: string): Promise<{ success: boolean; message: string }> =>
+      ipcRenderer.invoke('bot:launch', botName),
+    stopBot: (botName: string): Promise<{ success: boolean; message: string }> =>
+      ipcRenderer.invoke('bot:stop', botName),
+    getBotStatus: (
+      botName: string
+    ): Promise<{ isRunning: boolean; pid?: number; startTime?: Date; command?: string }> =>
+      ipcRenderer.invoke('bot:status', botName),
+    getAllBotStatuses: (): Promise<
+      Record<string, { isRunning: boolean; pid?: number; startTime?: Date; command?: string }>
+    > => ipcRenderer.invoke('bot:all-statuses'),
+    onStatusUpdate: (
+      callback: (
+        data: Record<
+          string,
+          { isRunning: boolean; pid?: number; startTime?: Date; command?: string }
+        >
+      ) => void
+    ) => {
+      ipcRenderer.on('bot:status-update', (_event, data) => callback(data))
+    },
+    offStatusUpdate: () => {
+      ipcRenderer.removeAllListeners('bot:status-update')
+    }
+  },
   dialog: {
     selectDirectory: (): Promise<string | null> => ipcRenderer.invoke('dialog:select-directory')
   }

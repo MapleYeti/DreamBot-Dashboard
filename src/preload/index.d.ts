@@ -18,6 +18,23 @@ export interface MonitoringApi {
   offLogUpdate(): void
 }
 
+export interface BotLaunchApi {
+  launchBot(botName: string): Promise<{ success: boolean; message: string }>
+  stopBot(botName: string): Promise<{ success: boolean; message: string }>
+  getBotStatus(
+    botName: string
+  ): Promise<{ isRunning: boolean; pid?: number; startTime?: Date; command?: string }>
+  getAllBotStatuses(): Promise<
+    Record<string, { isRunning: boolean; pid?: number; startTime?: Date; command?: string }>
+  >
+  onStatusUpdate(
+    callback: (
+      data: Record<string, { isRunning: boolean; pid?: number; startTime?: Date; command?: string }>
+    ) => void
+  ): void
+  offStatusUpdate(): void
+}
+
 export interface DialogApi {
   selectDirectory(): Promise<string | null>
 }
@@ -25,6 +42,7 @@ export interface DialogApi {
 export interface Api {
   config: ConfigApi
   monitoring: MonitoringApi
+  botLaunch: BotLaunchApi
   dialog: DialogApi
 }
 

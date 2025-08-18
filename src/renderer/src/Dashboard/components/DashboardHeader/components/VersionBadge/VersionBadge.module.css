@@ -1,0 +1,33 @@
+.versionBadge {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+@media (max-width: 768px) {
+  .versionBadge {
+    font-size: 11px;
+    padding: 3px 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .versionBadge {
+    font-size: 10px;
+    padding: 2px 5px;
+  }
+}
+
+@media (max-width: 360px) {
+  .versionBadge {
+    display: none;
+  }
+}

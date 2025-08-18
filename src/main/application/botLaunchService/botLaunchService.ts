@@ -1,7 +1,7 @@
 import { spawn, type ChildProcess, exec } from 'child_process'
 import { promisify } from 'util'
 import { webContents } from 'electron'
-import type { AppConfig } from '@shared/types/configTypes'
+import { configService } from '../configService'
 
 interface BotProcess {
   process: ChildProcess
@@ -10,30 +10,20 @@ interface BotProcess {
   command: string
 }
 
-export class BotLaunchService {
-  private static instance: BotLaunchService
+export default class BotLaunchService {
   private botProcesses = new Map<string, BotProcess>()
 
-  private constructor() {
-    // Private constructor for singleton pattern
+  constructor() {
+    // Constructor for singleton pattern
   }
 
-  public static getInstance(): BotLaunchService {
-    if (!BotLaunchService.instance) {
-      BotLaunchService.instance = new BotLaunchService()
-    }
-    return BotLaunchService.instance
-  }
-
-  async launchBot(
-    botName: string,
-    config: AppConfig
-  ): Promise<{ success: boolean; message: string }> {
+  async launchBot(botName: string): Promise<{ success: boolean; message: string }> {
     try {
       if (this.botProcesses.has(botName)) {
         return { success: false, message: `Bot ${botName} is already running` }
       }
 
+      const config = await configService.getConfig()
       const botConfig = config.BOT_CONFIG[botName]
       if (!botConfig || !botConfig.launchScript) {
         return { success: false, message: `No launch script configured for bot ${botName}` }
@@ -231,3 +221,7 @@ export class BotLaunchService {
     }
   }
 }
+
+// Export a single instance (singleton)
+const botLaunchService = new BotLaunchService()
+export { botLaunchService }

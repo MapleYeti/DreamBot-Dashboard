@@ -1,14 +1,12 @@
 import { ipcMain, webContents } from 'electron'
-import { ConfigService } from '../application'
+import { configService } from '../application/configService'
 import type { AppConfig } from '@shared/types/configTypes'
 
 export function registerConfigHandlers(): void {
   ipcMain.handle('config:get', async (): Promise<{ config: AppConfig; errors: string[] }> => {
     try {
-      const configService = ConfigService.getInstance()
       const config = await configService.getConfig()
       const validation = await configService.validateConfig(config)
-
       return {
         config,
         errors: validation.errors
@@ -23,7 +21,6 @@ export function registerConfigHandlers(): void {
     'config:save',
     async (_event, data: AppConfig): Promise<{ success: boolean; errors: string[] }> => {
       try {
-        const configService = ConfigService.getInstance()
         const validation = await configService.validateConfig(data)
         if (validation.success) {
           await configService.saveConfig(data)

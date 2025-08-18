@@ -2,57 +2,65 @@ import type { AppConfig } from '@shared/types/configTypes'
 import type { LogEvent } from './logPatterns'
 import { MessageFormatter } from './messageFormatter'
 
-export class WebhookService {
-  private config: AppConfig
+export default class WebhookService {
+	private config: AppConfig
 
-  constructor(config: AppConfig) {
-    this.config = config
-  }
+	constructor(config: AppConfig) {
+		this.config = config
+	}
 
-  async sendWebhook(event: LogEvent, botName: string): Promise<void> {
-    try {
-      // Determine which webhook URL to use
-      const webhookUrl = this.getWebhookUrl(botName)
+	setConfig(config: AppConfig): void {
+		this.config = config
+	}
 
-      if (!webhookUrl) {
-        console.log(`No webhook configured for ${botName}, skipping webhook for ${event.type}`)
-        return
-      }
+	async sendWebhook(event: LogEvent, botName: string): Promise<void> {
+		try {
+			// Determine which webhook URL to use
+			const webhookUrl = this.getWebhookUrl(botName)
 
-      const embed = MessageFormatter.createDiscordEmbed(event, botName)
+			if (!webhookUrl) {
+				console.log(`No webhook configured for ${botName}, skipping webhook for ${event.type}`)
+				return
+			}
 
-      const response = await fetch(webhookUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          embeds: [embed]
-        })
-      })
+			const embed = MessageFormatter.createDiscordEmbed(event, botName)
 
-      if (!response.ok) {
-        throw new Error(`Webhook failed: ${response.status} ${response.statusText}`)
-      }
+			const response = await fetch(webhookUrl, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					embeds: [embed]
+				})
+			})
 
-      console.log(`Webhook sent successfully for ${event.type} event from ${botName}`)
-    } catch (error) {
-      console.error(`Failed to send webhook for ${event.type} event from ${botName}:`, error)
-    }
-  }
+			if (!response.ok) {
+				throw new Error(`Webhook failed: ${response.status} ${response.statusText}`)
+			}
 
-  private getWebhookUrl(botName: string): string | null {
-    // First try to get the bot-specific webhook
-    const botConfig = this.config.BOT_CONFIG[botName]
-    if (botConfig?.webhookUrl) {
-      return botConfig.webhookUrl
-    }
+			console.log(`Webhook sent successfully for ${event.type} event from ${botName}`)
+		} catch (error) {
+			console.error(`Failed to send webhook for ${event.type} event from ${botName}:`, error)
+		}
+	}
 
-    // Fall back to base webhook URL
-    if (this.config.BASE_WEBHOOK_URL) {
-      return this.config.BASE_WEBHOOK_URL
-    }
+	private getWebhookUrl(botName: string): string | null {
+		// First try to get the bot-specific webhook
+		const botConfig = this.config.BOT_CONFIG[botName]
+		if (botConfig?.webhookUrl) {
+			return botConfig.webhookUrl
+		}
 
-    return null
-  }
+		// Fall back to base webhook URL
+		if (this.config.BASE_WEBHOOK_URL) {
+			return this.config.BASE_WEBHOOK_URL
+		}
+
+		return null
+	}
 }
+
+// Export a single instance (singleton)
+const webhookService = new WebhookService({} as AppConfig)
+export { webhookService }

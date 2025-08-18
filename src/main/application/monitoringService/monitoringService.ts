@@ -5,9 +5,9 @@ import { createInterface } from 'readline'
 import { join, extname, basename, dirname } from 'path'
 import chokidar from 'chokidar'
 import type { AppConfig } from '@shared/types/configTypes'
-import { ConfigService } from '../configService/index'
-import { EventProcessor } from './utils/eventProcessor'
-import { WebhookService } from './utils/webhookService'
+import { configService } from '../configService'
+import { eventProcessor } from './utils/eventProcessor'
+import { webhookService } from './utils/webhookService'
 import type { MonitoringStatus } from '@shared/types/monitoringTypes'
 
 interface MonitoringState {
@@ -29,8 +29,7 @@ const CHOKIDAR_CONFIG = {
   binaryInterval: 300 // Polling interval for binary files
 }
 
-export class MonitoringService {
-  private static instance: MonitoringService
+export default class MonitoringService {
   private state: MonitoringState = {
     isMonitoring: false,
     watchedFiles: new Map(),
@@ -38,18 +37,9 @@ export class MonitoringService {
     fileOffsets: new Map(),
     processingQueue: new Map()
   }
-  private eventProcessor: EventProcessor
-  private webhookService: WebhookService | null = null
 
-  private constructor() {
-    this.eventProcessor = new EventProcessor()
-  }
-
-  public static getInstance(): MonitoringService {
-    if (!MonitoringService.instance) {
-      MonitoringService.instance = new MonitoringService()
-    }
-    return MonitoringService.instance
+  constructor() {
+    // Constructor for singleton pattern
   }
 
   async startMonitoring(): Promise<{ success: boolean; message: string }> {
@@ -60,11 +50,10 @@ export class MonitoringService {
     // Always get the current config from configService singleton
     let currentConfig: AppConfig
     try {
-      const configService = ConfigService.getInstance()
       currentConfig = await configService.getConfig()
 
       // Initialize webhook service with current config
-      this.webhookService = new WebhookService(currentConfig)
+      webhookService.setConfig(currentConfig)
     } catch (error) {
       console.error('Failed to get current config for monitoring:', error)
       return { success: false, message: 'Failed to get current configuration' }
@@ -329,23 +318,18 @@ export class MonitoringService {
   }
 
   private async processLogLine(line: string, filePath: string, botName: string) {
-    if (!this.webhookService) {
-      console.log('Webhook service not initialized, skipping event processing')
-      return
-    }
-
     const trimmedLine = line.trim()
     if (!trimmedLine) return
 
     const timestamp = new Date().toISOString()
     const fileName = basename(filePath)
 
-    const event = this.eventProcessor.processLogLine(trimmedLine, botName, fileName, timestamp)
+    const event = eventProcessor.processLogLine(trimmedLine, botName, fileName, timestamp)
 
     if (event) {
       console.log(`Detected ${event.type} event from ${botName}:`, event)
 
-      this.webhookService.sendWebhook(event, botName).catch((error) => {
+      webhookService.sendWebhook(event, botName).catch((error) => {
         console.error(`Failed to send webhook for ${event.type} event:`, error)
       })
     }
@@ -413,3 +397,7 @@ export class MonitoringService {
     }
   }
 }
+
+// Export a single instance (singleton)
+const monitoringService = new MonitoringService()
+export { monitoringService }

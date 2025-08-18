@@ -1,10 +1,9 @@
 import { ipcMain, webContents } from 'electron'
-import { MonitoringService } from '../application'
+import { monitoringService } from '../application/monitoringService'
 
 export function registerMonitoringHandlers(): void {
   ipcMain.handle('monitoring:start', async () => {
     try {
-      const monitoringService = MonitoringService.getInstance()
       await monitoringService.startMonitoring()
 
       // Emit status update to all renderer processes
@@ -25,7 +24,6 @@ export function registerMonitoringHandlers(): void {
 
   ipcMain.handle('monitoring:stop', async () => {
     try {
-      const monitoringService = MonitoringService.getInstance()
       await monitoringService.stopMonitoring()
 
       // Emit status update to all renderer processes
@@ -46,7 +44,6 @@ export function registerMonitoringHandlers(): void {
 
   ipcMain.handle('monitoring:get-status', async () => {
     try {
-      const monitoringService = MonitoringService.getInstance()
       return monitoringService.getStatus()
     } catch (error) {
       console.error('Failed to get monitoring status:', error)

@@ -1,17 +1,12 @@
 import { ipcMain } from 'electron'
-import { BotLaunchService } from '../application/botLaunchService'
-import { ConfigService } from '../application/configService'
+import { botLaunchService } from '../application/botLaunchService'
 
 export function registerBotLaunchHandlers() {
   ipcMain.handle(
     'bot:launch',
     async (_event, botName: string): Promise<{ success: boolean; message: string }> => {
       try {
-        const configService = ConfigService.getInstance()
-        const config = await configService.getConfig()
-
-        const botLaunchService = BotLaunchService.getInstance()
-        return await botLaunchService.launchBot(botName, config)
+        return await botLaunchService.launchBot(botName)
       } catch (error) {
         console.error(`Failed to launch bot ${botName}:`, error)
         return {
@@ -26,7 +21,6 @@ export function registerBotLaunchHandlers() {
     'bot:stop',
     async (_event, botName: string): Promise<{ success: boolean; message: string }> => {
       try {
-        const botLaunchService = BotLaunchService.getInstance()
         return await botLaunchService.stopBot(botName)
       } catch (error) {
         console.error(`Failed to stop bot ${botName}:`, error)
@@ -45,7 +39,6 @@ export function registerBotLaunchHandlers() {
       botName: string
     ): Promise<{ isRunning: boolean; pid?: number; startTime?: Date; command?: string }> => {
       try {
-        const botLaunchService = BotLaunchService.getInstance()
         return botLaunchService.getBotStatus(botName)
       } catch (error) {
         console.error(`Failed to get status for bot ${botName}:`, error)
@@ -60,7 +53,6 @@ export function registerBotLaunchHandlers() {
       Record<string, { isRunning: boolean; pid?: number; startTime?: Date; command?: string }>
     > => {
       try {
-        const botLaunchService = BotLaunchService.getInstance()
         return botLaunchService.getAllBotStatuses()
       } catch (error) {
         console.error('Failed to get all bot statuses:', error)

@@ -1,6 +1,6 @@
 import { LOG_PATTERNS, type LogEvent } from './logPatterns'
 
-export class EventProcessor {
+export default class EventProcessor {
   processLogLine(
     line: string,
     botName: string,
@@ -94,3 +94,7 @@ export class EventProcessor {
     return events
   }
 }
+
+// Export a single instance (singleton)
+const eventProcessor = new EventProcessor()
+export { eventProcessor }

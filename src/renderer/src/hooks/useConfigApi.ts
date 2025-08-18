@@ -7,6 +7,7 @@ export function useConfigApi() {
     errors: string[]
   } | null> => {
     try {
+      console.log('getConfig useConfigApi')
       return await window.api.config.getConfig()
     } catch (error) {
       console.error('Failed to get config:', error)

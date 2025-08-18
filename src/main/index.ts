@@ -3,7 +3,7 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import { join } from 'path'
 import { createMainWindow } from './windows'
 import { registerAllIpcHandlers } from './ipc'
-import { ConfigService } from './application'
+import { configService } from './application/configService'
 
 let mainWindow: Electron.BrowserWindow | null = null
 
@@ -22,17 +22,9 @@ app.whenReady().then(async () => {
 
   console.log('App is ready, initializing configuration...')
 
-  // Initialize app configuration using singleton instance
-  const configService = ConfigService.getInstance()
-  console.log('Created config service instance')
-
   try {
     await configService.loadConfig()
     console.log('App configuration loaded successfully')
-
-    // Test getting the config to verify it's loaded
-    const testConfig = await configService.getConfig()
-    console.log('Test config retrieval successful:', testConfig)
   } catch (error) {
     console.error('Failed to load app configuration:', error)
   }

@@ -1,1 +1,2 @@
-export { MonitoringService } from './monitoringService'
+export { default as MonitoringService } from './monitoringService'
+export { monitoringService } from './monitoringService'

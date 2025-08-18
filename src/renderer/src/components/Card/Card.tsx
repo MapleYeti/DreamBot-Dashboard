@@ -10,6 +10,7 @@ interface CardProps {
   title?: string
   icon?: string
   headerActions?: ReactNode
+  footer?: ReactNode
 }
 
 const Card: React.FC<CardProps> = ({
@@ -20,7 +21,8 @@ const Card: React.FC<CardProps> = ({
   onToggleCollapse,
   title,
   icon,
-  headerActions
+  headerActions,
+  footer
 }) => {
   const handleHeaderClick = () => {
     if (isCollapsible && onToggleCollapse) {
@@ -48,6 +50,7 @@ const Card: React.FC<CardProps> = ({
       )}
 
       {(!isCollapsible || !isCollapsed) && <div className={styles.cardContent}>{children}</div>}
+      {footer && <div className={styles.cardFooter}>{footer}</div>}
     </div>
   )
 }

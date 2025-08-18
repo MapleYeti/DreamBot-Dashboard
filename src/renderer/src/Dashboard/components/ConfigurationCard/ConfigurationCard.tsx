@@ -169,6 +169,7 @@ const ConfigurationCard: React.FC = () => {
             </button>
           </>
         }
+        footer={<FooterNotes />}
       >
         <ConfigInput
           label="DreamBot Logs Directory:"
@@ -241,7 +242,6 @@ const ConfigurationCard: React.FC = () => {
             </ul>
           </div>
         )}
-        <FooterNotes />
       </Card>
 
       {isBotModalOpen ? (

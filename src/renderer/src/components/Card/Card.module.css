@@ -65,6 +65,12 @@
   animation: slideDown 0.3s ease-out;
 }
 
+.cardFooter {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
 @keyframes slideDown {
   from {
     opacity: 0;

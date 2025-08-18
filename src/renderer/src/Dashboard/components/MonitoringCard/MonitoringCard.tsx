@@ -80,7 +80,15 @@ const MonitoringCard: React.FC = () => {
   }
 
   return (
-    <Card title="Monitoring" icon="🎮">
+    <Card
+      title="Monitoring"
+      icon="🎮"
+      footer={
+        appConfigContext.config?.DREAMBOT_VIP_FEATURES ? (
+          <p className={styles.helpText}>💡 Must launch bot through dashboard to track status</p>
+        ) : undefined
+      }
+    >
       <MonitoringControl
         isMonitoring={monitoring.status.isMonitoring}
         isLoading={monitoring.isLoading}
@@ -101,12 +109,6 @@ const MonitoringCard: React.FC = () => {
             onLaunchBot={handleLaunchBot}
             onStopBot={handleStopBot}
           />
-        </div>
-      )}
-
-      {appConfigContext.config?.DREAMBOT_VIP_FEATURES && (
-        <div className={styles.footer}>
-          <p className={styles.helpText}>💡 Must launch bot through dashboard to track status</p>
         </div>
       )}
     </Card>

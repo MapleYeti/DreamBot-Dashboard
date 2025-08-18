@@ -12,13 +12,6 @@
   font-style: italic;
 }
 
-.footer {
-  margin-top: 24px;
-  padding-top: 20px;
-  border-top: 1px solid #e5e7eb;
-  text-align: left;
-}
-
 .loadingMessage {
   text-align: center;
   padding: 40px;

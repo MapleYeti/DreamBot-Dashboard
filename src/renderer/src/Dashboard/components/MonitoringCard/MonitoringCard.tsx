@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react'
 import { Card } from '../../../components/Card'
+import HelpText from '../../../components/HelpText'
 import { useAppConfig } from '../../../hooks/useAppConfig'
 import { useMonitoring } from '../../../hooks/useMonitoring'
 import { useUnsavedChanges } from '../../../hooks/useUnsavedChanges'
@@ -85,7 +86,9 @@ const MonitoringCard: React.FC = () => {
       icon="🎮"
       footer={
         appConfigContext.config?.DREAMBOT_VIP_FEATURES ? (
-          <p className={styles.helpText}>💡 Must launch bot through dashboard to track status</p>
+          <HelpText icon="💡" variant="info">
+            Must launch bot through dashboard to track status
+          </HelpText>
         ) : undefined
       }
     >

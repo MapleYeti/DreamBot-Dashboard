@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
 import { Card } from '../../../components/Card'
+import HelpText from '../../../components/HelpText'
 import type { AppConfig } from '@shared/types/configTypes'
 import styles from './ConfigurationCard.module.css'
 import StatusBadge, { ConfigStatus } from './components/StatusBadge/StatusBadge'
@@ -200,9 +201,11 @@ const ConfigurationCard: React.FC = () => {
         {localConfig.DREAMBOT_VIP_FEATURES && (
           <div className={styles.botConfigurations}>
             <h3>Bot Configurations</h3>
-            <p className={styles.helpText}>
-              💡 Must launch bot with CLI script to use Bot-specific webhooks
-            </p>
+            <div style={{ marginBottom: '10px' }}>
+              <HelpText icon="💡" variant="info">
+                Must launch bot with CLI script to use Bot-specific webhooks
+              </HelpText>
+            </div>
             {Object.entries(localConfig.BOT_CONFIG).map(([botName, bot]) => (
               <BotConfigItem
                 key={botName}

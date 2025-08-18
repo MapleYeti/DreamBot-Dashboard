@@ -113,6 +113,8 @@
   display: flex;
   align-items: center;
   gap: 6px;
+  width: 100px;
+  justify-content: center;
 }
 
 .launchButton:hover:not(:disabled) {
@@ -136,6 +138,8 @@
   display: flex;
   align-items: center;
   gap: 6px;
+  width: 100px;
+  justify-content: center;
 }
 
 .stopButton:hover:not(:disabled) {
@@ -149,6 +153,9 @@
 
 .buttonIcon {
   font-size: 14px;
+  width: 16px;
+  text-align: center;
+  flex-shrink: 0;
 }
 
 .noBotsMessage {

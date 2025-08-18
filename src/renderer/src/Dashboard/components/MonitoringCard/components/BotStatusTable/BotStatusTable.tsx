@@ -35,10 +35,7 @@ const BotStatusTable: React.FC<BotStatusTableProps> = ({
 
   return (
     <div className={styles.botTable}>
-      <div
-        className={styles.tableHeader}
-        style={{ gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr' }}
-      >
+      <div className={styles.tableHeader} style={{ gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr' }}>
         <div className={styles.headerCell}>Bot Name</div>
         <div className={styles.headerCell}>Status</div>
         <div className={styles.headerCell}>Webhook</div>
@@ -53,14 +50,9 @@ const BotStatusTable: React.FC<BotStatusTableProps> = ({
         >
           <div className={styles.tableCell}>{bot.name}</div>
           <div className={styles.tableCell}>
-            <div
-              className={`${styles.statusIndicator} ${styles[bot.status.toLowerCase()]}`}
-            >
+            <div className={`${styles.statusIndicator} ${styles[bot.status.toLowerCase()]}`}>
               <div className={styles.statusDot}></div>
               <span>{bot.status}</span>
-              {bot.isRunning && bot.pid && (
-                <span className={styles.pidInfo}> (PID: {bot.pid})</span>
-              )}
             </div>
           </div>
           <div className={styles.tableCell}>

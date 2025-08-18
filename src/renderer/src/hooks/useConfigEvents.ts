@@ -3,15 +3,21 @@ import type { AppConfig } from '@shared/types/configTypes'
 
 export function useConfigEvents(onConfigChanged: (data: { config: AppConfig }) => void) {
   useEffect(() => {
-    if (!window.api?.config?.onConfigChanged) return
+    console.log('useConfigEvents: Setting up event listener')
+    if (!window.api?.config?.onChanged) {
+      console.error('useConfigEvents: onChanged method not available')
+      return
+    }
 
     // Add the event listener
-    window.api.config.onConfigChanged(onConfigChanged)
+    console.log('useConfigEvents: Adding event listener')
+    window.api.config.onChanged(onConfigChanged)
 
     // Cleanup function
     return () => {
-      if (window.api?.config?.offConfigChanged) {
-        window.api.config.offConfigChanged()
+      console.log('useConfigEvents: Cleaning up event listener')
+      if (window.api?.config?.offChanged) {
+        window.api.config.offChanged()
       }
     }
   }, [onConfigChanged])

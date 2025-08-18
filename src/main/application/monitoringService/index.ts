@@ -1,2 +1,1 @@
-export { ConfigService } from './configService'
 export { MonitoringService } from './monitoringService'

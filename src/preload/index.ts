@@ -9,7 +9,11 @@ const api = {
     saveConfig: (config: AppConfig): Promise<{ success: boolean; errors: string[] }> =>
       ipcRenderer.invoke('config:save', config),
     onChanged: (callback: (data: { config: AppConfig }) => void) => {
-      ipcRenderer.on('config:changed', (_event, data) => callback(data))
+      console.log('Preload: Setting up config:changed listener')
+      ipcRenderer.on('config:changed', (_event, data) => {
+        console.log('Preload: Received config:changed event:', data)
+        callback(data)
+      })
     },
     offChanged: () => {
       ipcRenderer.removeAllListeners('config:changed')

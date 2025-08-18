@@ -1,18 +1,18 @@
 import { ipcMain, webContents } from 'electron'
-import { ConfigManager } from '../application'
+import { ConfigService } from '../application'
 import type { AppConfig } from '@shared/types/configTypes'
 
 export function registerConfigHandlers(): void {
   ipcMain.handle('config:get', async (): Promise<{ config: AppConfig; errors: string[] }> => {
     console.log('config:get IPC handler called')
     try {
-      const configManager = ConfigManager.getInstance()
-      console.log('Got config manager instance')
+      const configService = ConfigService.getInstance()
+      console.log('Got config service instance')
 
-      const config = await configManager.getConfig()
+      const config = await configService.getConfig()
       console.log('Retrieved config:', config)
 
-      const validation = await configManager.validateConfig(config)
+      const validation = await configService.validateConfig(config)
       console.log('Config validation result:', validation)
 
       return {
@@ -30,13 +30,17 @@ export function registerConfigHandlers(): void {
     async (_event, data: AppConfig): Promise<{ success: boolean; errors: string[] }> => {
       console.log('config:save IPC handler called with data:', data)
       try {
-        const configManager = ConfigManager.getInstance()
-        const validation = await configManager.validateConfig(data)
-        if (validation.valid) {
-          await configManager.saveConfig(data)
+        const configService = ConfigService.getInstance()
+        const validation = await configService.validateConfig(data)
+        if (validation.success) {
+          await configService.saveConfig(data)
 
           // Emit config change event to all renderer processes
-          webContents.getAllWebContents().forEach((webContent) => {
+          console.log('Emitting config:changed event to renderer processes')
+          const webContentsList = webContents.getAllWebContents()
+          console.log(`Found ${webContentsList.length} web contents to notify`)
+          webContentsList.forEach((webContent) => {
+            console.log('Sending config:changed event to webContent:', webContent.id)
             webContent.send('config:changed', { config: data })
           })
 

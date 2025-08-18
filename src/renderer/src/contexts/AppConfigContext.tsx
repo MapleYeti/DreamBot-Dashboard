@@ -44,6 +44,7 @@ export function AppConfigProvider({ children }: AppConfigProviderProps) {
 
   // Listen for config change events from the backend
   useConfigEvents((data) => {
+    console.log('AppConfigContext: Received config change event:', data)
     setConfig(data.config)
     setErrors([]) // Clear errors when config is successfully updated
     setIsLoading(false)

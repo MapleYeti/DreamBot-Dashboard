@@ -1,6 +1,6 @@
-import type { AppConfig, BotConfig } from '@shared/types/configTypes'
+import type { AppConfig, BotConfig, ConfigValidationResult } from '@shared/types/configTypes'
 
-export async function validateConfig(config: AppConfig): Promise<{ valid: boolean; errors: string[] }> {
+export async function validateConfig(config: AppConfig): Promise<ConfigValidationResult> {
   const errors: string[] = []
 
   // Validate BASE_LOG_DIRECTORY
@@ -27,7 +27,7 @@ export async function validateConfig(config: AppConfig): Promise<{ valid: boolea
   }
 
   return {
-    valid: errors.length === 0,
+    success: errors.length === 0,
     errors
   }
 }

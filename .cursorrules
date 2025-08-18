@@ -68,18 +68,6 @@ useEffect(() => { getUserData(id).then(setUserData); }, [id]);
 - New features get own folders with barrel exports.
 - Avoid unnecessary comments; add only when clarifying complex code.
 
-## Barrel File Usage Rules
-
-**USE Barrel Files (`index.ts`) for:**
-
-- ✅ **Specific component folders**: `/Card/`, `/Header/`, `/ConfigurationCard/`, `/MonitoringCard/`
-- ✅ **Feature/domain folders**: `/main/ipc/`, `/main/windows/`, `/main/appConfigManager/`
-
-**DO NOT USE Barrel Files for:**
-
-- ❌ **Generic collection folders**: `/components/`, `/hooks/`, `/utils/`
-- ❌ **Root-level organization folders** that just group other folders
-
 **Import Examples:**
 
 ```typescript

@@ -102,7 +102,7 @@ export class MessageFormatter {
         seconds % 60
       } second${seconds % 60 !== 1 ? 's' : ''}`
     } else {
-      return `${seconds} second${seconds !== 1 ? 's' : ''}`
+      return `${seconds} second${seconds % 60 !== 1 ? 's' : ''}`
     }
   }
 

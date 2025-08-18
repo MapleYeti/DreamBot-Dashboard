@@ -1,1 +1,0 @@
-export { ConfigManager } from './configManager'

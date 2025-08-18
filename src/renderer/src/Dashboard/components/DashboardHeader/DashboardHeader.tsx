@@ -17,7 +17,7 @@ const DashboardHeader: React.FC = () => {
     if (monitoring.status.isMonitoring) {
       return `Monitoring (${monitoring.status.watchedFolders.length} log${monitoring.status.watchedFolders.length > 1 ? 's' : ''})`
     }
-    return 'Stopped'
+    return 'Not monitoring'
   }
 
   const getBotStatusText = () => {

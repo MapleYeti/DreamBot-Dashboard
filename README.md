@@ -42,9 +42,9 @@ _The dashboard shows the Monitoring section (top) with bot status tracking and t
 ### Option 1: Download Pre-built Release (Recommended)
 
 1. Go to the [Releases](https://github.com/yourusername/DreamBot-Dashboard/releases) page
-2. Download the latest `.exe` file for Windows
-3. Run the installer and follow the setup wizard
-4. Launch DreamBot Dashboard from your Start Menu
+2. Download the latest `.zip' for Windows
+3. Extract the zip contents into a folder 
+4. Launch `DreamBot Dashboard.exe`
 
 ### Option 2: Build from Source
 

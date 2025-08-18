@@ -1,0 +1,142 @@
+.monitoringControl {
+  margin-bottom: 24px;
+}
+
+.monitoringRow {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.startButton {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+  flex-shrink: 0;
+}
+
+.startButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.startButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.stopButton {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+.stopButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+.stopButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.monitoringStatus {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  flex: 1;
+}
+
+.monitoringStatus .statusIndicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.monitoringStatus .statusDetails {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* Active monitoring state */
+.monitoringStatus.active {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.monitoringStatus.active .statusIndicator {
+  color: #166534;
+}
+
+.monitoringStatus.active .statusDetails {
+  color: #374151;
+}
+
+/* Pending configuration state */
+.monitoringStatus.pending {
+  background: #fefce8;
+  border-color: #fde047;
+}
+
+.monitoringStatus.pending .statusIndicator {
+  color: #a16207;
+}
+
+.monitoringStatus.pending .statusDetails {
+  color: #92400e;
+}
+
+.statusIndicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.statusIndicator.online .statusDot {
+  background-color: #10b981;
+}
+
+.statusIndicator.offline .statusDot {
+  background-color: #6b7280;
+}
+
+.statusIndicator.pending .statusDot {
+  background-color: #f59e0b;
+}
+
+.errorMessage {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}

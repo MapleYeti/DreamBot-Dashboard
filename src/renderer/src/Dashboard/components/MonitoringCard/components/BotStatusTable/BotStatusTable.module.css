@@ -1,0 +1,162 @@
+.botTable {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.tableHeader {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.headerCell {
+  padding: 16px;
+  font-weight: 600;
+  color: #374151;
+  text-align: left;
+}
+
+.tableRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  border-bottom: 1px solid #e5e7eb;
+  transition: background-color 0.2s ease;
+}
+
+.tableRow:last-child {
+  border-bottom: none;
+}
+
+.tableRow:hover {
+  background-color: #f9fafb;
+}
+
+.tableCell {
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  color: #1f2937;
+  font-weight: 500;
+}
+
+.tableCell:first-child {
+  font-weight: 600;
+  color: #111827;
+}
+
+.configStatus {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.configured {
+  color: #10b981;
+}
+
+.notConfigured {
+  color: #ef4444;
+}
+
+.statusIndicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.statusIndicator.online .statusDot {
+  background-color: #10b981;
+}
+
+.statusIndicator.offline .statusDot {
+  background-color: #6b7280;
+}
+
+.statusIndicator.pending .statusDot {
+  background-color: #f59e0b;
+}
+
+.statusIndicator.starting .statusDot {
+  background-color: #f59e0b;
+}
+
+.statusIndicator.error .statusDot {
+  background-color: #ef4444;
+}
+
+.pidInfo {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: normal;
+  margin-left: 8px;
+}
+
+.launchButton {
+  background: #8b5cf6;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.launchButton:hover:not(:disabled) {
+  background: #7c3aed;
+}
+
+.launchButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.stopButton {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stopButton:hover:not(:disabled) {
+  background: #dc2626;
+}
+
+.stopButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.buttonIcon {
+  font-size: 14px;
+}
+
+.noBotsMessage {
+  text-align: center;
+  padding: 40px;
+  color: #6b7280;
+  font-size: 16px;
+  background: #f9fafb;
+  border-radius: 8px;
+  border: 1px dashed #d1d5db;
+}

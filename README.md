@@ -50,7 +50,7 @@ _The dashboard shows the Monitoring section (top) with bot status tracking and t
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/DreamBot-Dashboard.git
+gh repo clone MapleYeti/DreamBot-Dashboard
 cd DreamBot-Dashboard
 
 # Install dependencies

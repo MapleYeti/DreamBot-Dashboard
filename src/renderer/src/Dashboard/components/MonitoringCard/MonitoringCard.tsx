@@ -109,6 +109,7 @@ const MonitoringCard: React.FC = () => {
           <BotStatusTable
             bots={bots}
             isLoading={botLaunchLoading}
+            hasUnsavedChanges={hasUnsavedChanges}
             onLaunchBot={handleLaunchBot}
             onStopBot={handleStopBot}
           />

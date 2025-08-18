@@ -2,6 +2,8 @@ import { spawn, type ChildProcess, exec } from 'child_process'
 import { promisify } from 'util'
 import { webContents } from 'electron'
 import { configService } from '../configService'
+import { webhookService } from '../webhookService'
+import type { WebhookEvent } from '@shared/types/webhookTypes'
 
 interface BotProcess {
   process: ChildProcess
@@ -12,6 +14,7 @@ interface BotProcess {
 
 export default class BotLaunchService {
   private botProcesses = new Map<string, BotProcess>()
+  private manuallyStoppedBots = new Set<string>()
 
   constructor() {
     // Constructor for singleton pattern
@@ -47,18 +50,67 @@ export default class BotLaunchService {
 
       child.on('exit', (code) => {
         console.log(`Bot ${botName} process exited with code ${code}`)
-        this.botProcesses.delete(botName)
-        this.emitBotStatusUpdate()
+        const processInfo = this.botProcesses.get(botName)
+        if (processInfo) {
+          const runtime = this.calculateRuntime(processInfo.startTime)
+          this.botProcesses.delete(botName)
+          this.emitBotStatusUpdate()
+
+          // Only send webhook if this wasn't a manual stop
+          if (!this.manuallyStoppedBots.has(botName)) {
+            // Send webhook notification for unexpected bot exit
+            const stopEvent = this.createWebhookEvent('BOT_STOPPED', botName, {
+              pid: processInfo.pid.toString(),
+              runtime,
+              exitCode: code?.toString() || 'Unknown'
+            })
+            webhookService.sendWebhook(stopEvent, botName).catch((error) => {
+              console.error(`Failed to send bot exit webhook for ${botName}:`, error)
+            })
+          } else {
+            // Clean up the manual stop flag
+            this.manuallyStoppedBots.delete(botName)
+          }
+        }
       })
 
       child.on('error', (error) => {
         console.error(`Bot ${botName} process error:`, error)
-        this.botProcesses.delete(botName)
-        this.emitBotStatusUpdate()
+        const processInfo = this.botProcesses.get(botName)
+        if (processInfo) {
+          const runtime = this.calculateRuntime(processInfo.startTime)
+          this.botProcesses.delete(botName)
+          this.emitBotStatusUpdate()
+
+          // Only send webhook if this wasn't a manual stop
+          if (!this.manuallyStoppedBots.has(botName)) {
+            // Send webhook notification for bot error
+            const stopEvent = this.createWebhookEvent('BOT_STOPPED', botName, {
+              pid: processInfo.pid.toString(),
+              runtime,
+              error: error.message || 'Process error'
+            })
+            webhookService.sendWebhook(stopEvent, botName).catch((webhookError) => {
+              console.error(`Failed to send bot error webhook for ${botName}:`, webhookError)
+            })
+          } else {
+            // Clean up the manual stop flag
+            this.manuallyStoppedBots.delete(botName)
+          }
+        }
       })
 
       console.log(`Launched bot ${botName} with PID ${child.pid}`)
       this.emitBotStatusUpdate()
+
+      // Send webhook notification for bot start
+      const startEvent = this.createWebhookEvent('BOT_STARTED', botName, {
+        pid: child.pid?.toString() || 'Unknown'
+      })
+      webhookService.sendWebhook(startEvent, botName).catch((error) => {
+        console.error(`Failed to send bot start webhook for ${botName}:`, error)
+      })
+
       return {
         success: true,
         message: `Bot ${botName} launched successfully with PID ${child.pid}`
@@ -78,6 +130,9 @@ export default class BotLaunchService {
       if (!botProcess) {
         return { success: false, message: `Bot ${botName} is not running` }
       }
+
+      // Mark this bot as manually stopped to prevent duplicate webhooks
+      this.manuallyStoppedBots.add(botName)
 
       const { process, pid } = botProcess
 
@@ -126,9 +181,21 @@ export default class BotLaunchService {
             console.log(`Process ${process.pid} successfully terminated`)
           }
 
+          // Calculate runtime before deleting the process
+          const runtime = this.calculateRuntime(botProcess.startTime)
           this.botProcesses.delete(botName)
           console.log(`Stopped bot ${botName} with PID ${pid}`)
           this.emitBotStatusUpdate()
+
+          // Send webhook notification for bot stop
+          const stopEvent = this.createWebhookEvent('BOT_STOPPED', botName, {
+            pid: pid.toString(),
+            runtime
+          })
+          webhookService.sendWebhook(stopEvent, botName).catch((error) => {
+            console.error(`Failed to send bot stop webhook for ${botName}:`, error)
+          })
+
           return { success: true, message: `Bot ${botName} stopped successfully` }
         } catch (killError) {
           console.error(`Failed to kill bot ${botName}:`, killError)
@@ -218,6 +285,37 @@ export default class BotLaunchService {
       return true
     } catch {
       return false
+    }
+  }
+
+  private createWebhookEvent(
+    type: 'BOT_STARTED' | 'BOT_STOPPED',
+    botName: string,
+    data: Record<string, string>
+  ): WebhookEvent {
+    return {
+      type,
+      botName,
+      fileName: 'Bot Launcher',
+      timestamp: new Date().toISOString(),
+      data,
+      rawLine: type
+    }
+  }
+
+  private calculateRuntime(startTime: Date): string {
+    const now = new Date()
+    const runtimeMs = now.getTime() - startTime.getTime()
+    const seconds = Math.floor(runtimeMs / 1000)
+    const minutes = Math.floor(seconds / 60)
+    const hours = Math.floor(minutes / 60)
+
+    if (hours > 0) {
+      return `${hours}h ${minutes % 60}m ${seconds % 60}s`
+    } else if (minutes > 0) {
+      return `${minutes}m ${seconds % 60}s`
+    } else {
+      return `${seconds}s`
     }
   }
 }

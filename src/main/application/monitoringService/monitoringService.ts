@@ -6,7 +6,7 @@ import { join, extname, basename, dirname } from 'path'
 import chokidar from 'chokidar'
 import type { AppConfig } from '@shared/types/configTypes'
 import { configService } from '../configService'
-import { eventProcessor } from './utils/eventProcessor'
+import { getLogEventFromLine } from './utils/processLogEvents'
 import { webhookService } from '../webhookService'
 import type { MonitoringStatus } from '@shared/types/monitoringTypes'
 
@@ -321,7 +321,7 @@ export default class MonitoringService {
     const timestamp = new Date().toISOString()
     const fileName = basename(filePath)
 
-    const event = eventProcessor.processLogLine(trimmedLine, botName, fileName, timestamp)
+    const event = getLogEventFromLine(trimmedLine, botName, fileName, timestamp)
 
     if (event) {
       console.log(`Detected ${event.type} event from ${botName}:`, event)

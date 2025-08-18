@@ -1,9 +1,9 @@
 import { configService } from '../configService'
-import type { LogEvent } from '@shared/types/monitoringTypes'
-import { MessageFormatter } from './utils/messageFormatter'
+import type { WebhookEvent } from '@shared/types/webhookTypes'
+import { createDiscordEmbed } from './utils/messageFormatter'
 
 export default class WebhookService {
-  async sendWebhook(event: LogEvent, botName: string): Promise<void> {
+  async sendWebhook(event: WebhookEvent, botName: string): Promise<void> {
     try {
       console.log('Sending webhook for', event)
       // Determine which webhook URL to use
@@ -14,7 +14,7 @@ export default class WebhookService {
         return
       }
 
-      const embed = MessageFormatter.createDiscordEmbed(event, botName)
+      const embed = createDiscordEmbed(event, botName)
 
       const response = await fetch(webhookUrl, {
         method: 'POST',

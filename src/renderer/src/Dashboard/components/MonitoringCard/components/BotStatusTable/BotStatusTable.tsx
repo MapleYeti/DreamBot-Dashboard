@@ -15,7 +15,7 @@ interface BotStatus {
 interface BotStatusTableProps {
   bots: BotStatus[]
   isLoading: boolean
-  hasUnsavedChanges: boolean
+  isConfigReady: boolean
   onLaunchBot: (botId: string) => Promise<void>
   onStopBot: (botId: string) => Promise<void>
 }
@@ -23,7 +23,7 @@ interface BotStatusTableProps {
 const BotStatusTable: React.FC<BotStatusTableProps> = ({
   bots,
   isLoading,
-  hasUnsavedChanges,
+  isConfigReady,
   onLaunchBot,
   onStopBot
 }) => {
@@ -89,9 +89,13 @@ const BotStatusTable: React.FC<BotStatusTableProps> = ({
               <button
                 className={styles.launchButton}
                 onClick={() => onLaunchBot(bot.id)}
-                disabled={!bot.launchScript || isLoading || hasUnsavedChanges}
+                disabled={!bot.launchScript || isLoading || !isConfigReady}
                 title={
-                  hasUnsavedChanges ? 'Save configuration changes before launching' : undefined
+                  !isConfigReady
+                    ? 'Fix configuration issues before launching'
+                    : !bot.launchScript
+                      ? 'Configure launch script before launching'
+                      : undefined
                 }
               >
                 <span className={styles.buttonIcon}>🚀</span>

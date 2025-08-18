@@ -4,7 +4,7 @@ import styles from './MonitoringControl.module.css'
 interface MonitoringControlProps {
   isMonitoring: boolean
   isLoading: boolean
-  hasUnsavedChanges: boolean
+  isConfigReady: boolean
   watchedFiles: string[]
   watchedFolders: string[]
   error?: string
@@ -15,7 +15,7 @@ interface MonitoringControlProps {
 const MonitoringControl: React.FC<MonitoringControlProps> = ({
   isMonitoring,
   isLoading,
-  hasUnsavedChanges,
+  isConfigReady,
   watchedFiles,
   watchedFolders,
   error,
@@ -30,14 +30,19 @@ const MonitoringControl: React.FC<MonitoringControlProps> = ({
         <button
           className={isMonitoring ? styles.stopButton : styles.startButton}
           onClick={isMonitoring ? onStopMonitoring : onStartMonitoring}
-          disabled={isLoading || (!isMonitoring && hasUnsavedChanges)}
+          disabled={isLoading || (!isMonitoring && !isConfigReady)}
+          title={
+            !isConfigReady && !isMonitoring
+              ? 'Fix configuration issues before starting monitoring'
+              : undefined
+          }
         >
           {isLoading ? 'Processing...' : isMonitoring ? 'Stop Monitoring' : 'Start Monitoring'}
         </button>
 
         <div
           className={`${styles.monitoringStatus} ${
-            isMonitoring ? styles.active : hasUnsavedChanges ? styles.pending : ''
+            isMonitoring ? styles.active : !isConfigReady ? styles.pending : ''
           }`}
         >
           {isMonitoring ? (
@@ -53,15 +58,17 @@ const MonitoringControl: React.FC<MonitoringControlProps> = ({
           ) : (
             <>
               <span
-                className={`${styles.statusIndicator} ${hasUnsavedChanges ? styles.pending : styles.offline}`}
+                className={`${styles.statusIndicator} ${!isConfigReady ? styles.pending : styles.offline}`}
               >
                 <div
-                  className={`${styles.statusDot} ${hasUnsavedChanges ? styles.pending : styles.offline}`}
+                  className={`${styles.statusDot} ${!isConfigReady ? styles.pending : styles.offline}`}
                 ></div>
-                <span>{hasUnsavedChanges ? 'Pending' : 'Not Monitoring'}</span>
+                <span>{!isConfigReady ? 'Config Issues' : 'Not Monitoring'}</span>
               </span>
               <span className={styles.statusDetails}>
-                {hasUnsavedChanges ? '⚠️ Save config to start monitoring' : 'No monitoring active'}
+                {!isConfigReady
+                  ? '⚠️ Fix configuration issues to start monitoring'
+                  : 'No monitoring active'}
               </span>
             </>
           )}

@@ -26,6 +26,9 @@ const MonitoringCard: React.FC = () => {
   const { hasUnsavedChanges } = useUnsavedChanges()
   const { botStatuses, launchBot, stopBot, isLoading: botLaunchLoading } = useBotLaunch()
 
+  const hasConfigErrors = appConfigContext.errors.length > 0
+  const isConfigReady = !hasUnsavedChanges && !hasConfigErrors
+
   // Derive bots list from config and bot statuses
   const bots: BotStatus[] = useMemo(() => {
     if (!appConfigContext.config?.BOT_CONFIG) return []
@@ -95,7 +98,7 @@ const MonitoringCard: React.FC = () => {
       <MonitoringControl
         isMonitoring={monitoring.status.isMonitoring}
         isLoading={monitoring.isLoading}
-        hasUnsavedChanges={hasUnsavedChanges}
+        isConfigReady={isConfigReady}
         watchedFiles={monitoring.status.watchedFiles}
         watchedFolders={monitoring.status.watchedFolders}
         error={monitoring.error || undefined}
@@ -109,7 +112,7 @@ const MonitoringCard: React.FC = () => {
           <BotStatusTable
             bots={bots}
             isLoading={botLaunchLoading}
-            hasUnsavedChanges={hasUnsavedChanges}
+            isConfigReady={isConfigReady}
             onLaunchBot={handleLaunchBot}
             onStopBot={handleStopBot}
           />

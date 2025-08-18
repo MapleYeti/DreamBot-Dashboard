@@ -1,5 +1,5 @@
 appId: com.electron.app
-productName: dreambot-dashboard
+productName: DreamBot Dashboard
 directories:
   buildResources: build
 files:
@@ -11,8 +11,10 @@ files:
   - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}'
 asarUnpack:
   - resources/**
+  - node_modules
 win:
-  executableName: dreambot-dashboard
+  executableName: DreamBot-Dashboard
+  target: ['portable']
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}

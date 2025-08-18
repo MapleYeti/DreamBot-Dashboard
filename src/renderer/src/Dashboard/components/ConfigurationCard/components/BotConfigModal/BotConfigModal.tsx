@@ -82,6 +82,9 @@ const BotConfigModal: React.FC<BotConfigModalProps> = ({
               className={styles.input}
               disabled={isEditMode}
             />
+            <small className={styles.fieldHint}>
+              ⚠️ This is the bot account&apos;s nickname in DreamBot, not the bot&apos;s RSN
+            </small>
           </div>
 
           <div className={styles.formGroup}>

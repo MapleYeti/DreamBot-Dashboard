@@ -9,7 +9,6 @@ import ConfigInput from './components/ConfigInput/ConfigInput'
 import CheckboxField from './components/CheckboxField/CheckboxField'
 import BotConfigItem from './components/BotConfigItem/BotConfigItem'
 import ActionButtons from './components/ActionButtons/ActionButtons'
-import FooterNotes from './components/FooterNotes/FooterNotes'
 import BotConfigModal from './components/BotConfigModal'
 import { useAppConfig } from '../../../hooks/useAppConfig'
 import { useConfigApi } from '../../../hooks/useConfigApi'
@@ -170,7 +169,6 @@ const ConfigurationCard: React.FC = () => {
             </button>
           </>
         }
-        footer={<FooterNotes />}
       >
         <ConfigInput
           label="DreamBot Logs Directory:"
@@ -203,7 +201,8 @@ const ConfigurationCard: React.FC = () => {
             <h3>Bot Configurations</h3>
             <div style={{ marginBottom: '10px' }}>
               <HelpText icon="💡" variant="info">
-                Must launch bot with CLI script to use Bot-specific webhooks
+                Must launch bot with CLI script to use Bot-specific webhooks due to DreamBot&apos;s
+                log file system
               </HelpText>
             </div>
 

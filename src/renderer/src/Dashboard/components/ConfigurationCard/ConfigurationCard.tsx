@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 
 import { Card } from '../../../components/Card'
 import HelpText from '../../../components/HelpText'
 import type { AppConfig } from '@shared/types/configTypes'
 import styles from './ConfigurationCard.module.css'
-import StatusBadge, { ConfigStatus } from './components/StatusBadge/StatusBadge'
+import StatusBadge from './components/StatusBadge/StatusBadge'
 import ConfigInput from './components/ConfigInput/ConfigInput'
 import CheckboxField from './components/CheckboxField/CheckboxField'
 import BotConfigItem from './components/BotConfigItem/BotConfigItem'
@@ -14,6 +14,7 @@ import { useAppConfig } from '../../../hooks/useAppConfig'
 import { useConfigApi } from '../../../hooks/useConfigApi'
 import { useUnsavedChanges } from '../../../hooks/useUnsavedChanges'
 import { useMonitoring } from '../../../hooks/useMonitoring'
+import { ConfigStatus } from './types/ConfigStatus'
 
 const ConfigurationCard: React.FC = () => {
   const appConfigContext = useAppConfig()
@@ -54,20 +55,20 @@ const ConfigurationCard: React.FC = () => {
     )
   }, [localConfig, appConfigContext.config])
 
+  // Determine config status based on validation errors and unsaved changes
+  const getConfigStatus = useCallback((): ConfigStatus => {
+    if (monitoring.status.isMonitoring) return ConfigStatus.MONITORING
+    if (appConfigContext.errors && appConfigContext.errors.length > 0) return ConfigStatus.ERROR
+    if (hasUnsavedChanges()) return ConfigStatus.UNSAVED
+    return ConfigStatus.SAVED
+  }, [monitoring.status.isMonitoring, appConfigContext.errors, hasUnsavedChanges])
+
   // Update unsaved changes state when local config changes
   // Probably refactor this later
   useEffect(() => {
     const hasChanges = hasUnsavedChanges()
     setHasUnsavedChanges(hasChanges)
   }, [localConfig, appConfigContext.config, setHasUnsavedChanges, hasUnsavedChanges])
-
-  // Determine config status based on validation errors and unsaved changes
-  const getConfigStatus = (): ConfigStatus => {
-    if (monitoring.status.isMonitoring) return 'monitoring'
-    if (validationErrors.length > 0) return 'error'
-    if (hasUnsavedChanges()) return 'unsaved'
-    return 'saved'
-  }
 
   const handleToggleCollapse = () => {
     setIsCollapsed(!isCollapsed)

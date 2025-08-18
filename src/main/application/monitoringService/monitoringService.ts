@@ -7,7 +7,7 @@ import chokidar from 'chokidar'
 import type { AppConfig } from '@shared/types/configTypes'
 import { configService } from '../configService'
 import { eventProcessor } from './utils/eventProcessor'
-import { webhookService } from './utils/webhookService'
+import { webhookService } from '../webhookService'
 import type { MonitoringStatus } from '@shared/types/monitoringTypes'
 
 interface MonitoringState {
@@ -51,9 +51,6 @@ export default class MonitoringService {
     let currentConfig: AppConfig
     try {
       currentConfig = await configService.getConfig()
-
-      // Initialize webhook service with current config
-      webhookService.setConfig(currentConfig)
     } catch (error) {
       console.error('Failed to get current config for monitoring:', error)
       return { success: false, message: 'Failed to get current configuration' }

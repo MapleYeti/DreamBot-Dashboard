@@ -1,4 +1,4 @@
-import type { LogEvent } from './logPatterns'
+import type { LogEvent } from '@shared/types/monitoringTypes'
 import { getSkillEmoji } from './skillEmojis'
 
 interface DiscordEmbed {
@@ -19,7 +19,7 @@ interface DiscordEmbed {
 export class MessageFormatter {
   static createDiscordEmbed(event: LogEvent, botName: string): DiscordEmbed {
     const embed: DiscordEmbed = {
-      title: this.getEventTitle(event.type, event.data),
+      title: this.getEventTitle(event.type),
       description: this.getEventDescription(event),
       color: this.getEventColor(event.type),
       timestamp: event.timestamp,
@@ -29,28 +29,23 @@ export class MessageFormatter {
     }
 
     // Add fields based on event type
-    const fields = this.getEventFields(event)
-    if (fields.length > 0) {
-      embed.fields = fields
-    }
+    // const fields = this.getEventFields(event)
+    // if (fields.length > 0) {
+    //   embed.fields = fields
+    // }
 
     return embed
   }
 
-  private static getEventTitle(eventType: string, data: Record<string, string>): string {
-    if (eventType === 'LEVEL_UP' && data.skill) {
-      const skillEmoji = getSkillEmoji(data.skill)
-      return `${skillEmoji} Level Up!`
-    }
-
+  private static getEventTitle(eventType: string): string {
     const titles: Record<string, string> = {
       CHAT: '💬 Chat Message',
       RESPONSE: '⌨️ Bot Response',
-      LEVEL_UP: '🎯 Level Up!',
+      LEVEL_UP: '📈 Level Up!',
       QUEST: '🏆 Quest Completed!',
-      BREAK: '☕ Break Started',
-      BREAK_OVER: '🚀 Break Over',
-      DEATH: '💀 Player Died',
+      BREAK: '💤 Break Started',
+      BREAK_OVER: '⏰ Break Over',
+      DEATH: '💀  Died',
       VALUABLE_DROP: '💰 Valuable Drop!'
     }
     return titles[eventType] || '📝 Log Event'
@@ -63,7 +58,7 @@ export class MessageFormatter {
       case 'RESPONSE':
         return `**${event.data.response || 'Unknown response'}**`
       case 'LEVEL_UP':
-        return `**${event.data.skill || 'Unknown skill'}** is now level **${event.data.level || 'Unknown'}**!`
+        return `${getSkillEmoji(event.data.skill)} **${event.data.skill || 'Unknown skill'}** is now level **${event.data.level || 'Unknown'}**!`
       case 'QUEST':
         return `**${event.data.quest || 'Unknown quest'}** has been completed!`
       case 'BREAK': {
@@ -77,7 +72,7 @@ export class MessageFormatter {
       case 'BREAK_OVER':
         return 'Break is over, back to work!'
       case 'DEATH':
-        return 'The player has died and needs to respawn'
+        return 'Bot has died'
       case 'VALUABLE_DROP':
         return `**${event.data.item || 'Unknown item'}** worth **${event.data.value || 'Unknown'}** coins!`
       default:
@@ -108,12 +103,12 @@ export class MessageFormatter {
 
   private static getEventColor(eventType: string): number {
     const colors: Record<string, number> = {
-      CHAT: 0x00ff00, // Green
+      CHAT: 0x0099ff, // Blue
       RESPONSE: 0x0099ff, // Blue
-      LEVEL_UP: 0xffd700, // Gold
-      QUEST: 0xff69b4, // Pink
-      BREAK: 0xffa500, // Orange
-      BREAK_OVER: 0x32cd32, // Lime
+      LEVEL_UP: 0x88e788, // Light Green
+      QUEST: 0x87ceeb, // Light Blue
+      BREAK: 0x808080, // Dark Gray
+      BREAK_OVER: 0x90ee90, // Light Green
       DEATH: 0xff0000, // Red
       VALUABLE_DROP: 0xffd700 // Gold
     }

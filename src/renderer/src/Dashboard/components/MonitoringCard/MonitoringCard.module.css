@@ -1,3 +1,9 @@
+.headerActionsContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .botStatus h3 {
   margin: 0 0 20px 0;
   font-size: 18px;
@@ -10,4 +16,39 @@
   padding: 40px;
   color: #6b7280;
   font-size: 16px;
+}
+
+.configButton {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.configButton:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #374151;
+  transform: scale(1.1);
+}
+
+.configButton:active {
+  transform: scale(1);
+}
+
+.configButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  color: #9ca3af;
+}
+
+.configButton:disabled:hover {
+  background: none;
+  transform: none;
 }

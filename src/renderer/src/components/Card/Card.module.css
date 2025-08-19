@@ -1,11 +1,17 @@
 .card {
-  background: white;
+  background: var(--bg-card);
   border-radius: 16px;
   padding: 25px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 20px var(--shadow-medium);
+  border: 1px solid var(--border-main);
   height: fit-content;
   transition: padding 0.3s ease;
+}
+
+/* Variant styles */
+.card.item {
+  background: var(--bg-item);
+  border-color: var(--border-item);
 }
 
 /* Spacing variants */
@@ -33,7 +39,7 @@
 }
 
 .cardHeader.collapsible:hover {
-  background-color: rgba(0, 0, 0, 0.02);
+  background: var(--bg-card);
   border-radius: 8px;
   padding: 8px;
   margin: -8px -8px -8px -8px;
@@ -66,7 +72,7 @@
   margin: 0;
   font-size: 22px;
   font-weight: 700;
-  color: #1f2937;
+  color: var(--text-primary);
 }
 
 .cardContent {
@@ -107,7 +113,7 @@
 .cardFooter {
   margin-top: 24px;
   padding-top: 20px;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--border-main);
 }
 
 @keyframes slideDown {

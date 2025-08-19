@@ -1,0 +1,46 @@
+.themeSelect {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  color: var(--text-primary);
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 90px;
+  text-align: center;
+  text-align-last: center;
+}
+
+.themeSelect:hover {
+  background: var(--bg-card);
+  border-color: var(--border-light);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px var(--shadow-small);
+}
+
+.themeSelect:focus {
+  outline: none;
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px var(--shadow-primary);
+  transform: none;
+}
+
+.themeSelect:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px var(--shadow-small);
+}
+
+.themeSelect option {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  text-align: left;
+  text-align-last: left;
+  appearance: none;
+  border: 1px solid var(--border-card);
+}

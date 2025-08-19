@@ -90,7 +90,7 @@ const BotStatusTable: React.FC<BotStatusTableProps> = ({
               </Button>
             ) : (
               <Button
-                color="success"
+                color="primary"
                 size="small"
                 onClick={() => onLaunchBot(bot.id)}
                 disabled={!bot.launchScript || isLoading || !isConfigReady}

@@ -18,8 +18,8 @@
   align-items: center;
   gap: 16px;
   padding: 12px 16px;
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
+  background: var(--bg-info);
+  border: 1px solid var(--border-info);
   border-radius: 8px;
   flex: 1;
 }
@@ -29,40 +29,40 @@
   align-items: center;
   gap: 8px;
   font-weight: 600;
-  color: #374151;
+  color: var(--text-primary);
 }
 
 .monitoringStatus .statusDetails {
-  color: #6b7280;
+  color: var(--text-secondary);
   font-size: 14px;
 }
 
 /* Active monitoring state */
 .monitoringStatus.active {
-  background: #f0fdf4;
-  border-color: #bbf7d0;
+  background: var(--bg-success);
+  border-color: var(--border-success);
 }
 
 .monitoringStatus.active .statusIndicator {
-  color: #166534;
+  color: var(--status-success);
 }
 
 .monitoringStatus.active .statusDetails {
-  color: #374151;
+  color: var(--text-primary);
 }
 
 /* Pending configuration state */
 .monitoringStatus.pending {
-  background: #fefce8;
-  border-color: #fde047;
+  background: var(--bg-warning);
+  border-color: var(--border-warning);
 }
 
 .monitoringStatus.pending .statusIndicator {
-  color: #a16207;
+  color: var(--status-warning);
 }
 
 .monitoringStatus.pending .statusDetails {
-  color: #92400e;
+  color: var(--text-primary);
 }
 
 .statusIndicator {
@@ -78,21 +78,21 @@
 }
 
 .statusIndicator.online .statusDot {
-  background-color: #10b981;
+  background: var(--status-success);
 }
 
 .statusIndicator.offline .statusDot {
-  background-color: #6b7280;
+  background: var(--text-muted);
 }
 
 .statusIndicator.pending .statusDot {
-  background-color: #f59e0b;
+  background: var(--status-warning);
 }
 
 .errorMessage {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  color: #dc2626;
+  background: var(--bg-card);
+  border: 1px solid var(--status-danger);
+  color: var(--status-danger);
   padding: 12px;
   border-radius: 8px;
   margin-bottom: 16px;

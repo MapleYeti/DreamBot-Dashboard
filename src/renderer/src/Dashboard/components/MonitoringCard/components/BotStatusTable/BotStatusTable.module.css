@@ -1,28 +1,30 @@
 .botTable {
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-item);
   border-radius: 8px;
   overflow: hidden;
+  background: var(--bg-item);
 }
 
 .tableHeader {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-  background: #f9fafb;
-  border-bottom: 1px solid #e5e7eb;
+  background: var(--bg-item);
+  border-bottom: 1px solid var(--border-item);
 }
 
 .headerCell {
   padding: 16px;
   font-weight: 600;
-  color: #374151;
+  color: var(--text-primary);
   text-align: left;
 }
 
 .tableRow {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-  border-bottom: 1px solid #e5e7eb;
-  transition: background-color 0.2s ease;
+  border-bottom: 1px solid var(--border-main);
+  transition: background 0.2s ease;
+  background: var(--bg-item);
 }
 
 .tableRow:last-child {
@@ -30,20 +32,20 @@
 }
 
 .tableRow:hover {
-  background-color: #f9fafb;
+  background: var(--bg-card);
 }
 
 .tableCell {
   padding: 16px;
   display: flex;
   align-items: center;
-  color: #1f2937;
+  color: var(--text-primary);
   font-weight: 500;
 }
 
 .tableCell:first-child {
   font-weight: 600;
-  color: #111827;
+  color: var(--text-primary);
 }
 
 .configStatus {
@@ -55,11 +57,11 @@
 }
 
 .configured {
-  color: #10b981;
+  color: var(--text-success);
 }
 
 .notConfigured {
-  color: #ef4444;
+  color: var(--text-danger);
 }
 
 .statusIndicator {
@@ -75,28 +77,28 @@
 }
 
 .statusIndicator.online .statusDot {
-  background-color: #10b981;
+  background: var(--status-success);
 }
 
 .statusIndicator.offline .statusDot {
-  background-color: #6b7280;
+  background: var(--text-muted);
 }
 
 .statusIndicator.pending .statusDot {
-  background-color: #f59e0b;
+  background: var(--status-warning);
 }
 
 .statusIndicator.starting .statusDot {
-  background-color: #f59e0b;
+  background: var(--status-warning);
 }
 
 .statusIndicator.error .statusDot {
-  background-color: #ef4444;
+  background: var(--status-danger);
 }
 
 .pidInfo {
   font-size: 12px;
-  color: #6b7280;
+  color: var(--text-muted);
   font-weight: normal;
   margin-left: 8px;
 }
@@ -104,9 +106,9 @@
 .noBotsMessage {
   text-align: center;
   padding: 40px;
-  color: #6b7280;
+  color: var(--text-muted);
   font-size: 16px;
-  background: #f9fafb;
+  background: var(--bg-card);
   border-radius: 8px;
-  border: 1px dashed #d1d5db;
+  border: 1px dashed var(--border-main);
 }

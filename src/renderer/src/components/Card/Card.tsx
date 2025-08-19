@@ -11,6 +11,7 @@ interface CardProps {
   headerActions?: ReactNode
   footer?: ReactNode
   spacing?: 'regular' | 'tight' | 'compact'
+  variant?: 'default' | 'item'
 }
 
 const Card: React.FC<CardProps> = ({
@@ -22,7 +23,8 @@ const Card: React.FC<CardProps> = ({
   icon,
   headerActions,
   footer,
-  spacing = 'regular'
+  spacing = 'regular',
+  variant = 'default'
 }) => {
   const handleHeaderClick = () => {
     if (isCollapsible && onToggleCollapse) {
@@ -30,7 +32,8 @@ const Card: React.FC<CardProps> = ({
     }
   }
 
-  const cardClassName = `${styles.card} ${styles[spacing]} ${!footer ? styles.noFooter : ''}`.trim()
+  const cardClassName =
+    `${styles.card} ${styles[spacing]} ${variant === 'default' ? '' : styles[variant]} ${!footer ? styles.noFooter : ''}`.trim()
   const headerClassName = `${styles.cardHeader} ${isCollapsible ? styles.collapsible : ''}`.trim()
 
   return (

@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--bg-overlay);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -15,10 +15,10 @@
 }
 
 .modal {
-  background: white;
+  background: var(--bg-modal);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 20px 60px var(--shadow-large);
   animation: modalSlideIn 0.3s ease-out;
   max-height: 90vh;
   display: flex;
@@ -62,9 +62,9 @@
   justify-content: space-between;
   align-items: center;
   padding: 20px 24px;
-  border-bottom: 1px solid #e5e7eb;
-  background: white;
-  color: #1f2937;
+  border-bottom: 1px solid var(--border-main);
+  background: var(--bg-modal);
+  color: var(--text-primary);
   flex-shrink: 0;
 }
 
@@ -102,12 +102,12 @@
 .closeButton {
   background: none;
   border: none;
-  color: #6b7280;
+  color: var(--text-muted);
   font-size: 24px;
   cursor: pointer;
   padding: 4px;
   border-radius: 4px;
-  transition: background-color 0.2s ease;
+  transition: background 0.2s ease;
   width: 32px;
   height: 32px;
   display: flex;
@@ -117,7 +117,7 @@
 }
 
 .closeButton:hover {
-  background: rgba(0, 0, 0, 0.05);
+  background: var(--bg-card);
 }
 
 .modalContent {
@@ -129,8 +129,8 @@
 
 .modalFooter {
   padding: 20px 24px;
-  border-top: 1px solid #e5e7eb;
-  background: #f9fafb;
+  border-top: 1px solid var(--border-main);
+  background: var(--bg-card);
   flex-shrink: 0;
   display: flex;
   justify-content: flex-end;

@@ -3,6 +3,7 @@ import { useMonitoring } from '../../../hooks/useMonitoring'
 import { useAppConfig } from '../../../hooks/useAppConfig'
 import { useBotLaunch } from '../../../hooks/useBotLaunch'
 import VersionBadge from './components/VersionBadge'
+import ThemeSelector from '../../../components/ThemeSelector'
 import styles from './DashboardHeader.module.css'
 
 const DashboardHeader: React.FC = () => {
@@ -54,6 +55,7 @@ const DashboardHeader: React.FC = () => {
             <div className={`${styles.statusDot} ${getStatusDotClass()}`}></div>
             <span>{getMonitoringStatusText()}</span>
           </div>
+          <ThemeSelector />
         </div>
       </div>
     </header>

@@ -6,7 +6,7 @@
   margin: 0 0 16px 0;
   font-size: 18px;
   font-weight: 600;
-  color: #374151;
+  color: var(--text-primary);
 }
 
 .checkboxRow {
@@ -18,13 +18,13 @@
 .configCheckbox {
   width: 20px;
   height: 20px;
-  accent-color: #8b5cf6;
+  accent-color: var(--border-focus);
   cursor: pointer;
   margin-top: 2px;
 }
 
 .checkboxLabel {
-  color: #6b7280;
+  color: var(--text-secondary);
   font-size: 13px;
   font-style: italic;
   line-height: 1.4;

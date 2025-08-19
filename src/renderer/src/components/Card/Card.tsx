@@ -3,7 +3,6 @@ import styles from './Card.module.css'
 
 interface CardProps {
   children: ReactNode
-  className?: string
   isCollapsible?: boolean
   isCollapsed?: boolean
   onToggleCollapse?: () => void
@@ -16,7 +15,6 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({
   children,
-  className = '',
   isCollapsible = false,
   isCollapsed = false,
   onToggleCollapse,
@@ -32,8 +30,7 @@ const Card: React.FC<CardProps> = ({
     }
   }
 
-  const cardClassName =
-    `${styles.card} ${styles[spacing]} ${!footer ? styles.noFooter : ''} ${className}`.trim()
+  const cardClassName = `${styles.card} ${styles[spacing]} ${!footer ? styles.noFooter : ''}`.trim()
   const headerClassName = `${styles.cardHeader} ${isCollapsible ? styles.collapsible : ''}`.trim()
 
   return (

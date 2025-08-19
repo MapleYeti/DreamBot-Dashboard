@@ -192,8 +192,9 @@ const ConfigurationModal: React.FC<ConfigurationModalProps> = ({ isOpen, onClose
               size="small"
               onClick={handleSelectDirectory}
               disabled={isDisabled}
+              icon="📁"
             >
-              📁 Browse
+              Browse
             </Button>
           </div>
         </Card>
@@ -234,8 +235,9 @@ const ConfigurationModal: React.FC<ConfigurationModalProps> = ({ isOpen, onClose
                     ? 'Cannot modify while monitoring is active'
                     : 'Add new bot configuration'
                 }
+                icon="➕"
               >
-                + Add Bot
+                Add Bot
               </Button>
             </div>
 
@@ -247,7 +249,7 @@ const ConfigurationModal: React.FC<ConfigurationModalProps> = ({ isOpen, onClose
                   Add your first bot configuration to start monitoring and managing your DreamBot
                   instances.
                 </p>
-                <Button color="primary" onClick={handleAddBot} disabled={isDisabled}>
+                <Button color="primary" onClick={handleAddBot} disabled={isDisabled} icon="➕">
                   Add Your First Bot
                 </Button>
               </div>

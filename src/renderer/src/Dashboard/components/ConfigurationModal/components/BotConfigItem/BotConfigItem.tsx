@@ -75,6 +75,7 @@ const BotConfigItem: React.FC<BotConfigItemProps> = ({
             size="small"
             onClick={handleEdit}
             disabled={disabled}
+            icon="✏️"
           >
             Edit
           </Button>
@@ -84,6 +85,7 @@ const BotConfigItem: React.FC<BotConfigItemProps> = ({
             size="small"
             onClick={() => onRemove(bot.id)}
             disabled={disabled}
+            icon="🗑️"
           >
             Remove
           </Button>

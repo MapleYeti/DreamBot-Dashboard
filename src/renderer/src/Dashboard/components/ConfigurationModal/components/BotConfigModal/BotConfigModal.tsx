@@ -97,7 +97,13 @@ const BotConfigModal: React.FC<BotConfigModalProps> = ({
       footer={
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.modalActions}>
-            <Button color="secondary" variant="outline" onClick={handleClose} type="button">
+            <Button
+              color="secondary"
+              variant="outline"
+              onClick={handleClose}
+              type="button"
+              icon="✕"
+            >
               Cancel
             </Button>
             <Button
@@ -113,6 +119,7 @@ const BotConfigModal: React.FC<BotConfigModalProps> = ({
                     ? 'Bot name is required'
                     : 'Add bot configuration'
               }
+              icon="✓"
             >
               {submitButtonText}
             </Button>

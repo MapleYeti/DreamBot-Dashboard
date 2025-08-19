@@ -1,4 +1,5 @@
 import React from 'react'
+import Button from '../../../../../components/Button'
 import styles from './MonitoringControl.module.css'
 
 interface MonitoringControlProps {
@@ -27,8 +28,8 @@ const MonitoringControl: React.FC<MonitoringControlProps> = ({
       {error && <div className={styles.errorMessage}>Error: {error}</div>}
 
       <div className={styles.monitoringRow}>
-        <button
-          className={isMonitoring ? styles.stopButton : styles.startButton}
+        <Button
+          color={isMonitoring ? 'danger' : 'success'}
           onClick={isMonitoring ? onStopMonitoring : onStartMonitoring}
           disabled={isLoading || (!isMonitoring && !isConfigReady)}
           title={
@@ -36,9 +37,11 @@ const MonitoringControl: React.FC<MonitoringControlProps> = ({
               ? 'Fix configuration errors before starting monitoring'
               : undefined
           }
+          icon={isMonitoring ? '⏹️' : '▶️'}
+          className={styles.monitoringButton}
         >
           {isLoading ? 'Processing...' : isMonitoring ? 'Stop Monitoring' : 'Start Monitoring'}
-        </button>
+        </Button>
 
         <div
           className={`${styles.monitoringStatus} ${

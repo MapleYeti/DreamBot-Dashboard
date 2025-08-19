@@ -101,63 +101,6 @@
   margin-left: 8px;
 }
 
-.launchButton {
-  background: #8b5cf6;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  width: 100px;
-  justify-content: center;
-}
-
-.launchButton:hover:not(:disabled) {
-  background: #7c3aed;
-}
-
-.launchButton:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.stopButton {
-  background: #ef4444;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  width: 100px;
-  justify-content: center;
-}
-
-.stopButton:hover:not(:disabled) {
-  background: #dc2626;
-}
-
-.stopButton:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.buttonIcon {
-  font-size: 14px;
-  width: 16px;
-  text-align: center;
-  flex-shrink: 0;
-}
-
 .noBotsMessage {
   text-align: center;
   padding: 40px;

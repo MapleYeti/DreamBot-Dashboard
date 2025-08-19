@@ -8,13 +8,13 @@
   margin: 0 0 20px 0;
   font-size: 18px;
   font-weight: 600;
-  color: #374151;
+  color: var(--text-primary);
 }
 
 .loadingMessage {
   text-align: center;
   padding: 40px;
-  color: #6b7280;
+  color: var(--text-secondary);
   font-size: 16px;
 }
 
@@ -26,15 +26,15 @@
   padding: 4px;
   border-radius: 4px;
   transition: all 0.2s ease;
-  color: #6b7280;
+  color: var(--text-muted);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .configButton:hover {
-  background: rgba(0, 0, 0, 0.05);
-  color: #374151;
+  background: var(--bg-card);
+  color: var(--text-primary);
   transform: scale(1.1);
 }
 
@@ -45,7 +45,7 @@
 .configButton:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-  color: #9ca3af;
+  color: var(--text-muted);
 }
 
 .configButton:disabled:hover {

@@ -1,8 +1,8 @@
 .header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--bg-header);
   color: white;
   padding: 20px 0;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px var(--shadow-medium);
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -28,7 +28,6 @@
   font-size: 24px;
   font-weight: 700;
   text-decoration: none;
-  color: white;
   flex-shrink: 0;
 }
 
@@ -40,7 +39,7 @@
 .logoText {
   font-size: 28px;
   font-weight: 800;
-  background: linear-gradient(45deg, #ffffff, #f0f0f0);
+  background: var(--text-header);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -57,16 +56,16 @@
   text-decoration: none;
   padding: 8px 16px;
   border-radius: 6px;
-  transition: background-color 0.2s ease;
+  transition: background 0.2s ease;
   font-weight: 500;
 }
 
 .navLink:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .navLink.active {
-  background-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .userInfo {
@@ -99,6 +98,7 @@
   background: rgba(255, 255, 255, 0.1);
   border-radius: 6px;
   font-weight: 500;
+  color: white;
 }
 
 .statusDot {
@@ -110,13 +110,13 @@
 }
 
 .statusDotOnline {
-  background: #10b981;
-  box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+  background: var(--status-success);
+  box-shadow: 0 0 8px var(--shadow-success);
 }
 
 .statusDotOffline {
-  background: #ff6b6b;
-  box-shadow: 0 0 8px rgba(255, 107, 107, 0.4);
+  background: var(--status-danger);
+  box-shadow: 0 0 8px var(--shadow-danger);
 }
 
 @media (max-width: 768px) {

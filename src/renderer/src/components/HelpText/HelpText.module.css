@@ -22,32 +22,25 @@
 
 /* Variant styles */
 .helpText.info {
-  background-color: #f0f9ff;
-  border-color: #bae6fd;
-  color: #0369a1;
+  background: var(--bg-info);
+  border-color: var(--border-info);
+  color: var(--text-info);
 }
 
 .helpText.warning {
-  background-color: #fefce8;
-  border-color: #fde047;
-  color: #a16207;
+  background: var(--bg-warning);
+  border-color: var(--border-warning);
+  color: var(--text-warning);
 }
 
 .helpText.success {
-  background-color: #f0fdf4;
-  border-color: #bbf7d0;
-  color: #166534;
+  background: var(--bg-success);
+  border-color: var(--border-success);
+  color: var(--text-success);
 }
 
 .helpText.error {
-  background-color: #fef2f2;
-  border-color: #fecaca;
-  color: #dc2626;
-}
-
-/* Default info variant (when no variant specified) */
-.helpText:not(.warning):not(.success):not(.error) {
-  background-color: #f8fafc;
-  border-color: #e2e8f0;
-  color: #64748b;
+  background: var(--bg-danger);
+  border-color: var(--border-danger);
+  color: var(--text-danger);
 }

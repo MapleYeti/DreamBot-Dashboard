@@ -3,10 +3,10 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-item);
   border-radius: 8px;
   margin-bottom: 12px;
-  background: #f9fafb;
+  background: var(--bg-item);
 }
 
 .botInfo {
@@ -15,7 +15,7 @@
 
 .botName {
   font-weight: 600;
-  color: #374151;
+  color: var(--text-primary);
   margin-bottom: 8px;
   font-size: 14px;
 }
@@ -38,16 +38,16 @@
 }
 
 .statusText {
-  color: #6b7280;
+  color: var(--text-item);
   font-size: 12px;
 }
 
 .statusConfigured {
-  color: #059669;
+  color: var(--status-success);
 }
 
 .statusNotConfigured {
-  color: #dc2626;
+  color: var(--status-danger);
 }
 
 .botActions {

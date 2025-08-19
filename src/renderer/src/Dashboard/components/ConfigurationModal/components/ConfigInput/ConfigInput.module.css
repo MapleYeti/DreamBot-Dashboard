@@ -6,7 +6,7 @@
 .configLabel {
   display: block;
   font-weight: 600;
-  color: #374151;
+  color: var(--text-primary);
   margin-bottom: 8px;
   font-size: 14px;
 }
@@ -16,10 +16,11 @@
   flex: 1;
   min-width: 0; /* Allow flex item to shrink below content size */
   padding: 8px 16px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border-main);
   border-radius: 8px;
   font-size: 14px;
-  background: white;
+  background: var(--bg-card);
+  color: var(--text-primary);
   transition: border-color 0.2s ease;
   height: 36px;
   box-sizing: border-box;
@@ -29,6 +30,6 @@
 
 .configInput:focus {
   outline: none;
-  border-color: #8b5cf6;
-  box-shadow: 0 0 0 3px rgba(139, 92, 244, 0.1);
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px var(--shadow-primary);
 }

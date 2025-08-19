@@ -1,6 +1,6 @@
 .dashboard {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: var(--bg-main);
   padding: 0;
 }
 
@@ -14,11 +14,11 @@
 }
 
 .dashboardSection {
-  background: white;
+  background: var(--bg-card);
   border-radius: 16px;
   padding: 25px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 20px var(--shadow-medium);
+  border: 1px solid var(--border-main);
 }
 
 .sectionHeader {
@@ -43,7 +43,7 @@
   margin: 0;
   font-size: 22px;
   font-weight: 700;
-  color: #1f2937;
+  color: var(--text-primary);
 }
 
 @media (max-width: 768px) {

@@ -1,34 +1,65 @@
+/* Theme CSS custom properties will be dynamically set by ThemeProvider */
 :root {
-  --ev-c-white: #ffffff;
-  --ev-c-white-soft: #f8f8f8;
-  --ev-c-white-mute: #f2f2f2;
+  /* Default values - will be overridden by theme */
+  --color-primary: hsl(226, 70%, 66%);
+  --color-secondary: hsl(220, 13%, 46%);
+  --color-accent: hsl(160, 84%, 39%);
 
-  --ev-c-black: #1b1b1f;
-  --ev-c-black-soft: #222222;
-  --ev-c-black-mute: #282828;
+  --bg-main: hsl(0, 0%, 100%);
+  --bg-card: hsl(0, 0%, 100%);
+  --bg-item: hsl(0, 0%, 98%);
+  --bg-modal: hsl(0, 0%, 100%);
+  --bg-overlay: hsla(0, 0%, 0%, 0.5);
+  --bg-header: linear-gradient(135deg, hsl(226, 70%, 66%) 0%, hsl(271, 39%, 53%) 100%);
+  --bg-info: hsl(214, 100%, 97%);
+  --bg-success: hsl(138, 76%, 97%);
+  --bg-warning: hsl(48, 96%, 89%);
+  --bg-danger: hsl(0, 100%, 97%);
 
-  --ev-c-gray-1: #515c67;
-  --ev-c-gray-2: #414853;
-  --ev-c-gray-3: #32363f;
+  --text-primary: hsl(222, 47%, 11%);
+  --text-secondary: hsl(215, 16%, 27%);
+  --text-muted: hsl(220, 13%, 46%);
+  --text-inverse: hsl(0, 0%, 100%);
+  --text-header: hsl(0, 0%, 100%);
+  --text-item: hsl(220, 13%, 46%);
+  --text-success: hsl(160, 84%, 39%);
+  --text-danger: hsl(0, 84%, 60%);
+  --text-warning: hsl(25, 95%, 53%);
+  --text-info: hsl(217, 91%, 60%);
 
-  --ev-c-text-1: rgba(255, 255, 245, 0.86);
-  --ev-c-text-2: rgba(235, 235, 245, 0.6);
-  --ev-c-text-3: rgba(235, 235, 245, 0.38);
+  --border-main: hsl(220, 13%, 91%);
+  --border-light: hsl(220, 14%, 96%);
+  --border-focus: hsl(226, 70%, 66%);
+  --border-item: hsl(220, 13%, 94%);
+  --border-success: hsl(160, 84%, 39%);
+  --border-warning: hsl(25, 95%, 53%);
+  --border-danger: hsl(0, 84%, 60%);
+  --border-info: hsl(217, 91%, 60%);
 
-  --ev-button-alt-border: transparent;
-  --ev-button-alt-text: var(--ev-c-text-1);
-  --ev-button-alt-bg: var(--ev-c-gray-3);
-  --ev-button-alt-hover-border: transparent;
-  --ev-button-alt-hover-text: var(--ev-c-text-1);
-  --ev-button-alt-hover-bg: var(--ev-c-gray-2);
-}
+  --status-success: hsl(160, 84%, 39%);
+  --status-danger: hsl(0, 84%, 60%);
+  --status-warning: hsl(25, 95%, 53%);
+  --status-info: hsl(217, 91%, 60%);
 
-:root {
-  --color-background: var(--ev-c-black);
-  --color-background-soft: var(--ev-c-black-soft);
-  --color-background-mute: var(--ev-c-black-mute);
+  --btn-primary-bg: hsl(226, 70%, 66%);
+  --btn-primary-bg-hover: hsl(226, 70%, 60%);
+  --btn-primary-text: hsl(0, 0%, 100%);
 
-  --color-text: var(--ev-c-text-1);
+  --btn-secondary-bg: hsl(220, 13%, 46%);
+  --btn-secondary-bg-hover: hsl(220, 13%, 40%);
+  --btn-secondary-text: hsl(0, 0%, 100%);
+
+  --btn-success-bg: hsl(160, 84%, 39%);
+  --btn-success-bg-hover: hsl(160, 84%, 33%);
+  --btn-success-text: hsl(0, 0%, 100%);
+
+  --btn-danger-bg: hsl(0, 84%, 60%);
+  --btn-danger-bg-hover: hsl(0, 84%, 54%);
+  --btn-danger-text: hsl(0, 0%, 100%);
+
+  --shadow-small: hsla(0, 0%, 0%, 0.05);
+  --shadow-medium: hsla(0, 0%, 0%, 0.1);
+  --shadow-large: hsla(0, 0%, 0%, 0.15);
 }
 
 *,
@@ -45,8 +76,8 @@ ul {
 
 body {
   min-height: 100vh;
-  color: var(--color-text);
-  background: var(--color-background);
+  color: var(--text-primary);
+  background: var(--bg-main);
   line-height: 1.6;
   font-family:
     Inter,
@@ -64,4 +95,9 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.App {
+  background: var(--bg-main);
+  min-height: 100vh;
 }

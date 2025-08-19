@@ -1,14 +1,7 @@
 import React from 'react'
 import styles from './Button.module.css'
 
-export type ButtonColor =
-  | 'primary'
-  | 'secondary'
-  | 'success'
-  | 'danger'
-  | 'warning'
-  | 'info'
-  | 'gray'
+export type ButtonColor = 'primary' | 'secondary' | 'success' | 'danger'
 
 export interface ButtonProps {
   children: React.ReactNode

@@ -45,7 +45,7 @@
   align-items: center;
   margin-bottom: 12px;
   padding-bottom: 8px;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--border-main);
   position: relative;
 }
 
@@ -56,7 +56,7 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  background: var(--btn-primary-bg);
   border-radius: 1px;
 }
 
@@ -70,16 +70,16 @@
 .emptyState {
   text-align: center;
   padding: 20px 16px;
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  background: var(--bg-card);
   border-radius: 12px;
-  border: 2px dashed #cbd5e1;
+  border: 2px dashed var(--border-light);
   margin-top: 12px;
   transition: all 0.2s ease;
 }
 
 .emptyState:hover {
-  border-color: #94a3b8;
-  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  border-color: var(--border-main);
+  background: var(--bg-card);
 }
 
 .emptyStateIcon {
@@ -91,12 +91,12 @@
   margin: 0 0 8px 0;
   font-size: 18px;
   font-weight: 600;
-  color: #374151;
+  color: var(--text-primary);
 }
 
 .emptyStateDescription {
   margin: 0 0 24px 0;
-  color: #6b7280;
+  color: var(--text-secondary);
   font-size: 14px;
   line-height: 1.5;
 }

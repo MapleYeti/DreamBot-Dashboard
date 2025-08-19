@@ -1,13 +1,19 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useCallback } from 'react'
 import { Card } from '../../../components/Card'
 import HelpText from '../../../components/HelpText'
 import { useAppConfig } from '../../../hooks/useAppConfig'
 import { useMonitoring } from '../../../hooks/useMonitoring'
-import { useUnsavedChanges } from '../../../hooks/useUnsavedChanges'
+
 import { useBotLaunch } from '../../../hooks/useBotLaunch'
 import MonitoringControl from './components/MonitoringControl'
 import BotStatusTable from './components/BotStatusTable'
+import StatusBadge from '../ConfigurationModal/components/StatusBadge/StatusBadge'
+import { ConfigStatus } from '../ConfigurationModal/types/ConfigStatus'
 import styles from './MonitoringCard.module.css'
+
+interface MonitoringCardProps {
+  onConfigClick?: () => void
+}
 
 interface BotStatus {
   id: string
@@ -20,14 +26,21 @@ interface BotStatus {
   pid?: number
 }
 
-const MonitoringCard: React.FC = () => {
+const MonitoringCard: React.FC<MonitoringCardProps> = ({ onConfigClick }) => {
   const appConfigContext = useAppConfig()
   const monitoring = useMonitoring()
-  const { hasUnsavedChanges } = useUnsavedChanges()
   const { botStatuses, launchBot, stopBot, isLoading: botLaunchLoading } = useBotLaunch()
 
   const hasConfigErrors = appConfigContext.errors.length > 0
-  const isConfigReady = !hasUnsavedChanges && !hasConfigErrors
+  const isConfigReady = !hasConfigErrors
+
+  // Determine config status for the status badge (based on global config, not modal state)
+  const getConfigStatus = useCallback((): ConfigStatus => {
+    if (monitoring.status.isMonitoring) return ConfigStatus.MONITORING
+    if (hasConfigErrors) return ConfigStatus.ERROR
+    if (appConfigContext.isLoading) return ConfigStatus.LOADING
+    return ConfigStatus.SAVED
+  }, [monitoring.status.isMonitoring, hasConfigErrors, appConfigContext.isLoading])
 
   // Derive bots list from config and bot statuses
   const bots: BotStatus[] = useMemo(() => {
@@ -87,6 +100,23 @@ const MonitoringCard: React.FC = () => {
     <Card
       title="Monitoring"
       icon="🎮"
+      headerActions={
+        <div className={styles.headerActionsContainer}>
+          <StatusBadge status={getConfigStatus()} />
+          <button
+            className={styles.configButton}
+            onClick={onConfigClick}
+            disabled={monitoring.status.isMonitoring}
+            title={
+              monitoring.status.isMonitoring
+                ? 'Cannot modify configuration while monitoring is active'
+                : 'Open Configuration'
+            }
+          >
+            ⚙️
+          </button>
+        </div>
+      }
       footer={
         appConfigContext.config?.DREAMBOT_VIP_FEATURES ? (
           <HelpText icon="💡" variant="info">

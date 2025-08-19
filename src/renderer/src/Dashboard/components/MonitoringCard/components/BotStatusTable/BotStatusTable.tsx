@@ -92,7 +92,7 @@ const BotStatusTable: React.FC<BotStatusTableProps> = ({
                 disabled={!bot.launchScript || isLoading || !isConfigReady}
                 title={
                   !isConfigReady
-                    ? 'Fix configuration issues before launching'
+                    ? 'Fix configuration errors before launching'
                     : !bot.launchScript
                       ? 'Configure launch script before launching'
                       : undefined

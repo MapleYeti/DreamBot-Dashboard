@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './StatusBadge.module.css'
-import { ConfigStatus } from '../../types/ConfigStatus'
+import { ConfigStatus } from '../../../ConfigurationModal/types/ConfigStatus'
 
 interface StatusBadgeProps {
   status: ConfigStatus

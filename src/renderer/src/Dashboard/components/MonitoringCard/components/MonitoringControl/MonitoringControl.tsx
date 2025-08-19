@@ -33,7 +33,7 @@ const MonitoringControl: React.FC<MonitoringControlProps> = ({
           disabled={isLoading || (!isMonitoring && !isConfigReady)}
           title={
             !isConfigReady && !isMonitoring
-              ? 'Fix configuration issues before starting monitoring'
+              ? 'Fix configuration errors before starting monitoring'
               : undefined
           }
         >
@@ -63,11 +63,11 @@ const MonitoringControl: React.FC<MonitoringControlProps> = ({
                 <div
                   className={`${styles.statusDot} ${!isConfigReady ? styles.pending : styles.offline}`}
                 ></div>
-                <span>{!isConfigReady ? 'Config Issues' : 'Not Monitoring'}</span>
+                <span>{!isConfigReady ? 'Config Errors' : 'Not Monitoring'}</span>
               </span>
               <span className={styles.statusDetails}>
                 {!isConfigReady
-                  ? '⚠️ Fix configuration issues to start monitoring'
+                  ? '⚠️ Fix configuration errors to start monitoring'
                   : 'No monitoring active'}
               </span>
             </>

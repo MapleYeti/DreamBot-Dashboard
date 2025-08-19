@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import Button from '../../../../../components/Button'
 import styles from './BotConfigItem.module.css'
 import BotConfigModal from '../BotConfigModal'
 import type { BotConfig } from '@shared/types/configTypes'
@@ -68,16 +69,24 @@ const BotConfigItem: React.FC<BotConfigItemProps> = ({
           </div>
         </div>
         <div className={styles.botActions}>
-          <button className={styles.editButton} onClick={handleEdit} disabled={disabled}>
+          <Button
+            color="primary"
+            variant="outline"
+            size="small"
+            onClick={handleEdit}
+            disabled={disabled}
+          >
             Edit
-          </button>
-          <button
-            className={styles.removeButton}
+          </Button>
+          <Button
+            color="danger"
+            variant="outline"
+            size="small"
             onClick={() => onRemove(bot.id)}
             disabled={disabled}
           >
             Remove
-          </button>
+          </Button>
         </div>
       </div>
 

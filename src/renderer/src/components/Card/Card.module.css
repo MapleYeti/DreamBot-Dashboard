@@ -8,6 +8,15 @@
   transition: padding 0.3s ease;
 }
 
+/* Spacing variants */
+.card.tight {
+  padding: 16px;
+}
+
+.card.compact {
+  padding: 12px;
+}
+
 .card.collapsed {
   padding-bottom: 25px;
 }
@@ -63,6 +72,36 @@
 .cardContent {
   padding-top: 25px;
   animation: slideDown 0.3s ease-out;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Adjust cardContent padding based on spacing variant */
+.card.tight .cardContent {
+  padding-top: 16px;
+}
+
+.card.compact .cardContent {
+  padding-top: 12px;
+}
+
+/* Ensure all spacing variants maintain gap behavior */
+.card.tight .cardContent {
+  gap: 12px;
+}
+
+.card.compact .cardContent {
+  gap: 8px;
+}
+
+/* Remove bottom margin when no footer is present */
+.card.tight.noFooter .cardContent {
+  margin-bottom: 0;
+}
+
+.card.compact.noFooter .cardContent {
+  margin-bottom: 0;
 }
 
 .cardFooter {
@@ -87,6 +126,22 @@
     padding: 20px;
   }
 
+  .card.tight {
+    padding: 14px;
+  }
+
+  .card.compact {
+    padding: 10px;
+  }
+
+  .card.tight .cardContent {
+    padding-top: 14px;
+  }
+
+  .card.compact .cardContent {
+    padding-top: 10px;
+  }
+
   .cardHeader {
     flex-direction: column;
     align-items: flex-start;
@@ -97,5 +152,21 @@
 @media (max-width: 480px) {
   .card {
     padding: 16px;
+  }
+
+  .card.tight {
+    padding: 12px;
+  }
+
+  .card.compact {
+    padding: 8px;
+  }
+
+  .card.tight .cardContent {
+    padding-top: 12px;
+  }
+
+  .card.compact .cardContent {
+    padding-top: 8px;
   }
 }

@@ -1,0 +1,56 @@
+.botConfigItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  background: #f9fafb;
+}
+
+.botInfo {
+  flex: 1;
+}
+
+.botName {
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.botStatus {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.statusItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.statusIcon {
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.statusText {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.statusConfigured {
+  color: #059669;
+}
+
+.statusNotConfigured {
+  color: #dc2626;
+}
+
+.botActions {
+  display: flex;
+  gap: 8px;
+}

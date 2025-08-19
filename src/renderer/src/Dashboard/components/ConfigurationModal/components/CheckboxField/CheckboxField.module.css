@@ -1,5 +1,5 @@
 .checkboxField {
-  margin-bottom: 24px;
+  /* Margin removed - spacing is now handled by Card component */
 }
 
 .checkboxTitle {

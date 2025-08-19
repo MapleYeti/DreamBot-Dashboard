@@ -3,12 +3,29 @@
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   text-decoration: none;
   font-family: inherit;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: inherit;
+  transition: transform 0.3s ease;
+}
+
+.fullWidth {
+  width: 100% !important;
+  min-width: 100% !important;
 }
 
 /* Size variants */
@@ -19,6 +36,7 @@
   box-sizing: border-box;
   flex-shrink: 0;
   width: auto;
+  min-width: 80px;
 }
 
 .medium {
@@ -233,6 +251,7 @@
   .small {
     padding: 5px 10px;
     font-size: 11px;
+    min-width: 75px;
   }
 
   .medium {
@@ -250,6 +269,7 @@
   .small {
     padding: 4px 8px;
     font-size: 10px;
+    min-width: 70px;
   }
 
   .medium {

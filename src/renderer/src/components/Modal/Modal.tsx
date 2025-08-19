@@ -5,7 +5,6 @@ interface ModalProps {
   children: ReactNode
   isOpen: boolean
   onClose: () => void
-  className?: string
   title?: string
   icon?: string
   headerActions?: ReactNode
@@ -19,7 +18,6 @@ const Modal: React.FC<ModalProps> = ({
   children,
   isOpen,
   onClose,
-  className = '',
   title,
   icon,
   headerActions,
@@ -54,7 +52,7 @@ const Modal: React.FC<ModalProps> = ({
 
   if (!isOpen) return null
 
-  const modalClassName = `${styles.modal} ${styles[size]} ${className}`.trim()
+  const modalClassName = `${styles.modal} ${styles[size]}`.trim()
 
   return (
     <div className={styles.modalOverlay} onClick={handleOverlayClick}>

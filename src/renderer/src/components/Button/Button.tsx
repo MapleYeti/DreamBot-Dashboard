@@ -20,6 +20,8 @@ export interface ButtonProps {
   className?: string
   type?: 'button' | 'submit' | 'reset'
   title?: string
+  icon?: React.ReactNode
+  fullWidth?: boolean
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -29,17 +31,20 @@ const Button: React.FC<ButtonProps> = ({
   disabled = false,
   size = 'medium',
   variant = 'solid',
-  className = '',
   type = 'button',
-  title
+  className,
+  title,
+  icon,
+  fullWidth = false
 }) => {
   const buttonClassName = [
     styles.button,
-    styles[color],
     styles[size],
+    styles[color],
     styles[variant],
     disabled && styles.disabled,
-    className
+    className,
+    fullWidth && styles.fullWidth
   ]
     .filter(Boolean)
     .join(' ')
@@ -52,6 +57,7 @@ const Button: React.FC<ButtonProps> = ({
       type={type}
       title={title}
     >
+      {icon && <span className={styles.icon}>{icon}</span>}
       {children}
     </button>
   )

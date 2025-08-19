@@ -8,14 +8,9 @@ interface HelpTextProps {
   icon?: string
 }
 
-const HelpText: React.FC<HelpTextProps> = ({
-  children,
-  className = '',
-  variant = 'info',
-  icon
-}) => {
-  const helpTextClassName = `${styles.helpText} ${styles[variant]} ${className}`.trim()
-  
+const HelpText: React.FC<HelpTextProps> = ({ children, variant = 'info', icon }) => {
+  const helpTextClassName = `${styles.helpText} ${styles[variant]}`.trim()
+
   return (
     <div className={helpTextClassName}>
       {icon && <span className={styles.helpIcon}>{icon}</span>}

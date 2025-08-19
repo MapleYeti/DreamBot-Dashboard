@@ -1,4 +1,5 @@
 import React from 'react'
+import Button from '../../../../../components/Button'
 import styles from './BotStatusTable.module.css'
 
 interface BotStatus {
@@ -77,17 +78,20 @@ const BotStatusTable: React.FC<BotStatusTableProps> = ({
           </div>
           <div className={styles.tableCell}>
             {bot.isRunning ? (
-              <button
-                className={styles.stopButton}
+              <Button
+                color="danger"
+                size="small"
                 onClick={() => onStopBot(bot.id)}
                 disabled={isLoading}
+                icon="⏹️"
+                fullWidth
               >
-                <span className={styles.buttonIcon}>⏹️</span>
                 Stop
-              </button>
+              </Button>
             ) : (
-              <button
-                className={styles.launchButton}
+              <Button
+                color="success"
+                size="small"
                 onClick={() => onLaunchBot(bot.id)}
                 disabled={!bot.launchScript || isLoading || !isConfigReady}
                 title={
@@ -97,10 +101,11 @@ const BotStatusTable: React.FC<BotStatusTableProps> = ({
                       ? 'Configure launch script before launching'
                       : undefined
                 }
+                icon="🚀"
+                fullWidth
               >
-                <span className={styles.buttonIcon}>🚀</span>
                 Launch
-              </button>
+              </Button>
             )}
           </div>
         </div>

@@ -124,6 +124,7 @@ const ConfigurationModal: React.FC<ConfigurationModalProps> = ({ isOpen, onClose
 
   const handleSave = async () => {
     await saveConfig(localConfig)
+    handleClose()
   }
 
   const handleReset = () => {
@@ -155,7 +156,7 @@ const ConfigurationModal: React.FC<ConfigurationModalProps> = ({ isOpen, onClose
         <div className={styles.footerActions}>
           <Button
             color="secondary"
-            onClick={handleReset}
+            onClick={handleClose}
             disabled={isDisabled}
             title="Cancel changes and revert to saved configuration"
           >

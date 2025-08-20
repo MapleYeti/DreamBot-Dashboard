@@ -108,7 +108,7 @@
   padding: 40px;
   color: var(--text-muted);
   font-size: 16px;
-  background: var(--bg-card);
+  background: var(--bg-item);
   border-radius: 8px;
   border: 1px dashed var(--border-main);
 }

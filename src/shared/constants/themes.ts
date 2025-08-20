@@ -43,7 +43,7 @@ export const lightTheme: Theme = {
       focus: 'hsl(226, 70%, 66%)',
       item: 'hsl(0, 0.00%, 83.90%)',
       success: 'hsl(160, 84%, 39%)',
-      warning: 'hsl(25, 95%, 53%)',
+      warning: 'hsl(51, 93.40%, 58.60%)',
       danger: 'hsl(0, 84%, 60%)',
       info: 'hsl(217, 100.00%, 87.60%)'
     },
@@ -52,7 +52,7 @@ export const lightTheme: Theme = {
     status: {
       success: 'hsl(160, 84%, 39%)',
       danger: 'hsl(0, 84%, 60%)',
-      warning: 'hsl(25, 95%, 53%)',
+      warning: 'hsl(51, 93.40%, 58.60%)',
       info: 'hsl(217, 91%, 60%)'
     },
 

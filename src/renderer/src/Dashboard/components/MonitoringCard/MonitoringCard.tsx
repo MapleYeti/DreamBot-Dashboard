@@ -118,11 +118,20 @@ const MonitoringCard: React.FC<MonitoringCardProps> = ({ onConfigClick }) => {
         </div>
       }
       footer={
-        appConfigContext.config?.DREAMBOT_VIP_FEATURES ? (
-          <HelpText icon="💡" variant="info">
-            Must launch bot through dashboard to track status
-          </HelpText>
-        ) : undefined
+        <div className={styles.helpTextContainer}>
+          {appConfigContext.config?.DREAMBOT_VIP_FEATURES ? (
+            <HelpText icon="💡" variant="info">
+              Must launch bot through dashboard to track status
+            </HelpText>
+          ) : null}
+          {appConfigContext.config?.BOT_CONFIG &&
+          Object.keys(appConfigContext.config.BOT_CONFIG).length > 1 ? (
+            <HelpText icon="💡" variant="info">
+              When you launch (or stop) accounts, especially for Tutorial Island, make sure to
+              launch them at different times as timing is a strong contributor to chainbans.
+            </HelpText>
+          ) : null}
+        </div>
       }
     >
       <MonitoringControl

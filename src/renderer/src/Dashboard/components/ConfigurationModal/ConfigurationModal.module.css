@@ -70,7 +70,7 @@
 .emptyState {
   text-align: center;
   padding: 20px 16px;
-  background: var(--bg-card);
+  background: var(--bg-item);
   border-radius: 12px;
   border: 2px dashed var(--border-light);
   margin-top: 12px;

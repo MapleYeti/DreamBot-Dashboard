@@ -10,7 +10,7 @@ export function createMainWindow(): BrowserWindow {
   // Calculate window dimensions (e.g., 80% of screen height, max 900px)
   const windowHeight = Math.min(Math.floor(screenHeight * 0.8), 850)
   const mainWindow = new BrowserWindow({
-    width: 850,
+    width: 910,
     height: windowHeight,
     show: false,
     autoHideMenuBar: true,

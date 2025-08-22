@@ -29,6 +29,7 @@ const ConfigurationModal: React.FC<ConfigurationModalProps> = ({ isOpen, onClose
   const monitoring = useMonitoring()
   const [validationErrors, setValidationErrors] = useState<string[]>([])
   const [isBotModalOpen, setIsBotModalOpen] = useState(false)
+  const [editingBot, setEditingBot] = useState<{ name: string; config: BotConfig } | null>(null)
   const [localConfig, setLocalConfig] = useState<AppConfig>(
     appConfigContext.config || {
       BASE_LOG_DIRECTORY: '',
@@ -78,6 +79,7 @@ const ConfigurationModal: React.FC<ConfigurationModalProps> = ({ isOpen, onClose
   const handleClose = () => {
     handleReset()
     setIsBotModalOpen(false)
+    setEditingBot(null)
     onClose()
   }
 
@@ -99,12 +101,6 @@ const ConfigurationModal: React.FC<ConfigurationModalProps> = ({ isOpen, onClose
     }
   }
 
-  const handleEditBot = () => {
-    if (!isDisabled) {
-      setIsBotModalOpen(true)
-    }
-  }
-
   const handleDeleteBot = (botName: string) => {
     if (!isDisabled) {
       const updatedBotConfig = { ...localConfig.BOT_CONFIG }
@@ -113,14 +109,29 @@ const ConfigurationModal: React.FC<ConfigurationModalProps> = ({ isOpen, onClose
     }
   }
 
+  console.log('testing')
   const handleBotConfigSubmit = (botName: string, botConfig: BotConfig) => {
-    setLocalConfig((prev) => ({
-      ...prev,
-      BOT_CONFIG: {
-        ...prev.BOT_CONFIG,
-        [botName]: botConfig
+    setLocalConfig((prev) => {
+      console.log('test')
+      const updatedBotConfig = { ...prev.BOT_CONFIG }
+
+      // If we're editing and the name changed, remove the old entry
+      if (editingBot && editingBot.name !== botName) {
+        delete updatedBotConfig[editingBot.name]
       }
-    }))
+
+      // Add/update the bot configuration
+      updatedBotConfig[botName] = botConfig
+
+      return {
+        ...prev,
+        BOT_CONFIG: updatedBotConfig
+      }
+    })
+
+    // Reset editing state and close modal
+    setEditingBot(null)
+    setIsBotModalOpen(false)
   }
 
   const handleSave = async () => {
@@ -266,7 +277,7 @@ const ConfigurationModal: React.FC<ConfigurationModalProps> = ({ isOpen, onClose
                       webhookUrl: botConfig.webhookUrl,
                       launchScript: botConfig.launchScript
                     }}
-                    onEdit={() => handleEditBot()}
+                    onEdit={handleBotConfigSubmit}
                     onRemove={handleDeleteBot}
                     disabled={isDisabled}
                   />
@@ -279,8 +290,10 @@ const ConfigurationModal: React.FC<ConfigurationModalProps> = ({ isOpen, onClose
         <BotConfigModal
           isOpen={isBotModalOpen}
           onClose={() => setIsBotModalOpen(false)}
-          mode="add"
+          mode={editingBot ? 'edit' : 'add'}
           onSubmit={handleBotConfigSubmit}
+          botName={editingBot?.name}
+          botConfig={editingBot?.config}
         />
       </div>
     </Modal>

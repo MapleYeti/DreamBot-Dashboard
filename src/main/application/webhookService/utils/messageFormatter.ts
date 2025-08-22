@@ -35,7 +35,8 @@ function getEventTitle(eventType: string): string {
     CHAT: '💬 Chat Message',
     RESPONSE: '⌨️ Bot Response',
     LEVEL_UP: '📈 Level Up!',
-    QUEST: '🏆 Quest Completed!',
+    QUEST_COMPLETE: '🏆 Quest Completed!',
+    QUEST_START: '📖 Quest Started!',
     BREAK: '💤 Break Started',
     BREAK_OVER: '⏰ Break Over',
     DEATH: '💀  Died',
@@ -54,8 +55,10 @@ function getEventDescription(event: WebhookEvent): string {
       return `**${event.data.response || 'Unknown response'}**`
     case 'LEVEL_UP':
       return `${getSkillEmoji(event.data.skill)} **${event.data.skill || 'Unknown skill'}** is now level **${event.data.level || 'Unknown'}**!`
-    case 'QUEST':
+    case 'QUEST_COMPLETE':
       return `**${event.data.quest || 'Unknown quest'}** has been completed!`
+    case 'QUEST_START':
+      return `**${event.data.quest || 'Unknown quest'}** has been started!`
     case 'BREAK': {
       const duration = event.data.duration
       if (duration) {
@@ -116,7 +119,8 @@ function getEventColor(eventType: string): number {
     CHAT: 0x0099ff, // Blue
     RESPONSE: 0x0099ff, // Blue
     LEVEL_UP: 0x88e788, // Light Green
-    QUEST: 0x87ceeb, // Light Blue
+    QUEST_COMPLETE: 0x87ceeb, // Light Blue
+    QUEST_START: 0x9370db, // Medium Purple
     BREAK: 0x808080, // Dark Gray
     BREAK_OVER: 0x90ee90, // Light Green
     DEATH: 0xff0000, // Red

@@ -52,7 +52,10 @@ function createLogEvent(
       data.skill = match[1] || ''
       data.level = match[2] || ''
       break
-    case 'QUEST':
+    case 'QUEST_COMPLETE':
+      data.quest = match[1] || ''
+      break
+    case 'QUEST_START':
       data.quest = match[1] || ''
       break
     case 'BREAK':

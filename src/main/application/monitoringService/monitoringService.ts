@@ -15,7 +15,6 @@ interface MonitoringState {
   watchedFiles: Map<string, ReturnType<typeof chokidar.watch>>
   watchedFolders: Map<string, ReturnType<typeof chokidar.watch>>
   fileOffsets: Map<string, number> // Track file positions for reading new content
-  processingQueue: Map<string, NodeJS.Timeout> // Debounce rapid changes per file
 }
 
 const DEFAULT_DREAMBOT_FOLDER = 'DreamBot'
@@ -34,8 +33,7 @@ export default class MonitoringService {
     isMonitoring: false,
     watchedFiles: new Map(),
     watchedFolders: new Map(),
-    fileOffsets: new Map(),
-    processingQueue: new Map()
+    fileOffsets: new Map()
   }
 
   constructor() {
@@ -80,13 +78,6 @@ export default class MonitoringService {
     }
 
     try {
-      // Clear all pending processing timeouts
-      for (const [filePath, timeout] of this.state.processingQueue) {
-        clearTimeout(timeout)
-        console.log(`Cleared pending processing for: ${filePath}`)
-      }
-      this.state.processingQueue.clear()
-
       for (const [filePath, watcher] of this.state.watchedFiles) {
         watcher.close()
         console.log(`Stopped watching file: ${filePath}`)
@@ -201,7 +192,11 @@ export default class MonitoringService {
 
       watcher.on('change', async () => {
         console.log(`🔍 File change detected: ${filePath}`)
-        this.debouncedProcessFile(filePath)
+
+        // Add a small delay to ensure the file is fully written
+        await new Promise((resolve) => setTimeout(resolve, 10))
+
+        await this.processLogFile(filePath)
       })
 
       // Handle file truncation/rotation
@@ -240,38 +235,18 @@ export default class MonitoringService {
     }
   }
 
-  private debouncedProcessFile(filePath: string) {
-    console.log(`⏱️ Debouncing file processing for: ${filePath}`)
-
-    // Clear existing timeout for this file
-    const existingTimeout = this.state.processingQueue.get(filePath)
-    if (existingTimeout) {
-      clearTimeout(existingTimeout)
-      console.log(`🔄 Reset debounce timer for: ${filePath}`)
-    }
-
-    // Set new timeout - process after 25ms of no changes (faster with polling)
-    const timeout = setTimeout(async () => {
-      console.log(`🚀 Processing file after debounce: ${filePath}`)
-      try {
-        await this.processLogFile(filePath)
-      } catch (error) {
-        console.error(`Error in debounced processing for ${filePath}:`, error)
-      } finally {
-        // Clean up the timeout reference
-        this.state.processingQueue.delete(filePath)
-      }
-    }, 25) // 25ms debounce - faster since polling is more reliable
-
-    this.state.processingQueue.set(filePath, timeout)
-  }
-
   private async processLogFile(filePath: string) {
     try {
       const previousSize = this.state.fileOffsets.get(filePath) || 0
       const currentSize = statSync(filePath).size
 
-      if (currentSize <= previousSize) return
+      console.log(`🔍 Processing file: ${filePath}`)
+      console.log(`   Previous size: ${previousSize}, Current size: ${currentSize}`)
+
+      if (currentSize <= previousSize) {
+        console.log(`   ⏭️ File size hasn't increased, skipping processing`)
+        return
+      }
 
       const stream = createReadStream(filePath, {
         start: previousSize,
@@ -283,18 +258,28 @@ export default class MonitoringService {
       const botName = basename(dirname(filePath))
 
       let lineCount = 0
+      let nonEmptyLineCount = 0
       for await (const line of rl) {
         lineCount++
-        console.log(
-          `📝 Processing line ${lineCount}: ${line.substring(0, 100)}${
-            line.length > 100 ? '...' : ''
-          }`
-        )
-        await this.processLogLine(line, filePath, botName)
+        const trimmedLine = line.trim()
+        if (trimmedLine) {
+          nonEmptyLineCount++
+          console.log(
+            `📝 Processing line ${lineCount} (non-empty: ${nonEmptyLineCount}): ${line.substring(0, 100)}${
+              line.length > 100 ? '...' : ''
+            }`
+          )
+          await this.processLogLine(line, filePath, botName)
+        } else {
+          console.log(`📝 Skipping empty line ${lineCount}`)
+        }
       }
 
-      console.log(`✅ Processed ${lineCount} lines from ${filePath}`)
+      console.log(
+        `✅ Processed ${lineCount} total lines (${nonEmptyLineCount} non-empty) from ${filePath}`
+      )
       this.state.fileOffsets.set(filePath, currentSize)
+      console.log(`   📊 Updated file offset to: ${currentSize}`)
 
       // Notify renderer processes
       webContents.getAllWebContents().forEach((webContent) => {

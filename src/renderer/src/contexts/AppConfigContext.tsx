@@ -1,5 +1,6 @@
 import { useState, useEffect, ReactNode } from 'react'
 import type { AppConfig } from '@shared/types/configTypes'
+import type { ThemeMode } from '@shared/types/themeTypes'
 import { useConfigApi } from '../hooks/useConfigApi'
 import { useConfigEvents } from '../hooks/useConfigEvents'
 import { AppConfigContext, type AppConfigContextType } from './AppConfigContextDef'
@@ -9,7 +10,7 @@ interface AppConfigProviderProps {
 }
 
 export function AppConfigProvider({ children }: AppConfigProviderProps) {
-  const { getConfig } = useConfigApi()
+  const { getConfig, saveConfig } = useConfigApi()
   const [config, setConfig] = useState<AppConfig | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [errors, setErrors] = useState<string[]>([])
@@ -38,6 +39,22 @@ export function AppConfigProvider({ children }: AppConfigProviderProps) {
     }
   }
 
+  const updateThemeMode = async (themeMode: ThemeMode) => {
+    if (config) {
+      const updatedConfig = { ...config, THEME_MODE: themeMode }
+      try {
+        const result = await saveConfig(updatedConfig)
+        if (result.success) {
+          setConfig(updatedConfig)
+        } else {
+          console.error('Failed to save theme mode:', result.errors)
+        }
+      } catch (error) {
+        console.error('Failed to save theme mode:', error)
+      }
+    }
+  }
+
   useEffect(() => {
     refreshConfig()
   }, [])
@@ -55,7 +72,8 @@ export function AppConfigProvider({ children }: AppConfigProviderProps) {
     isLoading,
     errors,
     refreshConfig,
-    updateConfig
+    updateConfig,
+    updateThemeMode
   }
 
   return <AppConfigContext.Provider value={value}>{children}</AppConfigContext.Provider>

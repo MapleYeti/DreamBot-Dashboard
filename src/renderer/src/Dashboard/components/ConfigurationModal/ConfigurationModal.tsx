@@ -109,10 +109,8 @@ const ConfigurationModal: React.FC<ConfigurationModalProps> = ({ isOpen, onClose
     }
   }
 
-  console.log('testing')
   const handleBotConfigSubmit = (botName: string, botConfig: BotConfig) => {
     setLocalConfig((prev) => {
-      console.log('test')
       const updatedBotConfig = { ...prev.BOT_CONFIG }
 
       // If we're editing and the name changed, remove the old entry

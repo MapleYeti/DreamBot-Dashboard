@@ -34,7 +34,8 @@ const ConfigurationModal: React.FC<ConfigurationModalProps> = ({ isOpen, onClose
       BASE_LOG_DIRECTORY: '',
       DREAMBOT_VIP_FEATURES: false,
       BASE_WEBHOOK_URL: '',
-      BOT_CONFIG: {}
+      BOT_CONFIG: {},
+      THEME_MODE: 'light'
     }
   )
 

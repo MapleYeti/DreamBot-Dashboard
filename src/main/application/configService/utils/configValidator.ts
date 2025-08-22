@@ -18,6 +18,13 @@ export async function validateConfig(config: AppConfig): Promise<ConfigValidatio
     errors.push('DREAMBOT_VIP_FEATURES must be a boolean')
   }
 
+  // Validate THEME_MODE
+  if (!config.THEME_MODE || typeof config.THEME_MODE !== 'string') {
+    errors.push('THEME_MODE must be a non-empty string')
+  } else if (!['light', 'dark', 'osrs'].includes(config.THEME_MODE)) {
+    errors.push('THEME_MODE must be one of: light, dark, osrs')
+  }
+
   // Validate BOT_CONFIG
   if (!config.BOT_CONFIG || typeof config.BOT_CONFIG !== 'object') {
     errors.push('BOT_CONFIG must be an object')

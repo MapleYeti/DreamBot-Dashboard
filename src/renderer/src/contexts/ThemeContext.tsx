@@ -1,30 +1,43 @@
 import React, { useState, useEffect, ReactNode } from 'react'
 import type { ThemeMode } from '@shared/types/themeTypes'
-import { themes } from '@shared/constants/themes'
+import { themes } from '@shared/themes'
 import { ThemeContext, type ThemeContextValue } from './ThemeContextValue'
+import { useAppConfig } from '../hooks/useAppConfig'
 
 interface ThemeProviderProps {
   children: ReactNode
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
+  const { config, updateThemeMode } = useAppConfig()
+
   const [themeMode, setThemeModeState] = useState<ThemeMode>(() => {
-    // Get theme from localStorage or default to light
-    const savedTheme = localStorage.getItem('theme') as ThemeMode
-    return savedTheme && (savedTheme === 'light' || savedTheme === 'dark') ? savedTheme : 'light'
+    // Get theme from config if available, otherwise default to light
+    if (config?.THEME_MODE) {
+      return config.THEME_MODE
+    }
+    return 'light'
   })
 
   const theme = themes[themeMode]
 
-  const setThemeMode = (mode: ThemeMode) => {
+  const setThemeMode = async (mode: ThemeMode) => {
     setThemeModeState(mode)
-    localStorage.setItem('theme', mode)
+
+    // Save to config service (which persists to file)
+    try {
+      await updateThemeMode(mode)
+    } catch (error) {
+      console.error('Failed to save theme mode to config:', error)
+    }
   }
 
-  const toggleTheme = () => {
-    const newMode = themeMode === 'light' ? 'dark' : 'light'
-    setThemeMode(newMode)
-  }
+  // Update local state when config changes
+  useEffect(() => {
+    if (config?.THEME_MODE && config.THEME_MODE !== themeMode) {
+      setThemeModeState(config.THEME_MODE)
+    }
+  }, [config?.THEME_MODE, themeMode])
 
   // Apply CSS custom properties when theme changes
   useEffect(() => {
@@ -105,8 +118,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const value: ThemeContextValue = {
     theme,
     themeMode,
-    setThemeMode,
-    toggleTheme
+    setThemeMode
   }
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>

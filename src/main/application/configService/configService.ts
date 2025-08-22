@@ -11,6 +11,24 @@ class ConfigService {
     try {
       const configData = await readFile(this.configPath, 'utf-8')
       this.config = JSON.parse(configData)
+
+      // Migrate existing config files that don't have THEME_MODE
+      if (this.config && !this.config.THEME_MODE) {
+        console.log('Migrating existing config: adding default THEME_MODE')
+
+        // Check if old themeMode field exists and migrate it
+        if ((this.config as any).themeMode) {
+          console.log('Migrating old themeMode field to THEME_MODE')
+          this.config.THEME_MODE = (this.config as any).themeMode
+          // Remove the old field
+          delete (this.config as any).themeMode
+        } else {
+          this.config.THEME_MODE = 'light'
+        }
+
+        // Save the migrated config
+        await this.saveConfig(this.config)
+      }
     } catch (error) {
       console.error('Failed to load config:', error)
       // Load default config if file doesn't exist
@@ -18,7 +36,8 @@ class ConfigService {
         BASE_LOG_DIRECTORY: '',
         DREAMBOT_VIP_FEATURES: false,
         BASE_WEBHOOK_URL: '',
-        BOT_CONFIG: {}
+        BOT_CONFIG: {},
+        THEME_MODE: 'light'
       }
     }
   }

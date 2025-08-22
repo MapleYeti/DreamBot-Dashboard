@@ -7,15 +7,15 @@ import './base.css'
 
 function App(): React.ReactElement {
   return (
-    <ThemeProvider>
-      <AppConfigProvider>
+    <AppConfigProvider>
+      <ThemeProvider>
         <UnsavedChangesProvider>
           <div className="App">
             <Dashboard />
           </div>
         </UnsavedChangesProvider>
-      </AppConfigProvider>
-    </ThemeProvider>
+      </ThemeProvider>
+    </AppConfigProvider>
   )
 }
 

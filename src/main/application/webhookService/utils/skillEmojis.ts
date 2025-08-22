@@ -13,7 +13,7 @@ export function getSkillEmoji(skill: string): string {
       return '🙏'
     case 'Magic':
       return '🧙‍♂️'
-    case 'Runecrafting':
+    case 'Runecraft':
       return '🔮'
     case 'Hitpoints':
       return '❤️'
